@@ -1,0 +1,23 @@
+# QR-BA-06 (external config)
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tourplanner
+    username: tourplanner
+    password: 2ws3ed4rf5tg
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    serialization:
+      indent_output: true
+
+server:
+  port: 8080
+
+app:
+  image-base-directory: /opt/tourplanner/images

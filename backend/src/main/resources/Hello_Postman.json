@@ -27,7 +27,7 @@
               "    pm.response.to.have.status(200);",
               "});",
               "",
-              "pm.test(\"Response contains hello text\", function () {",
+              "pm.test(\"Response contains: hello world\", function () {",
               "    const jsonData = pm.response.json();",
               "    pm.expect(jsonData.message).to.eql(\"hello world\");",
               "});"

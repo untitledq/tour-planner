@@ -1,4 +1,4 @@
 Hello_Postman.json returns "hello world" from table "text" in postgresDB over "http://localhost:8080/api/hello" and showcases how api in spring works.
 
-newman run ~/IdeaProjects/TourPlanner/src/main/resources/Hello_Postman.json
+newman run ~/IdeaProjects/Tour_Planner/backend/src/main/resources/Hello_Postman.json
 
