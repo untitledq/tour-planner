@@ -1,0 +1,68 @@
+{
+  "info": {
+    "name": "TourPlanner User Postman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/users/register",
+              "host": [
+                "http://localhost:8080"
+              ],
+              "path": [
+                "api",
+                "users",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/users/login",
+              "host": [
+                "http://localhost:8080"
+              ],
+              "path": [
+                "api",
+                "users",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+nvm install 20
+nvm use 20
+nvm alias default 20
+npm install -g @angular/cli
+
+cd ~/IdeaProjects/Tour_Planner/
+ng new frontend --standalone --routing --style=css --skip-tests
+ng generate component home --standalone --skip-tests
+
+ng serve
+
+
+-----------
+
+=> If you wish to uninstall them at a later point (or re-install them under your
+=> `nvm` node installs), you can remove them from the system Node as follows:
+     $ nvm use system
+     $ npm uninstall -g a_module

@@ -1,0 +1,86 @@
+.
+├── compose.yaml
+├── docs
+│   ├── Figma_link.txt
+│   ├── Postman.txt
+│   ├── project_structure.txt
+│   ├── TourPlanner.pdf
+│   ├── TourPlannerRequirements.odt
+│   └── uml
+│       ├── domain-model.puml
+│       └── use-cases.puml
+├── frontend
+│   ├── angular.json
+│   ├── package.json
+│   ├── README.txt
+│   └── src
+├── .gitattributes
+├── .gitignore
+├── HELP.md
+├── .idea
+│   ├── compiler.xml
+│   ├── encodings.xml
+│   ├── .gitignore
+│   ├── inspectionProfiles
+│   │   └── Project_Default.xml
+│   ├── jarRepositories.xml
+│   ├── misc.xml
+│   ├── vcs.xml
+│   └── workspace.xml
+├── init.sql
+├── logs
+│   ├── tourplanner.2026-02-21.0.log
+│   └── tourplanner.log
+├── .mvn
+│   └── wrapper
+│       └── maven-wrapper.properties
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── at
+    │   │       └── fhtw
+    │   │           └── swen
+    │   │               └── tourplanner
+    │   │                   ├── common
+    │   │                   │   ├── exception
+    │   │                   │   ├── infra
+    │   │                   │   │   ├── LoggerService.java
+    │   │                   │   │   └── SecurityConfig.java
+    │   │                   │   └── mapper
+    │   │                   ├── hello
+    │   │                   │   ├── HelloController.java
+    │   │                   │   ├── HelloEntity.java
+    │   │                   │   ├── HelloRepository.java
+    │   │                   │   └── HelloService.java
+    │   │                   ├── tour
+    │   │                   │   ├── controller
+    │   │                   │   ├── entity
+    │   │                   │   ├── repository
+    │   │                   │   └── service
+    │   │                   ├── TourPlannerApplication.java
+    │   │                   └── user
+    │   │                       ├── controller
+    │   │                       ├── entity
+    │   │                       ├── repository
+    │   │                       └── service
+    │   └── resources
+    │       ├── application.yaml
+    │       ├── Hello_Postman.json
+    │       ├── logback.xml
+    │       ├── static
+    │       ├── templates
+    │       └── User_Postman.json
+    └── test
+        └── java
+            └── at
+                └── fhtw
+                    └── swen
+                        └── tourplanner
+                            ├── devtools
+                            │   └── UpdateProjectStructure.java
+                            └── TourPlannerApplicationTests.java
+
+42 directories, 42 files

@@ -1,0 +1,46 @@
+@startuml
+title TourPlanner - Minimal Domain Model
+
+class UserAccount {
+  +uuid: UUID
+  +username: String
+  +passwordHash: String
+  +email: String
+  +verified: boolean
+}
+
+class Tour {
+  +id: UUID
+  +name: String
+  +description: String
+  +distanceKm: double
+  +estimatedTimeMin: int
+}
+
+class TourLog {
+  +id: UUID
+  +date: LocalDate
+  +comment: String
+  +rating: int
+  +actualTimeMin: int
+}
+
+class Location {
+  +name: String
+  +latitude: double
+  +longitude: double
+}
+
+class LoginToken {
+  +id: Long
+  +token: String
+  +expiresAt: LocalDateTime
+}
+
+UserAccount "1" -- "0..*" Tour : owns
+UserAccount "1" -- "0..*" LoginToken : has
+Tour "1" *-- "0..*" TourLog : contains
+Tour "1" -- "1" Location : start
+Tour "1" -- "1" Location : destination
+
+@enduml

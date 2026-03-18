@@ -1,0 +1,31 @@
+@startuml
+title TourPlanner - Use Case Diagram
+
+left to right direction
+
+actor "User" as User
+actor "Admin" as Admin
+
+rectangle "TourPlanner System" {
+
+  usecase "Register Account" as UC_Register
+  usecase "Login" as UC_Login
+  usecase "Create Tour" as UC_CreateTour
+  usecase "View Tour" as UC_ViewTour
+  usecase "Export Tour as PDF" as UC_Export
+  usecase "Validate Credentials" as UC_Validate
+  usecase "Manage Users" as UC_ManageUsers
+
+  UC_Login ..> UC_Validate : <<include>>
+  UC_Export ..> UC_ViewTour : <<extend>>
+}
+
+User --> UC_Register
+User --> UC_Login
+User --> UC_CreateTour
+User --> UC_ViewTour
+User --> UC_Export
+
+Admin --> UC_ManageUsers
+
+@enduml
