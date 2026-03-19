@@ -29,5 +29,6 @@ public class TourPlannerApplication implements CommandLineRunner {
                 .map(HelloEntity::getContent)
                 .orElse("No hello text found");
         logger.info("First text from DB: " + dbText);
+        // testzweck
     }
 }
