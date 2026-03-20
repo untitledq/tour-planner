@@ -131,6 +131,13 @@
   width: 100%;
 }
 
+.field-error {
+  margin: -2px 0 0;
+  color: #dc2626;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.8rem;
+}
+
 .remember-row {
   display: inline-flex;
   align-items: center;
@@ -207,6 +214,39 @@
 .form-panel ::ng-deep .p-inputtext:enabled:focus,
 .form-panel ::ng-deep .p-password-input:enabled:focus {
   border-color: #f59e0b;
+}
+
+.field-group--invalid ::ng-deep .p-inputtext,
+.field-group--invalid ::ng-deep .p-password .p-inputtext,
+.field-group--invalid ::ng-deep .p-password-input,
+.field-group--invalid ::ng-deep .p-password-input.p-inputtext,
+.field-group--invalid ::ng-deep p-password.ng-invalid .p-password-input,
+.field-group--invalid ::ng-deep p-password.ng-invalid.ng-dirty .p-password-input,
+.field-group--invalid ::ng-deep p-password .p-password-input {
+  border-color: #dc2626;
+  box-shadow: none;
+}
+
+.field-group--invalid ::ng-deep .p-floatlabel label,
+.field-group--invalid ::ng-deep .p-floatlabel:has(.p-inputtext.p-filled) label,
+.field-group--invalid ::ng-deep .p-floatlabel:has(.p-password-input.p-filled) label {
+  color: #dc2626;
+}
+
+.field-group--label-invalid ::ng-deep .p-floatlabel label,
+.field-group--label-invalid ::ng-deep .p-floatlabel:has(.p-inputtext.p-filled) label {
+  color: #dc2626;
+}
+
+.field-group--invalid ::ng-deep .p-inputtext:enabled:focus,
+.field-group--invalid ::ng-deep .p-password .p-inputtext:enabled:focus,
+.field-group--invalid ::ng-deep .p-password-input:enabled:focus,
+.field-group--invalid ::ng-deep .p-password-input.p-inputtext:enabled:focus,
+.field-group--invalid ::ng-deep p-password.ng-invalid .p-password-input:enabled:focus,
+.field-group--invalid ::ng-deep p-password.ng-invalid.ng-dirty .p-password-input:enabled:focus,
+.field-group--invalid ::ng-deep p-password .p-password-input:enabled:focus {
+  border-color: #dc2626;
+  box-shadow: none;
 }
 
 .form-panel ::ng-deep .p-checkbox-box.p-focus,
