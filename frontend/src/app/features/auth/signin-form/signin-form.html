@@ -1,4 +1,4 @@
-<section class="login-shell">
+<section class="signin-shell">
   <div class="visual-side" aria-hidden="true">
     <div class="visual-side__brand">[Placeholder]</div>
     <div class="visual-side__copy">
@@ -9,19 +9,19 @@
   </div>
 
   <p-card class="form-panel">
-    <div class="login-card__topbar" aria-hidden="true">
+    <div class="signin-card__topbar" aria-hidden="true">
       
     </div>
 
-    <div class="login-card__hero">
-      <p class="login-card__eyebrow">Welcome!</p>
+    <div class="signin-card__hero">
+      <p class="signin-card__eyebrow">Welcome!</p>
       <h1>Create an account with your credentials</h1>
-      <p class="login-card__subtitle">
+      <p class="signin-card__subtitle">
         Set up your profile to continue using our services.
       </p>
     </div>
 
-    <form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="signinForm" class="signin-form" (ngSubmit)="onSubmit()">
       <div class="field-group">
         <p-floatlabel variant="on">
           <input
@@ -81,9 +81,9 @@
 
     <p-divider />
 
-    <p class="login-card__footer">
+    <p class="signin-card__footer">
       Already have an account?
-      <a href="/">Login</a>
+      <a routerLink="/login">Login</a>
     </p>
   </p-card>
 </section>

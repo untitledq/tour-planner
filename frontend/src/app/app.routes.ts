@@ -1,3 +1,19 @@
 import { Routes } from '@angular/router';
+import { LoginForm } from './features/auth/login-form/login-form';
+import { SigninForm } from './features/auth/signin-form/signin-form';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'login'
+  },
+  {
+    path: 'login',
+    component: LoginForm
+  },
+  {
+    path: 'signin',
+    component: SigninForm
+  }
+];

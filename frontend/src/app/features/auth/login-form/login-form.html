@@ -1,0 +1,68 @@
+<section class="login-shell">
+  <p-card class="form-panel">
+    <div class="login-card__topbar" aria-hidden="true">
+      <!--<span>[Placeholder]</span>
+      <span>[Placeholder]</span>
+      <span>[Placeholder]</span>
+    -->
+    </div>
+
+    <div class="login-card__hero">
+      <p class="login-card__eyebrow">Welcome Back!</p>
+      <p class="login-card__subtitle">Login with your credentials</p>
+    </div>
+
+    <form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
+      <div class="field-group">
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="login-email"
+            type="email"
+            formControlName="email"
+            class="w-full"
+          />
+          <label for="login-email">Email</label>
+        </p-floatlabel>
+      </div>
+
+      <div class="field-group">
+        <p-floatlabel variant="on">
+          <p-password
+            inputId="login-password"
+            formControlName="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+          />
+          <label for="login-password">Password</label>
+        </p-floatlabel>
+      </div>
+
+      <p-button
+        type="submit"
+        label="Log in"
+        styleClass="login-button"
+      />
+
+      <!--<a class="forgot-link" routerLink="/login">Forgot password?</a>-->
+    </form>
+
+    <p-divider />
+
+    <p class="login-card__footer">
+      Don't have an account?
+      <a routerLink="/signin">Sign up</a>
+    </p>
+  </p-card>
+
+  <div class="visual-side" aria-hidden="true">
+    <div class="visual-side__brand">[Placeholder]</div>
+    <div class="visual-side__copy">
+      <p>Vienna.</p>
+      <p>A new Experience</p>
+      <p>awaits you.</p>
+    </div>
+  </div>
+</section>
