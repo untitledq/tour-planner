@@ -43,4 +43,10 @@ export class LoginForm {
 
     console.log('Login form payload', this.loginForm.getRawValue());
   }
+
+  protected showRequiredError(controlName: 'email' | 'password'): boolean {
+    const control = this.loginForm.controls[controlName];
+
+    return control.touched && control.hasError('required');
+  }
 }

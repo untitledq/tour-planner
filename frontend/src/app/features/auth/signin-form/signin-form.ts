@@ -47,4 +47,10 @@ export class SigninForm {
 
     console.log('Signin form payload', this.signinForm.getRawValue());
   }
+
+  protected showRequiredError(controlName: 'email' | 'password' | 'confirmPassword'): boolean {
+    const control = this.signinForm.controls[controlName];
+
+    return control.touched && control.hasError('required');
+  }
 }
