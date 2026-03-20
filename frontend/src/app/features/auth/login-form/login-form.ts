@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { CheckboxModule } from 'primeng/checkbox';
 import { DividerModule } from 'primeng/divider';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,9 +13,9 @@ import { PasswordModule } from 'primeng/password';
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     ButtonModule,
     CardModule,
-    CheckboxModule,
     DividerModule,
     FloatLabelModule,
     InputTextModule,
@@ -30,9 +30,7 @@ export class LoginForm {
   constructor(private readonly formBuilder: FormBuilder) {
     this.loginForm = this.formBuilder.nonNullable.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]],
-      rememberMe: [false]
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
