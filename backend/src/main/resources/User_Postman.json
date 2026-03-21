@@ -19,19 +19,19 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:8080/api/users/register",
+              "raw": "http://localhost:8080/api/user/register",
               "host": [
                 "http://localhost:8080"
               ],
               "path": [
                 "api",
-                "users",
+                "user",
                 "register"
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\"\n}"
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\",\n  \"email\": \"user1@mail.com\"\n}"
             }
           }
         },
@@ -46,13 +46,13 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:8080/api/users/login",
+              "raw": "http://localhost:8080/api/user/login",
               "host": [
                 "http://localhost:8080"
               ],
               "path": [
                 "api",
-                "users",
+                "user",
                 "login"
               ]
             },

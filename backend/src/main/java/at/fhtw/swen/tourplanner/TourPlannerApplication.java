@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner;
 
-import at.fhtw.swen.tourplanner.common.infra.LoggerService;
-import at.fhtw.swen.tourplanner.hello.HelloEntity;
-import at.fhtw.swen.tourplanner.hello.HelloRepository;
+import at.fhtw.swen.tourplanner.infrastructure.LoggerService;
+import at.fhtw.swen.tourplanner.a_hello_test.HelloEntity;
+import at.fhtw.swen.tourplanner.a_hello_test.HelloRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
