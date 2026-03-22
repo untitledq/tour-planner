@@ -2,12 +2,16 @@
 
 spring:
   datasource:
+#    url: ${DB_URL}
+#    username: ${DB_USER}
+#    password: ${DB_PASSWORD}
     url: jdbc:postgresql://localhost:5432/tourplanner
     username: tourplanner
     password: 2ws3ed4rf5tg
   jpa:
+    open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -18,6 +22,16 @@ spring:
 
 server:
   port: 8080
+
+security:
+  jwt:
+#    secret: ${JWT_SECRET}
+    secret: q3k9WlY8vR6ZcJ1Kz8n9QpL2YxF5H7Tg4Uu2Vw0aB1c=
+    expiration-minutes: 20
+
+session:
+  cleanup:
+    fixed-delay-ms: 900000
 
 app:
   image-base-directory: /opt/tourplanner/images

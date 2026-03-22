@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.common.infra;
+package at.fhtw.swen.tourplanner.infrastructure;
 
 /// QR-BA-05
 /*

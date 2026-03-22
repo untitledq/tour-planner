@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.hello;
+package at.fhtw.swen.tourplanner.a_hello_test;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
