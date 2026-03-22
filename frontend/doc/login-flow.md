@@ -420,7 +420,127 @@ Dann:
 - das Token wird nicht gespeichert
 - der Benutzer bleibt auf der Login-Seite
 
-## 16. End-to-End-Beispiel
+## 16. Was passiert bei Fehlereingaben im Frontend?
+
+Fehlereingaben koennen bereits abgefangen werden, bevor ueberhaupt ein Request ans Backend gesendet wird.
+
+Datei: `frontend/src/app/features/auth/login-form/login-form.ts`
+
+```ts
+protected onSubmit(): void {
+  this.loginForm.markAllAsTouched();
+  this.loginError = '';
+
+  if (this.loginForm.invalid) {
+    this.loginError = 'Bitte fuelle alle Felder korrekt aus.';
+    this.changeDetectorRef.detectChanges();
+    return;
+  }
+
+  ...
+}
+```
+
+Das bedeutet:
+
+1. Beim Klick auf `Log in` werden zuerst alle Felder als `touched` markiert.
+2. Danach prueft Angular, ob das Formular ungueltig ist.
+3. Wenn zum Beispiel `username` oder `password` leer ist, wird der Request sofort abgebrochen.
+4. Stattdessen wird direkt die Fehlermeldung `Bitte fuelle alle Felder korrekt aus.` gesetzt.
+
+Die sichtbaren Feldfehler kommen aus diesen Methoden:
+
+```ts
+protected showRequiredError(controlName: 'username' | 'password'): boolean {
+  const control = this.loginForm.controls[controlName];
+  return control.touched && control.hasError('required');
+}
+```
+
+Und in der HTML:
+
+Datei: `frontend/src/app/features/auth/login-form/login-form.html`
+
+```html
+@if (showRequiredError('username')) {
+  <p class="field-error">Username is required.</p>
+}
+
+@if (showRequiredError('password')) {
+  <p class="field-error">Password is required.</p>
+}
+```
+
+Das heisst:
+
+- leeres `username`-Feld -> `Username is required.`
+- leeres `password`-Feld -> `Password is required.`
+- zusaetzlich globale Formularmeldung -> `Bitte fuelle alle Felder korrekt aus.`
+
+In diesem Fall passiert **kein** HTTP-Request an das Backend.
+
+## 17. Was passiert bei falschem Benutzer oder falschem Passwort?
+
+Wenn das Formular gueltig ist, aber die Zugangsdaten fachlich falsch sind, wird der Request sehr wohl ans Backend gesendet.
+
+Frontend:
+
+```ts
+this.authService
+  .login(this.loginForm.getRawValue())
+  .pipe(finalize(() => {
+    this.isSubmitting = false;
+    this.changeDetectorRef.detectChanges();
+  }))
+  .subscribe({
+    next: () => {
+      void this.router.navigateByUrl('/dashboard');
+    },
+    error: () => {
+      this.loginError = 'Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.';
+      this.changeDetectorRef.detectChanges();
+    }
+  });
+```
+
+Backend:
+
+Datei: `backend/src/main/java/at/fhtw/swen/tourplanner/application/AuthService.java`
+
+```java
+User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new SecurityException("Invalid credentials"));
+
+if (!passwordHasher.matches(rawPassword, user.getPassword())) {
+    throw new SecurityException("Invalid credentials");
+}
+```
+
+Wenn der Benutzer nicht existiert oder das Passwort falsch ist:
+
+1. Das Backend wirft `SecurityException("Invalid credentials")`.
+2. Der Login-Request endet mit einem Fehler, typischerweise `401`.
+3. Das Frontend landet im `error`-Block des `subscribe(...)`.
+4. `loginError` wird auf `Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.` gesetzt.
+5. Der Benutzer bleibt auf der Login-Seite.
+6. Es wird **kein** Token gespeichert.
+7. Es erfolgt **keine** Navigation auf `/dashboard`.
+
+## 18. Unterschied: Eingabefehler vs. Backend-Loginfehler
+
+Es gibt also zwei verschiedene Fehlerarten:
+
+1. Formularfehler im Frontend
+   - Beispiel: Feld leer
+   - Folge: kein Request wird gesendet
+   - Meldung: `Bitte fuelle alle Felder korrekt aus.`
+
+2. Loginfehler aus dem Backend
+   - Beispiel: falscher Benutzername oder falsches Passwort
+   - Folge: Request wird gesendet, Backend antwortet mit Fehler
+   - Meldung: `Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.`
+
+## 19. End-to-End-Beispiel
 
 Beispielablauf:
 
@@ -437,7 +557,7 @@ Beispielablauf:
 11. Frontend speichert `response.token` in `localStorage`.
 12. Frontend navigiert auf `/dashboard`.
 
-## 17. Wichtige Abhaengigkeiten, damit der Flow funktioniert
+## 20. Wichtige Abhaengigkeiten, damit der Flow funktioniert
 
 - Das Backend muss auf `http://localhost:8080` laufen.
 - Das Frontend muss auf `http://localhost:4200` laufen.
@@ -445,7 +565,7 @@ Beispielablauf:
 - Ein passender Benutzer muss in der DB existieren.
 - Das Frontend muss dieselben Feldnamen schicken, die das Backend erwartet.
 
-## 18. Aktuell beteiligte Dateien
+## 21. Aktuell beteiligte Dateien
 
 Frontend:
 

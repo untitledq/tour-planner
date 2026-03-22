@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -33,6 +33,7 @@ export class LoginForm {
   protected isSubmitting = false;
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   constructor(private readonly formBuilder: FormBuilder) {
     this.loginForm = this.formBuilder.nonNullable.group({
@@ -47,19 +48,24 @@ export class LoginForm {
 
     if (this.loginForm.invalid) {
       this.loginError = 'Bitte fuelle alle Felder korrekt aus.';
+      this.changeDetectorRef.detectChanges();
       return;
     }
     this.isSubmitting = true;
 
     this.authService
       .login(this.loginForm.getRawValue())
-      .pipe(finalize(() => (this.isSubmitting = false)))
+      .pipe(finalize(() => {
+        this.isSubmitting = false;
+        this.changeDetectorRef.detectChanges();
+      }))
       .subscribe({
         next: () => {
           void this.router.navigateByUrl('/dashboard');
         },
         error: () => {
           this.loginError = 'Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.';
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
