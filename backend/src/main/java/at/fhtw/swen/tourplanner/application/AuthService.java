@@ -77,7 +77,11 @@ public class AuthService {
             return;
         }
 
-        TokenPayload payload = tokenService.parseAndValidate(token);
-        sessionRepository.revokeByJti(payload.sessionId());
+        try {
+            TokenPayload payload = tokenService.parseAndValidate(token);
+            sessionRepository.revokeByJti(payload.sessionId());
+        } catch (Exception ignored) {
+            sessionRepository.revokeByToken(token);
+        }
     }
 }

@@ -5,7 +5,7 @@ spring:
 #    url: ${DB_URL}
 #    username: ${DB_USER}
 #    password: ${DB_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/tourplanner
+    url: jdbc:postgresql://localhost:5433/tourplanner
     username: tourplanner
     password: 2ws3ed4rf5tg
   jpa:

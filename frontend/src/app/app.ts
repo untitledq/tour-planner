@@ -1,4 +1,3 @@
-
 import { Component, inject } from '@angular/core';
 import { NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
