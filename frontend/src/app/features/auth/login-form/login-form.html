@@ -13,19 +13,19 @@
     </div>
 
     <form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
-      <div class="field-group" [class.field-group--label-invalid]="showRequiredError('email')">
+      <div class="field-group" [class.field-group--label-invalid]="showRequiredError('username')">
         <p-floatlabel variant="on">
           <input
             pInputText
-            id="login-email"
-            type="email"
-            formControlName="email"
+            id="login-username"
+            type="text"
+            formControlName="username"
             class="w-full"
           />
-          <label for="login-email">Email</label>
+          <label for="login-username">Username</label>
         </p-floatlabel>
-        @if (showRequiredError('email')) {
-          <p class="field-error">Email is required.</p>
+        @if (showRequiredError('username')) {
+          <p class="field-error">Username is required.</p>
         }
       </div>
 
@@ -46,9 +46,14 @@
         }
       </div>
 
+      @if (loginError) {
+        <p class="field-error">{{ loginError }}</p>
+      }
+
       <p-button
         type="submit"
         label="Log in"
+        [loading]="isSubmitting"
         styleClass="login-button"
       />
 

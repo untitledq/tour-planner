@@ -11,6 +11,7 @@ public interface SessionRepository {
     Optional<Session> findByJti(UUID jti);
     Optional<Session> findByToken(String token);
     void revokeByJti(UUID jti);
+    void revokeByToken(String token);
     //void revokeAllActiveByUserId(UUID userId);
     void deleteExpired(Instant now);
     void deleteRevokedOrExpired(Instant now);

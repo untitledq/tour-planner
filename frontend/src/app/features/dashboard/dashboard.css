@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  padding: 2rem;
+  background: #ffffff;
+  color: #1f2937;
+}
+
+.dashboard-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #fffdf7;
+  box-shadow: 0 18px 45px rgba(17, 24, 39, 0.08);
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+}
+
+p {
+  margin: 0;
+  font-size: 1.05rem;
+}

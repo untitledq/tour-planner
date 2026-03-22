@@ -37,15 +37,14 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
     @Override
     public void revokeByJti(UUID jti) {
         repository.findById(jti).ifPresent(entity -> {
-            SessionEntity updated = new SessionEntity(
-                    entity.getJti(),
-                    entity.getUserId(),
-                    entity.getToken(),
-                    entity.getIssuedAt(),
-                    entity.getExpiresAt(),
-                    true
-            );
-            repository.save(updated);
+            repository.save(revoke(entity));
+        });
+    }
+
+    @Override
+    public void revokeByToken(String token) {
+        repository.findByToken(token).ifPresent(entity -> {
+            repository.save(revoke(entity));
         });
     }
 
@@ -93,6 +92,17 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
                 entity.getIssuedAt(),
                 entity.getExpiresAt(),
                 entity.isRevoked()
+        );
+    }
+
+    private SessionEntity revoke(SessionEntity entity) {
+        return new SessionEntity(
+                entity.getJti(),
+                entity.getUserId(),
+                entity.getToken(),
+                entity.getIssuedAt(),
+                entity.getExpiresAt(),
+                true
         );
     }
 }
