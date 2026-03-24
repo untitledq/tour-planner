@@ -22,5 +22,4 @@ public class Session {
         this.expiresAt = expiresAt;
         this.revoked = revoked;
     }
-
 }

@@ -1,9 +1,12 @@
 package at.fhtw.swen.tourplanner.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.time.Instant;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "sessions")
 public class SessionEntity {
@@ -38,10 +41,4 @@ public class SessionEntity {
         this.revoked = revoked;
     }
 
-    public UUID getJti() { return jti; }
-    public UUID getUserId() { return userId; }
-    public String getToken() { return token; }
-    public Instant getIssuedAt() { return issuedAt; }
-    public Instant getExpiresAt() { return expiresAt; }
-    public boolean isRevoked() { return revoked; }
 }
