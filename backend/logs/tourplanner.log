@@ -3952,3 +3952,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 21:38:41 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session found in DB: true
 2026-03-24 21:38:41 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session valid: true
 2026-03-24 21:38:41 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - User user1 authenticated successfully
+2026-03-24 21:39:23 [SpringApplicationShutdownHook] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-24 21:39:23 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-24 21:39:23 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-24 21:39:23 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-24 21:39:23 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
