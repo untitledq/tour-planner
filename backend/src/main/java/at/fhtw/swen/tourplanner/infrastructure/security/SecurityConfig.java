@@ -39,8 +39,7 @@ public class SecurityConfig {
                                 "/api/user/login",
                                 "/api/hello"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/user").permitAll()
-//                        .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

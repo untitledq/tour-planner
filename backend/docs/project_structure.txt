@@ -1,6 +1,7 @@
 .
 ├── compose.yaml
 ├── docs
+│   ├── db-recreate.txt
 │   └── project_structure.txt
 ├── .gitattributes
 ├── .gitignore
@@ -32,11 +33,6 @@
     │   │       └── fhtw
     │   │           └── swen
     │   │               └── tourplanner
-    │   │                   ├── a_hello_test
-    │   │                   │   ├── HelloController.java
-    │   │                   │   ├── HelloEntity.java
-    │   │                   │   ├── HelloRepository.java
-    │   │                   │   └── HelloService.java
     │   │                   ├── application
     │   │                   │   ├── AuthService.java
     │   │                   │   ├── SessionCleanupService.java
@@ -85,10 +81,10 @@
     │   │                           └── LoginResponse.java
     │   └── resources
     │       ├── application.yaml
-    │       ├── Hello_Postman.json
     │       ├── logback.xml
     │       ├── static
     │       ├── templates
+    │       ├── tourplanner-openapi.yaml
     │       └── User_Postman.json
     └── test
         └── java
@@ -100,4 +96,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-41 directories, 60 files
+40 directories, 57 files
