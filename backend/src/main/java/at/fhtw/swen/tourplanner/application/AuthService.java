@@ -74,14 +74,14 @@ public class AuthService {
 
     public void logout(String token) {
         if (token == null || token.isBlank()) {
-            return;
+            throw new SecurityException("Missing token");
         }
 
-        try {
-            TokenPayload payload = tokenService.parseAndValidate(token);
-            sessionRepository.revokeByJti(payload.sessionId());
-        } catch (Exception ignored) {
-            sessionRepository.revokeByToken(token);
-        }
+        TokenPayload payload = tokenService.parseAndValidate(token);
+        sessionRepository.revokeByJti(payload.sessionId());
+    }
+
+    public TokenPayload parseToken(String token) {
+        return tokenService.parseAndValidate(token);
     }
 }
