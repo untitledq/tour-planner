@@ -1,0 +1,103 @@
+.
+├── compose.yaml
+├── docs
+│   └── project_structure.txt
+├── .gitattributes
+├── .gitignore
+├── HELP.md
+├── .idea
+│   ├── compiler.xml
+│   ├── encodings.xml
+│   ├── .gitignore
+│   ├── inspectionProfiles
+│   │   └── Project_Default.xml
+│   ├── jarRepositories.xml
+│   ├── misc.xml
+│   ├── vcs.xml
+│   └── workspace.xml
+├── init.sql
+├── logs
+│   ├── tourplanner.2026-03-23.0.log
+│   └── tourplanner.log
+├── .mvn
+│   └── wrapper
+│       └── maven-wrapper.properties
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── at
+    │   │       └── fhtw
+    │   │           └── swen
+    │   │               └── tourplanner
+    │   │                   ├── a_hello_test
+    │   │                   │   ├── HelloController.java
+    │   │                   │   ├── HelloEntity.java
+    │   │                   │   ├── HelloRepository.java
+    │   │                   │   └── HelloService.java
+    │   │                   ├── application
+    │   │                   │   ├── AuthService.java
+    │   │                   │   ├── SessionCleanupService.java
+    │   │                   │   └── UserService.java
+    │   │                   ├── domain
+    │   │                   │   ├── enums
+    │   │                   │   ├── model
+    │   │                   │   │   ├── Session.java
+    │   │                   │   │   └── User.java
+    │   │                   │   └── ports
+    │   │                   │       ├── PasswordHasher.java
+    │   │                   │       ├── SessionRepository.java
+    │   │                   │       ├── TokenPayload.java
+    │   │                   │       ├── TokenService.java
+    │   │                   │       └── UserRepository.java
+    │   │                   ├── dto
+    │   │                   │   └── ApiErrorResponse.java
+    │   │                   ├── exceptions
+    │   │                   │   └── UserAlreadyExistsException.java
+    │   │                   ├── infrastructure
+    │   │                   │   ├── LoggerService.java
+    │   │                   │   ├── persistence
+    │   │                   │   │   ├── entity
+    │   │                   │   │   │   ├── SessionEntity.java
+    │   │                   │   │   │   └── UserEntity.java
+    │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
+    │   │                   │   │   ├── JpaUserRepositoryAdapter.java
+    │   │                   │   │   ├── SpringDataSessionJpaRepository.java
+    │   │                   │   │   └── SpringDataUserJpaRepository.java
+    │   │                   │   └── security
+    │   │                   │       ├── BCryptPasswordHasher.java
+    │   │                   │       ├── JwtAuthenticationFilter.java
+    │   │                   │       ├── JwtTokenService.java
+    │   │                   │       └── SecurityConfig.java
+    │   │                   ├── TourPlannerApplication.java
+    │   │                   ├── util
+    │   │                   │   └── UUIDv7.java
+    │   │                   └── web
+    │   │                       ├── controller
+    │   │                       │   └── AuthController.java
+    │   │                       ├── request
+    │   │                       │   ├── LoginRequest.java
+    │   │                       │   └── RegisterRequest.java
+    │   │                       └── response
+    │   │                           ├── AuthResponse.java
+    │   │                           └── LoginResponse.java
+    │   └── resources
+    │       ├── application.yaml
+    │       ├── Hello_Postman.json
+    │       ├── logback.xml
+    │       ├── static
+    │       ├── templates
+    │       └── User_Postman.json
+    └── test
+        └── java
+            └── at
+                └── fhtw
+                    └── swen
+                        └── tourplanner
+                            ├── BackendApplicationTests.java
+                            └── devtools
+                                └── UpdateProjectStructure.java
+
+41 directories, 60 files

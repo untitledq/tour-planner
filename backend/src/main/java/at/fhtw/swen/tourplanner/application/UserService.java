@@ -4,16 +4,21 @@ import at.fhtw.swen.tourplanner.domain.model.User;
 import at.fhtw.swen.tourplanner.domain.ports.PasswordHasher;
 import at.fhtw.swen.tourplanner.domain.ports.UserRepository;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private PasswordHasher passwordHasher;
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    private final UserRepository userRepository;
+    private final PasswordHasher passwordHasher;
 
     public UserService(UserRepository userRepository, PasswordHasher passwordHasher) {
         this.userRepository = userRepository;
@@ -21,8 +26,12 @@ public class UserService {
     }
 
     public User register(String username, String password, String email) {
+        log.info("Register attempt for username={}", username);
+
         validateCredentials(username, password);
+
         if (userRepository.existsByUsername(username)) {
+            log.warn("Registration failed: username already exists: {}", username);
             throw new IllegalArgumentException("username already exists");
         }
 
@@ -36,30 +45,50 @@ public class UserService {
                 Instant.now()
         );
 
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        log.info("User registered successfully: username={}, id={}", saved.getUsername(), saved.getId());
+
+        return saved;
     }
 
     public String login(String username, String rawPassword) {
+        log.info("Login attempt for username={}", username);
+
         validateCredentials(username, rawPassword);
+
         Optional<User> user = userRepository.findByUsername(username);
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
+            log.warn("Login failed: username not found: {}", username);
             throw new SecurityException("Username not found");
         }
 
-        User u =  user.get();
+        User u = user.get();
 
         if (!passwordHasher.matches(rawPassword, u.getPassword())) {
+            log.warn("Login failed: invalid password for username={}", username);
             throw new SecurityException("Invalid credentials");
         }
 
+        log.info("Login successful for username={}", username);
         return u.getUsername();
     }
 
-
     private void validateCredentials(String username, String rawPassword) {
-        if (username == null || username.isBlank())
+        if (username == null || username.isBlank()) {
+            log.warn("Validation failed: username is blank");
             throw new IllegalArgumentException("username blank");
-        if (rawPassword == null || rawPassword.isBlank())
+        }
+        if (rawPassword == null || rawPassword.isBlank()) {
+            log.warn("Validation failed: password is blank");
             throw new IllegalArgumentException("password blank");
+        }
+    }
+
+    public void deleteUser(UUID uuid) {
+        if (!userRepository.existsById(uuid)) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        userRepository.deleteById(uuid);
     }
 }

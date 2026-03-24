@@ -3,6 +3,7 @@ package at.fhtw.swen.tourplanner.web.controller;
 import at.fhtw.swen.tourplanner.application.AuthService;
 import at.fhtw.swen.tourplanner.domain.model.User;
 import at.fhtw.swen.tourplanner.application.UserService;
+import at.fhtw.swen.tourplanner.domain.ports.TokenPayload;
 import at.fhtw.swen.tourplanner.web.request.LoginRequest;
 import at.fhtw.swen.tourplanner.web.request.RegisterRequest;
 import at.fhtw.swen.tourplanner.web.response.AuthResponse;
@@ -57,10 +58,27 @@ public class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
+
         if (header == null || !header.startsWith("Bearer ")) {
-            return;
+            throw new SecurityException("Missing or invalid Authorization header");
         }
 
-        authService.logout(header.substring(7));
+        String token = header.substring(7);
+        authService.logout(token);
+    }
+
+    @DeleteMapping("/user")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            throw new SecurityException("Missing or invalid Authorization header");
+        }
+
+        String token = header.substring(7);
+
+        TokenPayload payload = authService.parseToken(token);
+        userService.deleteUser(payload.userId());
     }
 }
