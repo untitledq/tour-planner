@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { LoginForm } from './features/auth/login-form/login-form';
-import { Dashboard } from './features/dashboard/dashboard';
-import { SigninForm } from './features/auth/signin-form/signin-form';
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
+import { LoginPage } from './features/auth/pages/login/login-page';
+import { SigninPage } from './features/auth/pages/signin/signin-page';
+import { DashboardPage } from './features/dashboard/pages/dashboard/dashboard-page';
 
 export const routes: Routes = [
   {
@@ -12,15 +12,15 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginForm
+    component: LoginPage
   },
   {
     path: 'signin',
-    component: SigninForm
+    component: SigninPage
   },
   {
     path: 'dashboard',
-    component: Dashboard,
+    component: DashboardPage,
     canActivate: [authGuard]
   }
 ];

@@ -9,10 +9,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { finalize } from 'rxjs';
 
-import { AuthService } from '../../../services/auth.service';
+import { AuthApiService } from '../../services/auth-api.service';
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'app-login-page',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -24,14 +24,14 @@ import { AuthService } from '../../../services/auth.service';
     InputTextModule,
     PasswordModule
   ],
-  templateUrl: './login-form.html',
-  styleUrl: './login-form.css'
+  templateUrl: './login-page.html',
+  styleUrl: './login-page.css'
 })
-export class LoginForm {
+export class LoginPage {
   protected readonly loginForm;
   protected loginError = '';
   protected isSubmitting = false;
-  private readonly authService = inject(AuthService);
+  private readonly authApi = inject(AuthApiService);
   private readonly router = inject(Router);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -53,7 +53,7 @@ export class LoginForm {
     }
     this.isSubmitting = true;
 
-    this.authService
+    this.authApi
       .login(this.loginForm.getRawValue())
       .pipe(finalize(() => {
         this.isSubmitting = false;

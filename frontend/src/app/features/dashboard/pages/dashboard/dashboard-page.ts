@@ -3,40 +3,26 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { finalize } from 'rxjs';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthSessionService } from '../../../../core/services/auth-session.service';
+import { AuthApiService } from '../../../auth/services/auth-api.service';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-dashboard-page',
   standalone: true,
   imports: [ButtonModule],
-  template: `
-    <section class="dashboard-shell">
-      <div class="dashboard-header">
-        <div>
-          <h1>Dashboard</h1>
-          <p>Das ist mein Dashboard.</p>
-        </div>
-
-        <p-button
-          label="Logout"
-          severity="secondary"
-          [loading]="isLoggingOut"
-          (onClick)="logout()"
-        />
-      </div>
-    </section>
-  `,
-  styleUrl: './dashboard.css'
+  templateUrl: './dashboard-page.html',
+  styleUrl: './dashboard-page.css'
 })
-export class Dashboard {
+export class DashboardPage {
   protected isLoggingOut = false;
-  private readonly authService = inject(AuthService);
+  private readonly authApi = inject(AuthApiService);
+  private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
 
   protected logout(): void {
     this.isLoggingOut = true;
 
-    this.authService
+    this.authApi
       .logout()
       .pipe(finalize(() => (this.isLoggingOut = false)))
       .subscribe({
@@ -44,7 +30,7 @@ export class Dashboard {
           void this.router.navigateByUrl('/login');
         },
         error: () => {
-          this.authService.clearToken();
+          this.authSession.clearToken();
           void this.router.navigateByUrl('/login');
         }
       });

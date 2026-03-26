@@ -10,7 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 
 @Component({
-  selector: 'app-signin-form',
+  selector: 'app-signin-page',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -23,10 +23,10 @@ import { PasswordModule } from 'primeng/password';
     InputTextModule,
     PasswordModule
   ],
-  templateUrl: './signin-form.html',
-  styleUrl: './signin-form.css'
+  templateUrl: './signin-page.html',
+  styleUrl: './signin-page.css'
 })
-export class SigninForm {
+export class SigninPage {
   protected readonly signinForm;
 
   constructor(private readonly formBuilder: FormBuilder) {
