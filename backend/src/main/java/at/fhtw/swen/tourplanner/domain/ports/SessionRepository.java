@@ -7,12 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface SessionRepository {
-    Session save(Session session);
+    void save(Session session);
     Optional<Session> findByJti(UUID jti);
-    Optional<Session> findByToken(String token);
     void revokeByJti(UUID jti);
-    void revokeByToken(String token);
-    //void revokeAllActiveByUserId(UUID userId);
-    void deleteExpired(Instant now);
     void deleteRevokedOrExpired(Instant now);
 }

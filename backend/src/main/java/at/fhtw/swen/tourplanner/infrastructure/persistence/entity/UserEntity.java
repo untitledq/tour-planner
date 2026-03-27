@@ -1,9 +1,12 @@
 package at.fhtw.swen.tourplanner.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.time.Instant;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "users")
 public class UserEntity {
@@ -33,10 +36,4 @@ public class UserEntity {
         this.email = email;
         this.createdAt = createdAt;
     }
-
-    public UUID getId() { return id; }
-    public String getUsername() { return username; }
-    public String getPassword() { return password; }
-    public String getEmail() { return email; }
-    public Instant getCreatedAt() { return createdAt; }
 }
