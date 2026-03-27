@@ -46,7 +46,7 @@ export class LoginPage {
     this.loginError.set('');
 
     if (this.loginForm.invalid) {
-      this.loginError.set('Bitte fuelle alle Felder korrekt aus.');
+      this.loginError.set('Please fill out all fields correctly.');
       return;
     }
     this.isSubmitting.set(true);
@@ -61,7 +61,7 @@ export class LoginPage {
           void this.router.navigateByUrl('/dashboard');
         },
         error: () => {
-          this.loginError.set('Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.');
+          this.loginError.set('Login failed. Please check your username and password.');
         }
       });
   }
