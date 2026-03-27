@@ -1,15 +1,18 @@
-<section class="dashboard-shell">
-  <div class="dashboard-header">
-    <div>
-      <h1>Dashboard</h1>
-      <p>Das ist mein Dashboard.</p>
-    </div>
+<section class="dashboard-layout">
+  <app-sidebar
+    class="dashboard-layout__sidebar"
+    title="[Placeholder]"
+    (logoutClick)="logout()"
+  />
 
-    <p-button
-      label="Logout"
-      severity="secondary"
-      [loading]="isLoggingOut"
-      (onClick)="logout()"
-    />
-  </div>
+  <section class="dashboard-content">
+    <div class="dashboard-shell">
+      <div class="dashboard-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Das ist mein Dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </section>
