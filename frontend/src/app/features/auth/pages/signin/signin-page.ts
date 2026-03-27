@@ -74,7 +74,7 @@ export class SigninPage {
 
     if (this.signinForm.invalid) {
       if (this.signinForm.hasError('passwordMismatch')) {
-        this.submitError.set('Passwords do not match.');
+        this.submitError.set('Passwords do not match. Please try again.');
       }
       return;
     }
