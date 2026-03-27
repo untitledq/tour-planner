@@ -39,9 +39,9 @@ public class AuthController {
         );
 
         return new AuthResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getCreatedAt(),
+                user.id(),
+                user.username(),
+                user.createdAt(),
                 login.token()
         );
     }

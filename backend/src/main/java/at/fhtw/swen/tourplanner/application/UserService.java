@@ -46,7 +46,7 @@ public class UserService {
         );
 
         User saved = userRepository.save(user);
-        log.info("User registered successfully: username={}, id={}", saved.getUsername(), saved.getId());
+        log.info("User registered successfully: username={}, id={}", saved.username(), saved.id());
 
         return saved;
     }
@@ -64,13 +64,13 @@ public class UserService {
 
         User u = user.get();
 
-        if (!passwordHasher.matches(rawPassword, u.getPassword())) {
+        if (!passwordHasher.matches(rawPassword, u.passwordHash())) {
             log.warn("Login failed: invalid password for username={}", username);
             throw new SecurityException("Invalid credentials");
         }
 
         log.info("Login successful for username={}", username);
-        return u.getUsername();
+        return u.username();
     }
 
     private void validateCredentials(String username, String rawPassword) {

@@ -44,7 +44,7 @@ public class AuthService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new SecurityException("Invalid credentials"));
 
-        if (!passwordHasher.matches(rawPassword, user.getPassword())) {
+        if (!passwordHasher.matches(rawPassword, user.passwordHash())) {
             throw new SecurityException("Invalid credentials");
         }
 
@@ -52,15 +52,15 @@ public class AuthService {
         Instant expiresAt = Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES);
 
         String token = tokenService.createToken(
-                user.getId(),
-                user.getUsername(),
+                user.id(),
+                user.username(),
                 sessionId,
                 expiresAt
         );
 
         Session session = new Session(
                 sessionId,
-                user.getId(),
+                user.id(),
                 token,
                 Instant.now(),
                 expiresAt,

@@ -19,9 +19,9 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
     }
 
     @Override
-    public Session save(Session session){
+    public void save(Session session){
         SessionEntity saved = repository.save(toEntity(session));
-        return toDomain(saved);
+        toDomain(saved);
     }
 
     @Override
@@ -30,48 +30,14 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
     }
 
     @Override
-    public Optional<Session> findByToken(String token) {
-        return repository.findByToken(token).map(this::toDomain);
-    }
-
-    @Override
     public void revokeByJti(UUID jti) {
-        repository.findById(jti).ifPresent(entity -> {
-            repository.save(revoke(entity));
-        });
-    }
-
-    @Override
-    public void revokeByToken(String token) {
-        repository.findByToken(token).ifPresent(entity -> {
-            repository.save(revoke(entity));
-        });
-    }
-
-//    @Override
-//    public void revokeAllActiveByUserId(UUID userId) {
-//        repository.findAll().stream()
-//                .filter(session -> session.getUserId().equals(userId) && !session.isRevoked())
-//                .forEach(session -> repository.save(new SessionEntity(
-//                        session.getJti(),
-//                        session.getUserId(),
-//                        session.getToken(),
-//                        session.getIssuedAt(),
-//                        session.getExpiresAt(),
-//                        true
-//                )));
-//    }
-
-    @Override
-    public void deleteExpired(Instant now) {
-        repository.deleteByExpiresAtBefore(now);
+        repository.findById(jti).ifPresent(entity -> repository.save(revoke(entity)));
     }
 
     @Override
     public void deleteRevokedOrExpired(Instant now) {
         repository.deleteByRevokedTrueOrExpiresAtBefore(now);
     }
-
 
     private SessionEntity toEntity(Session session) {
         return new SessionEntity(

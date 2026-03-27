@@ -40,5 +40,4 @@ public class SessionEntity {
         this.expiresAt = expiresAt;
         this.revoked = revoked;
     }
-
 }

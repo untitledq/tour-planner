@@ -177,3 +177,234 @@ This generated password is for development use only. Your security configuration
 2026-03-27 12:57:54 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-03-27 12:57:54 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2026-03-27 12:57:54 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-03-27 15:00:08 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-27 15:00:08 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - Starting TourPlannerApplication using Java 25.0.2 with PID 412705 (/home/togar/IdeaProjects/Tour_Planner/backend/target/classes started by togar in /home/togar/IdeaProjects/Tour_Planner/backend)
+2026-03-27 15:00:08 [restartedMain] DEBUG a.f.s.t.TourPlannerApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-27 15:00:08 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-27 15:00:08 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-27 15:00:08 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-27 15:00:08 [restartedMain] INFO  o.s.b.d.c.l.DockerComposeLifecycleManager - Using Docker Compose file /home/togar/IdeaProjects/Tour_Planner/backend/compose.yaml
+2026-03-27 15:00:08 [restartedMain] INFO  o.s.b.d.c.l.DockerComposeLifecycleManager - There are already Docker Compose services running, skipping startup
+2026-03-27 15:00:09 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27 15:00:09 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 19 ms. Found 2 JPA repository interfaces.
+2026-03-27 15:00:09 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-27 15:00:09 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-27 15:00:09 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-27 15:00:09 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-27 15:00:09 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 570 ms
+2026-03-27 15:00:09 [restartedMain] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-27 15:00:09 [restartedMain] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-27 15:00:09 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27 15:00:09 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-27 15:00:09 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3a8d62ae
+2026-03-27 15:00:09 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-27 15:00:09 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://127.0.0.1:5433/tourplanner]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.9
+	Default catalog/schema: tourplanner/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-27 15:00:10 [restartedMain] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-27 15:00:10 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27 15:00:10 [restartedMain] INFO  o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-27 15:00:10 [restartedMain] DEBUG a.f.s.t.i.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-27 15:00:10 [restartedMain] WARN  o.s.b.s.a.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: f5b90215-74ee-4720-a9bb-ce13d22bc556
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-27 15:00:10 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-03-27 15:00:10 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-27 15:00:10 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-27 15:00:10 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - Started TourPlannerApplication in 2.275 seconds (process running for 2.659)
+2026-03-27 15:00:10 [restartedMain] INFO  a.f.s.t.TourPlannerApplication -  ###  TourPlanner started  ### 
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/register
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  a.f.s.t.application.UserService - Register attempt for username=user1
+2026-03-27 15:00:16 [http-nio-8080-exec-2] INFO  a.f.s.t.application.UserService - User registered successfully: username=user1, id=019d2f98-7f11-702d-b673-a7ba85aab20e
+2026-03-27 15:00:16 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/login
+2026-03-27 15:00:16 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:00:16 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:00:16 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/logout
+2026-03-27 15:00:16 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInVpZCI6IjAxOWQyZjk4LTdmMTEtNzAyZC1iNjczLWE3YmE4NWFhYjIwZSIsImp0aSI6IjAxOWQyZjk4LTgwMjItN2VkYy1hMWZiLTBiOTU2YjU2N2RjZSIsImlhdCI6MTc3NDYyMDAxNiwiZXhwIjoxNzc0NjIxMjE2fQ.MPM8TEfYowgC07jaqDz6mQU9UwrUoIA1m2vGJmDARhY
+2026-03-27 15:00:16 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session found in DB: true
+2026-03-27 15:00:16 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session valid: true
+2026-03-27 15:00:16 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - User user1 authenticated successfully
+2026-03-27 15:00:16 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/login
+2026-03-27 15:00:16 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:00:16 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:00:16 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: DELETE /api/user
+2026-03-27 15:00:16 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInVpZCI6IjAxOWQyZjk4LTdmMTEtNzAyZC1iNjczLWE3YmE4NWFhYjIwZSIsImp0aSI6IjAxOWQyZjk4LTgwYmQtNzQ2ZS05NmRiLTBjM2Y3MDliN2M3ZCIsImlhdCI6MTc3NDYyMDAxNiwiZXhwIjoxNzc0NjIxMjE2fQ.9xQtgdMpJuhOO60Wv1mgm4lHM3MidRAnpC6hVJerUdU
+2026-03-27 15:00:16 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session found in DB: true
+2026-03-27 15:00:16 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session valid: true
+2026-03-27 15:00:16 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - User user1 authenticated successfully
+2026-03-27 15:00:21 [SpringApplicationShutdownHook] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-27 15:00:21 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-27 15:00:21 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27 15:00:21 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-27 15:00:21 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-03-27 15:17:06 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-27 15:17:06 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - Starting TourPlannerApplication using Java 25.0.2 with PID 413840 (/home/togar/IdeaProjects/Tour_Planner/backend/target/classes started by togar in /home/togar/IdeaProjects/Tour_Planner/backend)
+2026-03-27 15:17:06 [restartedMain] DEBUG a.f.s.t.TourPlannerApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-27 15:17:06 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.b.d.c.l.DockerComposeLifecycleManager - Using Docker Compose file /home/togar/IdeaProjects/Tour_Planner/backend/compose.yaml
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.b.d.c.l.DockerComposeLifecycleManager - There are already Docker Compose services running, skipping startup
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 20 ms. Found 2 JPA repository interfaces.
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-27 15:17:07 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-27 15:17:07 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-27 15:17:07 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-27 15:17:07 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 589 ms
+2026-03-27 15:17:07 [restartedMain] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-27 15:17:07 [restartedMain] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-27 15:17:08 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27 15:17:08 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-27 15:17:08 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2d31b5ec
+2026-03-27 15:17:08 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-27 15:17:08 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://127.0.0.1:5433/tourplanner]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.9
+	Default catalog/schema: tourplanner/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-27 15:17:08 [restartedMain] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-27 15:17:08 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27 15:17:08 [restartedMain] INFO  o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-27 15:17:08 [restartedMain] DEBUG a.f.s.t.i.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-27 15:17:08 [restartedMain] WARN  o.s.b.s.a.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: cbf0544c-8e78-4aa7-8e77-1d986fcbc1bf
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-27 15:17:08 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-03-27 15:17:09 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-27 15:17:09 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-27 15:17:09 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - Started TourPlannerApplication in 2.356 seconds (process running for 2.806)
+2026-03-27 15:17:09 [restartedMain] INFO  a.f.s.t.TourPlannerApplication -  ###  TourPlanner started  ### 
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/register
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  a.f.s.t.application.UserService - Register attempt for username=user1
+2026-03-27 15:17:13 [http-nio-8080-exec-2] INFO  a.f.s.t.application.UserService - User registered successfully: username=user1, id=019d2fa8-0362-7235-8900-4cf4d85ff6fa
+2026-03-27 15:17:13 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/login
+2026-03-27 15:17:13 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:17:13 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:17:13 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/logout
+2026-03-27 15:17:13 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInVpZCI6IjAxOWQyZmE4LTAzNjItNzIzNS04OTAwLTRjZjRkODVmZjZmYSIsImp0aSI6IjAxOWQyZmE4LTA0NmItN2Q4MC05OGUwLTg5ZTc3ZjBhNWQ5YSIsImlhdCI6MTc3NDYyMTAzMywiZXhwIjoxNzc0NjIyMjMzfQ.Fi07ZaK1AHrrqAQ-EACOniL4p2JFtF6RRYDdT_z27ig
+2026-03-27 15:17:13 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session found in DB: true
+2026-03-27 15:17:13 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session valid: true
+2026-03-27 15:17:13 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - User user1 authenticated successfully
+2026-03-27 15:17:13 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/login
+2026-03-27 15:17:13 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:17:13 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:17:13 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: DELETE /api/user
+2026-03-27 15:17:13 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInVpZCI6IjAxOWQyZmE4LTAzNjItNzIzNS04OTAwLTRjZjRkODVmZjZmYSIsImp0aSI6IjAxOWQyZmE4LTA1MDktN2RlZi04MTU5LTI4NzI4MjZkYjMyZCIsImlhdCI6MTc3NDYyMTAzMywiZXhwIjoxNzc0NjIyMjMzfQ.rPn2j2aK_YHV9ZgU8zoow5zJm9mofY9_wJ_0m05MpyU
+2026-03-27 15:17:13 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session found in DB: true
+2026-03-27 15:17:13 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session valid: true
+2026-03-27 15:17:13 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - User user1 authenticated successfully
+2026-03-27 15:23:16 [SpringApplicationShutdownHook] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-27 15:23:16 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-27 15:23:16 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27 15:23:16 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-27 15:23:16 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-03-27 15:25:00 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-27 15:25:00 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - Starting TourPlannerApplication using Java 25.0.2 with PID 414736 (/home/togar/IdeaProjects/Tour_Planner/backend/target/classes started by togar in /home/togar/IdeaProjects/Tour_Planner/backend)
+2026-03-27 15:25:00 [restartedMain] DEBUG a.f.s.t.TourPlannerApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-27 15:25:00 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-27 15:25:00 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-27 15:25:00 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-27 15:25:00 [restartedMain] INFO  o.s.b.d.c.l.DockerComposeLifecycleManager - Using Docker Compose file /home/togar/IdeaProjects/Tour_Planner/backend/compose.yaml
+2026-03-27 15:25:00 [restartedMain] INFO  o.s.b.d.c.l.DockerComposeLifecycleManager - There are already Docker Compose services running, skipping startup
+2026-03-27 15:25:01 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-27 15:25:01 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 20 ms. Found 2 JPA repository interfaces.
+2026-03-27 15:25:01 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-03-27 15:25:01 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-03-27 15:25:01 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-27 15:25:01 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-27 15:25:01 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 631 ms
+2026-03-27 15:25:01 [restartedMain] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-27 15:25:01 [restartedMain] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-27 15:25:01 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-27 15:25:01 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-27 15:25:01 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6e73e4f8
+2026-03-27 15:25:01 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-27 15:25:01 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://127.0.0.1:5433/tourplanner]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.9
+	Default catalog/schema: tourplanner/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-27 15:25:02 [restartedMain] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-27 15:25:02 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27 15:25:02 [restartedMain] INFO  o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-27 15:25:02 [restartedMain] DEBUG a.f.s.t.i.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-27 15:25:02 [restartedMain] WARN  o.s.b.s.a.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: f33beda6-ec74-4cf6-8d6e-2db84edf7842
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-27 15:25:02 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-03-27 15:25:02 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-03-27 15:25:02 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-03-27 15:25:02 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - Started TourPlannerApplication in 2.421 seconds (process running for 2.88)
+2026-03-27 15:25:02 [restartedMain] INFO  a.f.s.t.TourPlannerApplication -  ###  TourPlanner started  ### 
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/register
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  a.f.s.t.application.UserService - Register attempt for username=user1
+2026-03-27 15:25:07 [http-nio-8080-exec-2] INFO  a.f.s.t.application.UserService - User registered successfully: username=user1, id=019d2faf-3fca-7acc-8cad-53aa43ff18fa
+2026-03-27 15:25:07 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/login
+2026-03-27 15:25:07 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:25:07 [http-nio-8080-exec-3] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:25:07 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/logout
+2026-03-27 15:25:07 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInVpZCI6IjAxOWQyZmFmLTNmY2EtN2FjYy04Y2FkLTUzYWE0M2ZmMThmYSIsImp0aSI6IjAxOWQyZmFmLTQwZGItNzAzOC1hMzYwLTliN2UxZTEyNmUyOSIsImlhdCI6MTc3NDYyMTUwNywiZXhwIjoxNzc0NjIyNzA3fQ.8qxeTaCuTOXk5nUjaAgg3KyfdY9zudlo-nPMFgbzp_k
+2026-03-27 15:25:07 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session found in DB: true
+2026-03-27 15:25:07 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session valid: true
+2026-03-27 15:25:07 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - User user1 authenticated successfully
+2026-03-27 15:25:07 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: POST /api/user/login
+2026-03-27 15:25:07 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: null
+2026-03-27 15:25:07 [http-nio-8080-exec-5] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
+2026-03-27 15:25:07 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Incoming request: DELETE /api/user
+2026-03-27 15:25:07 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInVpZCI6IjAxOWQyZmFmLTNmY2EtN2FjYy04Y2FkLTUzYWE0M2ZmMThmYSIsImp0aSI6IjAxOWQyZmFmLTQxN2UtN2Q4Yy04MmNmLTdkZWY5YjJkZWI4ZiIsImlhdCI6MTc3NDYyMTUwNywiZXhwIjoxNzc0NjIyNzA3fQ.oZC1a-6kdG-cqpYh0qmGPPgA-MtbwUaikLrKynA1XRM
+2026-03-27 15:25:07 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session found in DB: true
+2026-03-27 15:25:07 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - Session valid: true
+2026-03-27 15:25:07 [http-nio-8080-exec-6] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - User user1 authenticated successfully
+2026-03-27 15:25:28 [SpringApplicationShutdownHook] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-27 15:25:28 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-27 15:25:28 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-27 15:25:28 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-27 15:25:28 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
