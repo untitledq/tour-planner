@@ -45,11 +45,11 @@ public class JpaUserRepositoryAdapter implements UserRepository {
 
     private UserEntity toEntity(User user) {
         return new UserEntity(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getEmail(),
-                user.getCreatedAt()
+                user.id(),
+                user.username(),
+                user.passwordHash(),
+                user.email(),
+                user.createdAt()
         );
     }
 
