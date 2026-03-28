@@ -2,7 +2,7 @@
   "info": {
     "name": "TourPlanner User Postman",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "item": [
     {
@@ -13,21 +13,12 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "url": {
               "raw": "http://localhost:8080/api/user/register",
-              "host": [
-                "http://localhost:8080"
-              ],
-              "path": [
-                "api",
-                "user",
-                "register"
-              ]
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user", "register"]
             },
             "body": {
               "mode": "raw",
@@ -40,25 +31,96 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "url": {
               "raw": "http://localhost:8080/api/user/login",
-              "host": [
-                "http://localhost:8080"
-              ],
-              "path": [
-                "api",
-                "user",
-                "login"
-              ]
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user", "login"]
             },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// adjust field name depending on your LoginResponse",
+                  "// e.g. jsonData.token or jsonData.accessToken",
+                  "pm.environment.set(\"jwt_token\", jsonData.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/user/logout",
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/user/login",
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// adjust field name depending on your LoginResponse",
+                  "// e.g. jsonData.token or jsonData.accessToken",
+                  "pm.environment.set(\"jwt_token\", jsonData.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete User (Unregister)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/user",
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user"]
             }
           }
         }

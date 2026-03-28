@@ -1,0 +1,107 @@
+.
+├── compose.yaml
+├── docs
+│   ├── code2file.txt
+│   ├── contend.txt
+│   ├── db.json
+│   ├── db.puml
+│   ├── db-recreate.txt
+│   ├── project_structure.txt
+│   └── tourplanner-openapi.yaml
+├── .env
+├── .gitattributes
+├── .gitignore
+├── HELP.md
+├── .idea
+│   ├── compiler.xml
+│   ├── encodings.xml
+│   ├── .gitignore
+│   ├── inspectionProfiles
+│   │   └── Project_Default.xml
+│   ├── jarRepositories.xml
+│   ├── misc.xml
+│   ├── vcs.xml
+│   └── workspace.xml
+├── init.sql
+├── logs
+│   ├── tourplanner.2026-03-23.0.log
+│   ├── tourplanner.2026-03-24.0.log
+│   ├── tourplanner.2026-03-26.0.log
+│   ├── tourplanner.2026-03-27.0.log
+│   └── tourplanner.log
+├── .mvn
+│   └── wrapper
+│       └── maven-wrapper.properties
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── at
+    │   │       └── fhtw
+    │   │           └── swen
+    │   │               └── tourplanner
+    │   │                   ├── config
+    │   │                   │   └── SecurityConfig.java
+    │   │                   ├── controller
+    │   │                   │   ├── AuthController.java
+    │   │                   │   ├── request
+    │   │                   │   │   ├── LoginRequest.java
+    │   │                   │   │   └── RegisterRequest.java
+    │   │                   │   └── response
+    │   │                   │       ├── AuthResponse.java
+    │   │                   │       └── LoginResponse.java
+    │   │                   ├── persistence
+    │   │                   │   ├── adapter
+    │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
+    │   │                   │   │   └── JpaUserRepositoryAdapter.java
+    │   │                   │   ├── entity
+    │   │                   │   │   ├── SessionEntity.java
+    │   │                   │   │   └── UserEntity.java
+    │   │                   │   ├── port
+    │   │                   │   │   ├── PasswordHasher.java
+    │   │                   │   │   ├── SessionRepository.java
+    │   │                   │   │   ├── TokenPayload.java
+    │   │                   │   │   ├── TokenService.java
+    │   │                   │   │   └── UserRepository.java
+    │   │                   │   └── repository
+    │   │                   │       ├── SpringDataSessionJpaRepository.java
+    │   │                   │       └── SpringDataUserJpaRepository.java
+    │   │                   ├── security
+    │   │                   │   ├── BCryptPasswordHasher.java
+    │   │                   │   ├── JwtAuthenticationFilter.java
+    │   │                   │   └── JwtTokenService.java
+    │   │                   ├── service
+    │   │                   │   ├── AuthService.java
+    │   │                   │   ├── dto
+    │   │                   │   │   ├── Session.java
+    │   │                   │   │   └── User.java
+    │   │                   │   ├── impl
+    │   │                   │   │   ├── AuthServiceImpl.java
+    │   │                   │   │   ├── SessionCleanupServiceImpl.java
+    │   │                   │   │   └── UserServiceImpl.java
+    │   │                   │   ├── mapper
+    │   │                   │   ├── SessionCleanupService.java
+    │   │                   │   └── UserService.java
+    │   │                   ├── TourPlannerApplication.java
+    │   │                   └── util
+    │   │                       ├── LoggerService.java
+    │   │                       └── UUIDv7.java
+    │   └── resources
+    │       ├── application.yaml
+    │       ├── logback.xml
+    │       ├── static
+    │       ├── templates
+    │       └── User_Postman.json
+    └── test
+        └── java
+            └── at
+                └── fhtw
+                    └── swen
+                        └── tourplanner
+                            ├── BackendApplicationTests.java
+                            └── devtools
+                                └── UpdateProjectStructure.java
+
+39 directories, 66 files
