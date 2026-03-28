@@ -300,7 +300,7 @@ This generated password is for development use only. Your security configuration
 2026-03-22 12:35:18 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
 2026-03-22 12:38:42 [http-nio-8080-exec-5] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.service.impl.UserServiceImpl.register(UserService.java:26)
 	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:30)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -511,7 +511,7 @@ This generated password is for development use only. Your security configuration
 2026-03-22 12:46:59 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
 2026-03-22 12:53:40 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.service.impl.UserServiceImpl.register(UserService.java:26)
 	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:30)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -612,9 +612,9 @@ java.lang.IllegalArgumentException: username already exists
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:14:46 [http-nio-8080-exec-4] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -772,9 +772,9 @@ This generated password is for development use only. Your security configuration
 2026-03-22 13:17:28 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2026-03-22 13:17:38 [http-nio-8080-exec-7] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -875,9 +875,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:17:39 [http-nio-8080-exec-3] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -978,9 +978,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:17:56 [http-nio-8080-exec-9] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1081,9 +1081,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:02 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1184,9 +1184,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:04 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1287,9 +1287,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:05 [http-nio-8080-exec-4] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1390,9 +1390,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:05 [http-nio-8080-exec-5] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1493,9 +1493,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:05 [http-nio-8080-exec-6] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1596,9 +1596,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:06 [http-nio-8080-exec-7] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1699,9 +1699,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:06 [http-nio-8080-exec-3] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1802,9 +1802,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:07 [http-nio-8080-exec-9] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -1905,9 +1905,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:19 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2008,9 +2008,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:20 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2111,9 +2111,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:18:29 [http-nio-8080-exec-5] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2214,7 +2214,7 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:23:24 [http-nio-8080-exec-3] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:48)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:48)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2315,9 +2315,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:24:40 [http-nio-8080-exec-5] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2418,9 +2418,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:26:01 [http-nio-8080-exec-3] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2521,9 +2521,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:26:21 [http-nio-8080-exec-9] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2624,9 +2624,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:26:26 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2727,9 +2727,9 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:30:02 [http-nio-8080-exec-8] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.lambda$login$0(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.lambda$login$0(AuthService.java:45)
 	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:45)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:45)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2830,7 +2830,7 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:30:34 [http-nio-8080-exec-4] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:48)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:48)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -2931,7 +2931,7 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:30:39 [http-nio-8080-exec-6] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:48)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:48)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
@@ -3032,7 +3032,7 @@ java.lang.SecurityException: Invalid credentials
 	at java.base/java.lang.Thread.run(Thread.java:1474)
 2026-03-22 13:30:41 [http-nio-8080-exec-7] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.SecurityException: Invalid credentials] with root cause
 java.lang.SecurityException: Invalid credentials
-	at at.fhtw.swen.tourplanner.service.impl.AuthService.login(AuthService.java:48)
+	at at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl.login(AuthService.java:48)
 	at at.fhtw.swen.tourplanner.controller.AuthController.login(AuthController.java:50)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)

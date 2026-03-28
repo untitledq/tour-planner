@@ -8,11 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 
 @Service
-public class SessionCleanupService implements at.fhtw.swen.tourplanner.service.SessionCleanupService {
+public class SessionCleanupServiceImpl implements at.fhtw.swen.tourplanner.service.SessionCleanupService {
 
     private final SessionRepository sessionRepository;
 
-    public SessionCleanupService(SessionRepository sessionRepository) {
+    public SessionCleanupServiceImpl(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
 

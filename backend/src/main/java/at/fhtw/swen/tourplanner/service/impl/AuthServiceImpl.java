@@ -18,7 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
-public class AuthService implements at.fhtw.swen.tourplanner.service.AuthService {
+public class AuthServiceImpl implements at.fhtw.swen.tourplanner.service.AuthService {
 
     private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
@@ -26,7 +26,7 @@ public class AuthService implements at.fhtw.swen.tourplanner.service.AuthService
     private final SessionRepository sessionRepository;
     private final long expirationMinutes;
 
-    public AuthService(
+    public AuthServiceImpl(
             UserRepository userRepository,
             PasswordHasher passwordHasher,
             TokenService tokenService,

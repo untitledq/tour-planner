@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.service.impl.AuthService;
+import at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl;
 import at.fhtw.swen.tourplanner.__domain.model.User;
-import at.fhtw.swen.tourplanner.service.impl.UserService;
+import at.fhtw.swen.tourplanner.service.impl.UserServiceImpl;
 import at.fhtw.swen.tourplanner.__domain.ports.TokenPayload;
 import at.fhtw.swen.tourplanner.controller.request.LoginRequest;
 import at.fhtw.swen.tourplanner.controller.request.RegisterRequest;
@@ -16,24 +16,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final UserService userService;
-    private final AuthService authService;
+    private final UserServiceImpl userServiceImpl;
+    private final AuthServiceImpl authServiceImpl;
 
 
-    public AuthController(UserService userService, AuthService authService) {
-        this.userService = userService;
-        this.authService = authService;
+    public AuthController(UserServiceImpl userServiceImpl, AuthServiceImpl authServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+        this.authServiceImpl = authServiceImpl;
     }
 
     @PostMapping("/user/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse register(@RequestBody RegisterRequest request) {
-        User user = userService.register(
+        User user = userServiceImpl.register(
                 request.username(),
                 request.password(),
                 request.email()
         );
-        LoginResponse login = authService.login(
+        LoginResponse login = authServiceImpl.login(
                 request.username(),
                 request.password()
         );
@@ -48,7 +48,7 @@ public class AuthController {
 
     @PostMapping("/user/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
-        return authService.login(
+        return authServiceImpl.login(
                 request.username(),
                 request.password()
         );
@@ -64,7 +64,7 @@ public class AuthController {
         }
 
         String token = header.substring(7);
-        authService.logout(token);
+        authServiceImpl.logout(token);
     }
 
     @DeleteMapping("/user")
@@ -78,7 +78,7 @@ public class AuthController {
 
         String token = header.substring(7);
 
-        TokenPayload payload = authService.parseToken(token);
-        userService.deleteUser(payload.userId());
+        TokenPayload payload = authServiceImpl.parseToken(token);
+        userServiceImpl.deleteUser(payload.userId());
     }
 }

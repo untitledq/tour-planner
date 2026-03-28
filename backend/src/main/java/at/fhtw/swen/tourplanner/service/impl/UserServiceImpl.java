@@ -13,14 +13,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserService implements at.fhtw.swen.tourplanner.service.UserService {
+public class UserServiceImpl implements at.fhtw.swen.tourplanner.service.UserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
 
-    public UserService(UserRepository userRepository, PasswordHasher passwordHasher) {
+    public UserServiceImpl(UserRepository userRepository, PasswordHasher passwordHasher) {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
     }
