@@ -1,8 +1,12 @@
 .
 ├── compose.yaml
 ├── docs
+│   ├── db.json
+│   ├── db.puml
 │   ├── db-recreate.txt
-│   └── project_structure.txt
+│   ├── project_structure.txt
+│   └── tourplanner-openapi.yaml
+├── .env
 ├── .gitattributes
 ├── .gitignore
 ├── HELP.md
@@ -19,6 +23,9 @@
 ├── init.sql
 ├── logs
 │   ├── tourplanner.2026-03-23.0.log
+│   ├── tourplanner.2026-03-24.0.log
+│   ├── tourplanner.2026-03-26.0.log
+│   ├── tourplanner.2026-03-27.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -33,12 +40,17 @@
     │   │       └── fhtw
     │   │           └── swen
     │   │               └── tourplanner
-    │   │                   ├── application
-    │   │                   │   ├── AuthService.java
-    │   │                   │   ├── SessionCleanupService.java
-    │   │                   │   └── UserService.java
-    │   │                   ├── domain
-    │   │                   │   ├── enums
+    │   │                   ├── config
+    │   │                   │   └── SecurityConfig.java
+    │   │                   ├── controller
+    │   │                   │   ├── AuthController.java
+    │   │                   │   ├── request
+    │   │                   │   │   ├── LoginRequest.java
+    │   │                   │   │   └── RegisterRequest.java
+    │   │                   │   └── response
+    │   │                   │       ├── AuthResponse.java
+    │   │                   │       └── LoginResponse.java
+    │   │                   ├── __domain
     │   │                   │   ├── model
     │   │                   │   │   ├── Session.java
     │   │                   │   │   └── User.java
@@ -48,43 +60,41 @@
     │   │                   │       ├── TokenPayload.java
     │   │                   │       ├── TokenService.java
     │   │                   │       └── UserRepository.java
-    │   │                   ├── dto
-    │   │                   │   └── ApiErrorResponse.java
-    │   │                   ├── exceptions
-    │   │                   │   └── UserAlreadyExistsException.java
+    │   │                   ├── __infrastructure
+    │   │                   │   └── persistence
+    │   │                   │       ├── JpaSessionRepositoryAdapter.java
+    │   │                   │       └── JpaUserRepositoryAdapter.java
     │   │                   ├── infrastructure
-    │   │                   │   ├── LoggerService.java
-    │   │                   │   ├── persistence
-    │   │                   │   │   ├── entity
-    │   │                   │   │   │   ├── SessionEntity.java
-    │   │                   │   │   │   └── UserEntity.java
-    │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
-    │   │                   │   │   ├── JpaUserRepositoryAdapter.java
-    │   │                   │   │   ├── SpringDataSessionJpaRepository.java
-    │   │                   │   │   └── SpringDataUserJpaRepository.java
-    │   │                   │   └── security
-    │   │                   │       ├── BCryptPasswordHasher.java
-    │   │                   │       ├── JwtAuthenticationFilter.java
-    │   │                   │       ├── JwtTokenService.java
-    │   │                   │       └── SecurityConfig.java
+    │   │                   ├── persistence
+    │   │                   │   ├── entity
+    │   │                   │   │   ├── SessionEntity.java
+    │   │                   │   │   └── UserEntity.java
+    │   │                   │   └── repository
+    │   │                   │       ├── SpringDataSessionJpaRepository.java
+    │   │                   │       └── SpringDataUserJpaRepository.java
+    │   │                   ├── security
+    │   │                   │   ├── BCryptPasswordHasher.java
+    │   │                   │   ├── JwtAuthenticationFilter.java
+    │   │                   │   └── JwtTokenService.java
+    │   │                   ├── service
+    │   │                   │   ├── AuthService.java
+    │   │                   │   ├── dto
+    │   │                   │   ├── impl
+    │   │                   │   │   ├── AuthService.java
+    │   │                   │   │   ├── SessionCleanupService.java
+    │   │                   │   │   └── UserService.java
+    │   │                   │   ├── mapper
+    │   │                   │   ├── SessionCleanupService.java
+    │   │                   │   └── UserService.java
     │   │                   ├── TourPlannerApplication.java
-    │   │                   ├── util
-    │   │                   │   └── UUIDv7.java
-    │   │                   └── web
-    │   │                       ├── controller
-    │   │                       │   └── AuthController.java
-    │   │                       ├── request
-    │   │                       │   ├── LoginRequest.java
-    │   │                       │   └── RegisterRequest.java
-    │   │                       └── response
-    │   │                           ├── AuthResponse.java
-    │   │                           └── LoginResponse.java
+    │   │                   └── util
+    │   │                       ├── LoggerService.java
+    │   │                       └── UUIDv7.java
     │   └── resources
     │       ├── application.yaml
     │       ├── logback.xml
     │       ├── static
     │       ├── templates
-    │       ├── tourplanner-openapi.yaml
     │       └── User_Postman.json
     └── test
         └── java
@@ -96,4 +106,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-40 directories, 57 files
+43 directories, 64 files

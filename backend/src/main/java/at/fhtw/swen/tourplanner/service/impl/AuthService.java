@@ -1,0 +1,90 @@
+package at.fhtw.swen.tourplanner.service.impl;
+
+import at.fhtw.swen.tourplanner.__domain.model.Session;
+import at.fhtw.swen.tourplanner.__domain.model.User;
+import at.fhtw.swen.tourplanner.__domain.ports.PasswordHasher;
+import at.fhtw.swen.tourplanner.__domain.ports.SessionRepository;
+import at.fhtw.swen.tourplanner.__domain.ports.TokenPayload;
+import at.fhtw.swen.tourplanner.__domain.ports.TokenService;
+import at.fhtw.swen.tourplanner.__domain.ports.UserRepository;
+import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
+import at.fhtw.swen.tourplanner.util.UUIDv7;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
+
+@Service
+public class AuthService implements at.fhtw.swen.tourplanner.service.AuthService {
+
+    private final UserRepository userRepository;
+    private final PasswordHasher passwordHasher;
+    private final TokenService tokenService;
+    private final SessionRepository sessionRepository;
+    private final long expirationMinutes;
+
+    public AuthService(
+            UserRepository userRepository,
+            PasswordHasher passwordHasher,
+            TokenService tokenService,
+            SessionRepository sessionRepository,
+            @Value("${security.jwt.expiration-minutes}") long expirationMinutes
+    ) {
+        this.userRepository = userRepository;
+        this.passwordHasher = passwordHasher;
+        this.tokenService = tokenService;
+        this.sessionRepository = sessionRepository;
+        this.expirationMinutes = expirationMinutes;
+    }
+
+    @Override
+    public LoginResponse login(String username, String rawPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new SecurityException("Invalid credentials"));
+
+        if (!passwordHasher.matches(rawPassword, user.passwordHash())) {
+            throw new SecurityException("Invalid credentials");
+        }
+
+        UUID sessionId = UUIDv7.randomUUID();
+        Instant expiresAt = Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES);
+
+        String token = tokenService.createToken(
+                user.id(),
+                user.username(),
+                sessionId,
+                expiresAt
+        );
+
+        Session session = new Session(
+                sessionId,
+                user.id(),
+                token,
+                Instant.now(),
+                expiresAt,
+                false
+        );
+
+        sessionRepository.save(session);
+
+        return new LoginResponse(token, expiresAt, sessionId);
+    }
+
+    @Override
+    public void logout(String token) {
+        if (token == null || token.isBlank()) {
+            throw new SecurityException("Missing token");
+        }
+
+        TokenPayload payload = tokenService.parseAndValidate(token);
+        sessionRepository.revokeByJti(payload.sessionId());
+    }
+
+    @Override
+    public TokenPayload parseToken(String token) {
+        return tokenService.parseAndValidate(token);
+    }
+}

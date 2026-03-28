@@ -968,8 +968,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 16:39:22 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2026-03-24 16:39:37 [http-nio-8080-exec-4] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:30)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:30)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -1010,7 +1010,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:198)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -1126,8 +1126,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 19:14:13 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2026-03-24 19:14:13 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -1168,7 +1168,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:198)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -1284,8 +1284,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 19:16:59 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2026-03-24 19:16:59 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -1323,7 +1323,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -1439,8 +1439,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 19:21:41 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2026-03-24 19:21:41 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -1478,7 +1478,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:44)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:44)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -1594,8 +1594,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 19:26:35 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2026-03-24 19:26:35 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -1633,7 +1633,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:40)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -1752,8 +1752,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 19:51:37 [http-nio-8080-exec-1] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
 2026-03-24 19:51:37 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -1791,7 +1791,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -1919,8 +1919,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 19:54:56 [http-nio-8080-exec-1] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
 2026-03-24 19:54:56 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -1958,7 +1958,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -2032,8 +2032,8 @@ java.lang.IllegalArgumentException: username already exists
 2026-03-24 20:01:50 [http-nio-8080-exec-7] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
 2026-03-24 20:01:50 [http-nio-8080-exec-7] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -2071,7 +2071,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -2146,8 +2146,8 @@ java.lang.IllegalArgumentException: username already exists
 2026-03-24 20:01:58 [http-nio-8080-exec-4] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
 2026-03-24 20:01:58 [http-nio-8080-exec-4] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -2185,7 +2185,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -2370,8 +2370,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 20:02:34 [http-nio-8080-exec-1] INFO  a.f.s.t.i.s.JwtAuthenticationFilter - No Bearer token found, skipping authentication
 2026-03-24 20:02:34 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:26)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:26)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -2409,7 +2409,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -2543,8 +2543,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 20:05:21 [http-nio-8080-exec-1] WARN  a.f.s.t.application.UserService - Registration failed: username already exists: user1
 2026-03-24 20:05:21 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:34)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:34)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -2582,7 +2582,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -2765,8 +2765,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 20:21:17 [http-nio-8080-exec-1] WARN  a.f.s.t.application.UserService - Registration failed: username already exists: user1
 2026-03-24 20:21:17 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:34)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:34)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -2804,7 +2804,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -3013,8 +3013,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 21:15:56 [http-nio-8080-exec-2] WARN  a.f.s.t.application.UserService - Registration failed: username already exists: user1
 2026-03-24 21:15:56 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:34)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:34)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -3052,7 +3052,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -3261,8 +3261,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 21:21:32 [http-nio-8080-exec-2] WARN  a.f.s.t.application.UserService - Registration failed: username already exists: user1
 2026-03-24 21:21:32 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:34)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:34)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -3300,7 +3300,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
@@ -3591,7 +3591,7 @@ This generated password is for development use only. Your security configuration
 2026-03-24 21:28:50 [restartedMain] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 2026-03-24 21:28:50 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
 2026-03-24 21:28:50 [restartedMain] DEBUG a.f.s.t.i.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2026-03-24 21:28:50 [restartedMain] WARN  o.s.b.w.s.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authService' defined in file [/home/togar/IdeaProjects/Tour_Planner/backend/target/classes/at/fhtw/swen/tourplanner/application/AuthService.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'at.fhtw.swen.tourplanner.domain.ports.UserRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2026-03-24 21:28:50 [restartedMain] WARN  o.s.b.w.s.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authService' defined in file [/home/togar/IdeaProjects/Tour_Planner/backend/target/classes/at/fhtw/swen/tourplanner/application/AuthService.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'at.fhtw.swen.tourplanner.__domain.ports.UserRepository' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
 2026-03-24 21:28:50 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-03-24 21:28:50 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
 2026-03-24 21:28:50 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
@@ -3607,12 +3607,12 @@ APPLICATION FAILED TO START
 
 Description:
 
-Parameter 0 of constructor in at.fhtw.swen.tourplanner.application.AuthService required a bean of type 'at.fhtw.swen.tourplanner.domain.ports.UserRepository' that could not be found.
+Parameter 0 of constructor in at.fhtw.swen.tourplanner.service.impl.AuthService required a bean of type 'at.fhtw.swen.tourplanner.__domain.ports.UserRepository' that could not be found.
 
 
 Action:
 
-Consider defining a bean of type 'at.fhtw.swen.tourplanner.domain.ports.UserRepository' in your configuration.
+Consider defining a bean of type 'at.fhtw.swen.tourplanner.__domain.ports.UserRepository' in your configuration.
 
 2026-03-24 21:31:44 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
 2026-03-24 21:31:44 [restartedMain] INFO  a.f.s.t.TourPlannerApplication - Starting TourPlannerApplication using Java 25.0.2 with PID 302026 (/home/togar/IdeaProjects/Tour_Planner/backend/target/classes started by togar in /home/togar/IdeaProjects/Tour_Planner/backend)
@@ -3673,8 +3673,8 @@ This generated password is for development use only. Your security configuration
 2026-03-24 21:31:51 [http-nio-8080-exec-2] WARN  a.f.s.t.application.UserService - Registration failed: username already exists: user1
 2026-03-24 21:31:51 [http-nio-8080-exec-2] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalArgumentException: username already exists] with root cause
 java.lang.IllegalArgumentException: username already exists
-	at at.fhtw.swen.tourplanner.application.UserService.register(UserService.java:35)
-	at at.fhtw.swen.tourplanner.web.controller.AuthController.register(AuthController.java:31)
+	at at.fhtw.swen.tourplanner.service.impl.UserService.register(UserService.java:35)
+	at at.fhtw.swen.tourplanner.controller.AuthController.register(AuthController.java:31)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)
@@ -3712,7 +3712,7 @@ java.lang.IllegalArgumentException: username already exists
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
-	at at.fhtw.swen.tourplanner.infrastructure.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
 	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:380)
 	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:110)
