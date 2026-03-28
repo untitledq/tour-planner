@@ -38,11 +38,7 @@ entity tours {
   name : TEXT
   description : TEXT
   start_name : TEXT
-  start_lat : DOUBLE
-  start_lng : DOUBLE
   end_name : TEXT
-  end_lat : DOUBLE
-  end_lng : DOUBLE
 }
 
 entity routes {
