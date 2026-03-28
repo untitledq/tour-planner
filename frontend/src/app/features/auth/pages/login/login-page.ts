@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -9,10 +9,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { finalize } from 'rxjs';
 
-import { AuthService } from '../../../services/auth.service';
+import { AuthApiService } from '../../services/auth-api.service';
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'app-login-page',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -24,16 +24,15 @@ import { AuthService } from '../../../services/auth.service';
     InputTextModule,
     PasswordModule
   ],
-  templateUrl: './login-form.html',
-  styleUrl: './login-form.css'
+  templateUrl: './login-page.html',
+  styleUrl: './login-page.css'
 })
-export class LoginForm {
+export class LoginPage {
   protected readonly loginForm;
-  protected loginError = '';
-  protected isSubmitting = false;
-  private readonly authService = inject(AuthService);
+  protected readonly loginError = signal('');
+  protected readonly isSubmitting = signal(false);
+  private readonly authApi = inject(AuthApiService);
   private readonly router = inject(Router);
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   constructor(private readonly formBuilder: FormBuilder) {
     this.loginForm = this.formBuilder.nonNullable.group({
@@ -44,28 +43,25 @@ export class LoginForm {
 
   protected onSubmit(): void {
     this.loginForm.markAllAsTouched();
-    this.loginError = '';
+    this.loginError.set('');
 
     if (this.loginForm.invalid) {
-      this.loginError = 'Bitte fuelle alle Felder korrekt aus.';
-      this.changeDetectorRef.detectChanges();
+      this.loginError.set('Please fill out all fields correctly.');
       return;
     }
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
 
-    this.authService
+    this.authApi
       .login(this.loginForm.getRawValue())
       .pipe(finalize(() => {
-        this.isSubmitting = false;
-        this.changeDetectorRef.detectChanges();
+        this.isSubmitting.set(false);
       }))
       .subscribe({
         next: () => {
           void this.router.navigateByUrl('/dashboard');
         },
         error: () => {
-          this.loginError = 'Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.';
-          this.changeDetectorRef.detectChanges();
+          this.loginError.set('Login failed. Please check your username and password.');
         }
       });
   }

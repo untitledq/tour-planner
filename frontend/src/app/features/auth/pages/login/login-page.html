@@ -46,14 +46,14 @@
         }
       </div>
 
-      @if (loginError) {
-        <p class="field-error">{{ loginError }}</p>
+      @if (loginError()) {
+        <p class="field-error">{{ loginError() }}</p>
       }
 
       <p-button
         type="submit"
         label="Log in"
-        [loading]="isSubmitting"
+        [loading]="isSubmitting()"
         styleClass="login-button"
       />
 

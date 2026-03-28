@@ -1,0 +1,15 @@
+<section class="dashboard-shell">
+  <div class="dashboard-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Das ist mein Dashboard.</p>
+    </div>
+
+    <p-button
+      label="Logout"
+      severity="secondary"
+      [loading]="isLoggingOut"
+      (onClick)="logout()"
+    />
+  </div>
+</section>
