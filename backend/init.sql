@@ -11,8 +11,6 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_created_at
     ON users(created_at);
 
-
-
 -- LOGIN TOKENS
 CREATE TABLE IF NOT EXISTS login_tokens (
                                             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -28,7 +26,6 @@ CREATE INDEX IF NOT EXISTS idx_login_tokens_user_id
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_login_tokens_token
     ON login_tokens(token);
-
 
 -- SESSIONS
 CREATE TABLE IF NOT EXISTS sessions (
@@ -49,9 +46,6 @@ CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_sessions_user_active ON sessions(user_id, revoked);
 
-
-
-
 -- TOURS
 CREATE TABLE IF NOT EXISTS tours (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -59,11 +53,7 @@ CREATE TABLE IF NOT EXISTS tours (
     name TEXT,
     description TEXT,
     start_name TEXT,
-    start_lat DOUBLE PRECISION,
-    start_lng DOUBLE PRECISION,
     end_name TEXT,
-    end_lat DOUBLE PRECISION,
-    end_lng DOUBLE PRECISION
     );
 
 CREATE INDEX IF NOT EXISTS idx_tours_created_by ON tours(created_by);

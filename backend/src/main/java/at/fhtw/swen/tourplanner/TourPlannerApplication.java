@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner;
 
-import at.fhtw.swen.tourplanner.infrastructure.LoggerService;
+import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.slf4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
