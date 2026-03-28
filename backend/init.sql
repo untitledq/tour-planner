@@ -13,7 +13,7 @@ CREATE INDEX IF NOT EXISTS idx_users_created_at
 
 -- LOGIN TOKENS
 CREATE TABLE IF NOT EXISTS login_tokens (
-                                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
     token VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -53,13 +53,11 @@ CREATE TABLE IF NOT EXISTS tours (
     name TEXT,
     description TEXT,
     start_name TEXT,
-    end_name TEXT,
+    end_name TEXT
     );
 
 CREATE INDEX IF NOT EXISTS idx_tours_created_by ON tours(created_by);
 CREATE INDEX IF NOT EXISTS idx_tours_name ON tours(name);
-CREATE INDEX IF NOT EXISTS idx_tours_start_coords ON tours(start_lat, start_lng);
-CREATE INDEX IF NOT EXISTS idx_tours_end_coords ON tours(end_lat, end_lng);
 
 -- ROUTES
 CREATE TABLE IF NOT EXISTS routes (
