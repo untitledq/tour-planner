@@ -1,6 +1,6 @@
-package at.fhtw.swen.tourplanner.__domain.ports;
+package at.fhtw.swen.tourplanner.persistence.port;
 
-import at.fhtw.swen.tourplanner.__domain.model.Session;
+import at.fhtw.swen.tourplanner.service.dto.Session;
 
 import java.time.Instant;
 import java.util.Optional;

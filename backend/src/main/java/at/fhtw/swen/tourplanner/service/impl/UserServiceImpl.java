@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.__domain.model.User;
-import at.fhtw.swen.tourplanner.__domain.ports.PasswordHasher;
-import at.fhtw.swen.tourplanner.__domain.ports.UserRepository;
+import at.fhtw.swen.tourplanner.service.dto.User;
+import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
+import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ public class UserServiceImpl implements at.fhtw.swen.tourplanner.service.UserSer
 
         User u = user.get();
 
-        if (!passwordHasher.matches(rawPassword, u.passwordHash())) {
+        if (passwordHasher.invalid(rawPassword, u.passwordHash())) {
             log.warn("Login failed: invalid password for username={}", username);
             throw new SecurityException("Invalid credentials");
         }

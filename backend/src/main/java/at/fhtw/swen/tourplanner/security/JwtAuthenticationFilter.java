@@ -1,10 +1,10 @@
 package at.fhtw.swen.tourplanner.security;
 
 import at.fhtw.swen.tourplanner.util.LoggerService;
-import at.fhtw.swen.tourplanner.__domain.model.Session;
-import at.fhtw.swen.tourplanner.__domain.ports.SessionRepository;
-import at.fhtw.swen.tourplanner.__domain.ports.TokenPayload;
-import at.fhtw.swen.tourplanner.__domain.ports.TokenService;
+import at.fhtw.swen.tourplanner.service.dto.Session;
+import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
+import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
+import at.fhtw.swen.tourplanner.persistence.port.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

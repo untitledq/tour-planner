@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.service;
 
-import at.fhtw.swen.tourplanner.__domain.model.User;
+import at.fhtw.swen.tourplanner.service.dto.User;
 
 import java.util.UUID;
 

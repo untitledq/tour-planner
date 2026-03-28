@@ -1,6 +1,6 @@
-package at.fhtw.swen.tourplanner.__domain.ports;
+package at.fhtw.swen.tourplanner.persistence.port;
 
-import at.fhtw.swen.tourplanner.__domain.model.User;
+import at.fhtw.swen.tourplanner.service.dto.User;
 
 import java.util.Optional;
 import java.util.UUID;

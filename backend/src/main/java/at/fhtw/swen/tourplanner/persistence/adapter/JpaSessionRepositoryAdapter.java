@@ -1,8 +1,8 @@
-package at.fhtw.swen.tourplanner.__infrastructure.persistence;
+package at.fhtw.swen.tourplanner.persistence.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.repository.SpringDataSessionJpaRepository;
-import at.fhtw.swen.tourplanner.__domain.model.Session;
-import at.fhtw.swen.tourplanner.__domain.ports.SessionRepository;
+import at.fhtw.swen.tourplanner.service.dto.Session;
+import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
 import at.fhtw.swen.tourplanner.persistence.entity.SessionEntity;
 import org.springframework.stereotype.Repository;
 

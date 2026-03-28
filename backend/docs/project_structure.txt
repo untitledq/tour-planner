@@ -1,6 +1,8 @@
 .
 ├── compose.yaml
 ├── docs
+│   ├── code2file.txt
+│   ├── contend.txt
 │   ├── db.json
 │   ├── db.puml
 │   ├── db-recreate.txt
@@ -50,25 +52,19 @@
     │   │                   │   └── response
     │   │                   │       ├── AuthResponse.java
     │   │                   │       └── LoginResponse.java
-    │   │                   ├── __domain
-    │   │                   │   ├── model
-    │   │                   │   │   ├── Session.java
-    │   │                   │   │   └── User.java
-    │   │                   │   └── ports
-    │   │                   │       ├── PasswordHasher.java
-    │   │                   │       ├── SessionRepository.java
-    │   │                   │       ├── TokenPayload.java
-    │   │                   │       ├── TokenService.java
-    │   │                   │       └── UserRepository.java
-    │   │                   ├── __infrastructure
-    │   │                   │   └── persistence
-    │   │                   │       ├── JpaSessionRepositoryAdapter.java
-    │   │                   │       └── JpaUserRepositoryAdapter.java
-    │   │                   ├── infrastructure
     │   │                   ├── persistence
+    │   │                   │   ├── adapter
+    │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
+    │   │                   │   │   └── JpaUserRepositoryAdapter.java
     │   │                   │   ├── entity
     │   │                   │   │   ├── SessionEntity.java
     │   │                   │   │   └── UserEntity.java
+    │   │                   │   ├── port
+    │   │                   │   │   ├── PasswordHasher.java
+    │   │                   │   │   ├── SessionRepository.java
+    │   │                   │   │   ├── TokenPayload.java
+    │   │                   │   │   ├── TokenService.java
+    │   │                   │   │   └── UserRepository.java
     │   │                   │   └── repository
     │   │                   │       ├── SpringDataSessionJpaRepository.java
     │   │                   │       └── SpringDataUserJpaRepository.java
@@ -79,10 +75,12 @@
     │   │                   ├── service
     │   │                   │   ├── AuthService.java
     │   │                   │   ├── dto
+    │   │                   │   │   ├── Session.java
+    │   │                   │   │   └── User.java
     │   │                   │   ├── impl
-    │   │                   │   │   ├── AuthService.java
-    │   │                   │   │   ├── SessionCleanupService.java
-    │   │                   │   │   └── UserService.java
+    │   │                   │   │   ├── AuthServiceImpl.java
+    │   │                   │   │   ├── SessionCleanupServiceImpl.java
+    │   │                   │   │   └── UserServiceImpl.java
     │   │                   │   ├── mapper
     │   │                   │   ├── SessionCleanupService.java
     │   │                   │   └── UserService.java
@@ -106,4 +104,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-43 directories, 64 files
+39 directories, 66 files

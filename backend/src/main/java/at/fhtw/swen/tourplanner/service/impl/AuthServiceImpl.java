@@ -1,12 +1,12 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.__domain.model.Session;
-import at.fhtw.swen.tourplanner.__domain.model.User;
-import at.fhtw.swen.tourplanner.__domain.ports.PasswordHasher;
-import at.fhtw.swen.tourplanner.__domain.ports.SessionRepository;
-import at.fhtw.swen.tourplanner.__domain.ports.TokenPayload;
-import at.fhtw.swen.tourplanner.__domain.ports.TokenService;
-import at.fhtw.swen.tourplanner.__domain.ports.UserRepository;
+import at.fhtw.swen.tourplanner.service.dto.Session;
+import at.fhtw.swen.tourplanner.service.dto.User;
+import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
+import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
+import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
+import at.fhtw.swen.tourplanner.persistence.port.TokenService;
+import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
 import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements at.fhtw.swen.tourplanner.service.AuthSer
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new SecurityException("Invalid credentials"));
 
-        if (!passwordHasher.matches(rawPassword, user.passwordHash())) {
+        if (passwordHasher.invalid(rawPassword, user.passwordHash())) {
             throw new SecurityException("Invalid credentials");
         }
 

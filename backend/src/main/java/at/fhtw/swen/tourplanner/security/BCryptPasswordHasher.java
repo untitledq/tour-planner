@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.security;
 
-import at.fhtw.swen.tourplanner.__domain.ports.PasswordHasher;
+import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class BCryptPasswordHasher implements PasswordHasher {
     }
 
     @Override
-    public boolean matches(String rawPassword, String hashedPassword) {
-        return encoder.matches(rawPassword, hashedPassword);
+    public boolean invalid(String rawPassword, String hashedPassword) {
+        return !encoder.matches(rawPassword, hashedPassword);
     }
 }

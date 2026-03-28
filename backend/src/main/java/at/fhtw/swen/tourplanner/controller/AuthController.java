@@ -1,9 +1,9 @@
 package at.fhtw.swen.tourplanner.controller;
 
 import at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl;
-import at.fhtw.swen.tourplanner.__domain.model.User;
+import at.fhtw.swen.tourplanner.service.dto.User;
 import at.fhtw.swen.tourplanner.service.impl.UserServiceImpl;
-import at.fhtw.swen.tourplanner.__domain.ports.TokenPayload;
+import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
 import at.fhtw.swen.tourplanner.controller.request.LoginRequest;
 import at.fhtw.swen.tourplanner.controller.request.RegisterRequest;
 import at.fhtw.swen.tourplanner.controller.response.AuthResponse;

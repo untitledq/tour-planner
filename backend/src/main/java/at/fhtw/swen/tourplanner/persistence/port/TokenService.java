@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.__domain.ports;
+package at.fhtw.swen.tourplanner.persistence.port;
 
 import java.time.Instant;
 import java.util.UUID;

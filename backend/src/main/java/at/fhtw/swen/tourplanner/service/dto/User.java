@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.__domain.model;
+package at.fhtw.swen.tourplanner.service.dto;
 
 import java.time.Instant;
 import java.util.UUID;
