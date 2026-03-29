@@ -2,6 +2,9 @@ openapi: 3.0.3
 info:
   title: Tour Planner API
   version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local development server
 
 paths:
   /api/user/register:
@@ -49,12 +52,211 @@ paths:
 
   /api/user:
     delete:
-      summary: Delete the current user
+      summary: Delete (unregister) the current user
       security:
         - bearerAuth: []
       responses:
         '204':
           description: User deleted
+
+  /api/tours:
+    get:
+      summary: List all tours of the current user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of tours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tour'
+
+    post:
+      summary: Create a new tour
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourCreateRequest'
+      responses:
+        '201':
+          description: Tour created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tour'
+
+  /api/tours/{tourId}:
+    get:
+      summary: Get a specific tour
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: Tour details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tour'
+
+    put:
+      summary: Update a specific tour
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourCreateRequest'
+      responses:
+        '200':
+          description: Tour updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tour'
+
+    delete:
+      summary: Delete a tour
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '204':
+          description: Tour deleted
+
+  /api/tours/{tourId}/route:
+    get:
+      summary: Get route of a tour
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: Route details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
+
+  /api/tours/{tourId}/logs:
+    get:
+      summary: List all tour logs for a tour
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: List of tour logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TourLog'
+
+    post:
+      summary: Add a log entry to a tour
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourLogCreateRequest'
+      responses:
+        '201':
+          description: Tour log created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TourLog'
+
+  /api/tours/{tourId}/logs/{logId}:
+    put:
+      summary: Update a tour log
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+        - $ref: '#/components/parameters/LogId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourLogCreateRequest'
+      responses:
+        '200':
+          description: Tour log updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TourLog'
+
+    delete:
+      summary: Delete a tour log
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+        - $ref: '#/components/parameters/LogId'
+      responses:
+        '204':
+          description: Tour log deleted
+
+  /api/users/me/favorites:
+    get:
+      summary: List favorite tours of current user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Favorite tours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tour'
+
+  /api/users/me/favorites/{tourId}:
+    post:
+      summary: Add tour to favorites
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '204':
+          description: Added to favorites
+
+    delete:
+      summary: Remove tour from favorites
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '204':
+          description: Removed from favorites
 
 components:
   securitySchemes:
@@ -63,9 +265,30 @@ components:
       scheme: bearer
       bearerFormat: JWT
 
+  parameters:
+    TourId:
+      name: tourId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    LogId:
+      name: logId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
   schemas:
     RegisterRequest:
       type: object
+      required:
+        - username
+        - password
+        - email
       properties:
         username:
           type: string
@@ -73,21 +296,17 @@ components:
           type: string
         email:
           type: string
-      required:
-        - username
-        - password
-        - email
 
     LoginRequest:
       type: object
+      required:
+        - username
+        - password
       properties:
         username:
           type: string
         password:
           type: string
-      required:
-        - username
-        - password
 
     AuthResponse:
       type: object
@@ -114,3 +333,97 @@ components:
         sessionId:
           type: string
           format: uuid
+
+    Tour:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        startName:
+          type: string
+        startLat:
+          type: number
+        startLng:
+          type: number
+        endName:
+          type: string
+        endLat:
+          type: number
+        endLng:
+          type: number
+
+    TourCreateRequest:
+      type: object
+      required:
+        - name
+        - startName
+        - startLat
+        - startLng
+        - endName
+        - endLat
+        - endLng
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        startName:
+          type: string
+        startLat:
+          type: number
+        startLng:
+          type: number
+        endName:
+          type: string
+        endLat:
+          type: number
+        endLng:
+          type: number
+
+    Route:
+      type: object
+      properties:
+        transportType:
+          type: string
+        distance:
+          type: integer
+        duration:
+          type: integer
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+
+    TourLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dateTime:
+          type: string
+          format: date-time
+        rating:
+          type: integer
+        comment:
+          type: string
+
+    TourLogCreateRequest:
+      type: object
+      required:
+        - rating
+      properties:
+        dateTime:
+          type: string
+          format: date-time
+        rating:
+          type: integer
+        comment:
+          type: string
