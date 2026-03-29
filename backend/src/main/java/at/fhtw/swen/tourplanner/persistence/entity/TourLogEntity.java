@@ -2,6 +2,7 @@ package at.fhtw.swen.tourplanner.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -20,12 +21,16 @@ public class TourLogEntity {
     @Column(name = "created_by", nullable = false)
     private UUID createdBy;
 
+    // Needed for update use-case
+    @Setter
     @Column(name = "date_time")
     private Instant dateTime;
 
+    @Setter
     @Column
     private Integer rating;
 
+    @Setter
     @Column
     private String comment;
 
