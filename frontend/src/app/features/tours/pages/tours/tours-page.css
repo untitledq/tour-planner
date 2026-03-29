@@ -1,0 +1,95 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: #ffffff;
+  color: #183b2d;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.tours-layout {
+  display: grid;
+  min-height: 100dvh;
+  grid-template-columns: 260px minmax(0, 1fr);
+}
+
+.tours-layout__sidebar {
+  min-width: 0;
+}
+
+.tours-content {
+  padding: 2rem;
+}
+
+.tours-shell {
+  width: 100%;
+  max-width: 1200px;
+  padding-left: 2rem;
+}
+
+.tours-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.tours-description {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #4b6358;
+}
+
+:host ::ng-deep .tours-new-tour-button.p-button {
+  border: 0;
+  border-radius: 0.75rem;
+  color: #ffffff;
+  background: #5b7ee5;
+  padding: 0.8rem 1.6rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+:host ::ng-deep .tours-new-tour-button.p-button:hover {
+  background: #3c5ec3;
+  color: #ffffff;
+}
+
+.tours-placeholder h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.tours-placeholder p {
+  margin: 0;
+  max-width: 42rem;
+  line-height: 1.6;
+  color: #4b6358;
+}
+
+@media (max-width: 900px) {
+  .tours-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tours-content {
+    padding: 1.25rem;
+  }
+
+  .tours-shell {
+    padding-left: 0;
+  }
+
+  .tours-header {
+    flex-direction: column;
+  }
+}

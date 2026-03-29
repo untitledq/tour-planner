@@ -9,16 +9,21 @@ export const SIDEBAR_NAV_ITEMS: MenuItem[] = [
   {
     label: 'Tours',
     icon: 'pi pi-map',
-    routerLink: 'null'
+    routerLink: '/tours'
   },
   {
     label: 'Tour Logs',
     icon: 'pi pi-list-check',
-    routerLink: 'null'
+    routerLink: '/tour-logs'
   },
   {
-    label: 'Import/Export',
+    label: 'Export',
     icon: 'pi pi-file-export',
-    routerLink: 'null'
+    routerLink: '/export'
+  },
+  {
+    label: 'Import',
+    icon: 'pi pi-file-import',
+    routerLink: '/import'
   }
 ];

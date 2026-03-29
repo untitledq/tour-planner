@@ -1,0 +1,31 @@
+<section class="tours-layout">
+  <app-sidebar
+    class="tours-layout__sidebar"
+    title="[Placeholder]"
+    (logoutClick)="logout()"
+  />
+
+  <section class="tours-content">
+    <div class="tours-shell">
+      <div class="tours-header">
+        <div>
+          <h1>Your tour collection</h1>
+          <p class="tours-description">
+            Manage your routes, keep your destinations organized, and prepare
+            the next trip.
+          </p>
+        </div>
+
+        <p-button label="+ New Tour" styleClass="tours-new-tour-button" />
+      </div>
+
+      <section class="tours-placeholder">
+        <h2>No tours yet</h2>
+        <p>
+          This page is ready for the upcoming tour list, filters, and detailed
+          route information.
+        </p>
+      </section>
+    </div>
+  </section>
+</section>

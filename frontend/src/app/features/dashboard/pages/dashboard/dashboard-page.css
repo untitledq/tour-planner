@@ -21,7 +21,8 @@
 }
 
 .dashboard-shell {
-  max-width: 960px;
+  width: 100%;
+  max-width: 1200px;
   padding-left: 2rem;
   border-radius: 1rem;
 }
@@ -31,6 +32,21 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+}
+
+:host ::ng-deep .dashboard-new-tour-button.p-button {
+  border: 0;
+  border-radius: 0.6rem;
+  color: #ffffff;
+  background: #5b7ee5;
+  padding: 0.8rem 1.6rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+:host ::ng-deep .dashboard-new-tour-button.p-button:hover {
+  background: #3c5ec3;
+  color: #ffffff;
 }
 
 h1 {

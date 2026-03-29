@@ -122,7 +122,10 @@
 }
 
 :host ::ng-deep .sidebar-menu .p-menu-item-icon {
+  width: 1.25rem;
+  min-width: 1.25rem;
   color: inherit;
+  text-align: center;
 }
 
 :host ::ng-deep .sidebar__account .p-avatar {
