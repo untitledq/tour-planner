@@ -14,6 +14,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -68,12 +69,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.info("Session valid: {}", valid);
 
                 if (valid) {
+                    UserDetails user = new JwtUserDetails(tokenPayload.uuid(), tokenPayload.username());
                     UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    tokenPayload.username(),
-                                    null,
-                                    AuthorityUtils.NO_AUTHORITIES
-                            );
+                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     logger.info("User {} authenticated successfully", tokenPayload.username());
                 }
