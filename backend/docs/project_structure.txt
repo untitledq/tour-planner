@@ -19,6 +19,7 @@
 │   └── workspace.xml
 ├── init.sql
 ├── logs
+│   ├── tourplanner.2026-03-28.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -39,16 +40,22 @@
     │   │                   │   ├── AuthController.java
     │   │                   │   ├── request
     │   │                   │   │   ├── LoginRequest.java
-    │   │                   │   │   └── RegisterRequest.java
-    │   │                   │   └── response
-    │   │                   │       ├── AuthResponse.java
-    │   │                   │       └── LoginResponse.java
+    │   │                   │   │   ├── RegisterRequest.java
+    │   │                   │   │   ├── TourCreateRequest.java
+    │   │                   │   │   └── TourLogCreateRequest.java
+    │   │                   │   ├── response
+    │   │                   │   │   ├── AuthResponse.java
+    │   │                   │   │   └── LoginResponse.java
+    │   │                   │   ├── TourController.java
+    │   │                   │   └── TourLogController.java
     │   │                   ├── persistence
     │   │                   │   ├── adapter
     │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
     │   │                   │   │   └── JpaUserRepositoryAdapter.java
     │   │                   │   ├── entity
     │   │                   │   │   ├── SessionEntity.java
+    │   │                   │   │   ├── TourEntity.java
+    │   │                   │   │   ├── TourLogEntity.java
     │   │                   │   │   └── UserEntity.java
     │   │                   │   ├── port
     │   │                   │   │   ├── PasswordHasher.java
@@ -58,7 +65,9 @@
     │   │                   │   │   └── UserRepository.java
     │   │                   │   └── repository
     │   │                   │       ├── SpringDataSessionJpaRepository.java
-    │   │                   │       └── SpringDataUserJpaRepository.java
+    │   │                   │       ├── SpringDataUserJpaRepository.java
+    │   │                   │       ├── TourJpaRepository.java
+    │   │                   │       └── TourLogJpaRepository.java
     │   │                   ├── security
     │   │                   │   ├── BCryptPasswordHasher.java
     │   │                   │   ├── JwtAuthenticationFilter.java
@@ -71,6 +80,8 @@
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
     │   │                   │   │   ├── SessionCleanupServiceImpl.java
+    │   │                   │   │   ├── TourLogService.java
+    │   │                   │   │   ├── TourService.java
     │   │                   │   │   └── UserServiceImpl.java
     │   │                   │   ├── SessionCleanupService.java
     │   │                   │   └── UserService.java
@@ -81,6 +92,7 @@
     │   └── resources
     │       ├── application.yaml
     │       ├── logback.xml
+    │       ├── Tour_Postman.json
     │       └── User_Postman.json
     └── test
         └── java
@@ -92,4 +104,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-36 directories, 57 files
+36 directories, 69 files

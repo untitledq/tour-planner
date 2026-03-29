@@ -9,4 +9,7 @@ public record TokenPayload(
         UUID sessionId,
         Instant expiresAt
 ) {
+    public UUID uuid() {
+        return userId;
+    }
 }

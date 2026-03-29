@@ -1,0 +1,172 @@
+{
+  "info": {
+    "name": "TourPlanner User Postman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.1.1"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/user/register",
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\",\n  \"email\": \"user1@mail.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/user/login",
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "// store JWT token from login response",
+                  "pm.environment.set(\"jwt_token\", jsonData.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tours",
+          "item": [
+            {
+              "name": "Create Tour",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Vienna Walk\",\n  \"description\": \"Nice tour through Vienna\",\n  \"startName\": \"Stephansplatz\",\n  \"endName\": \"Prater\"\n}"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "pm.environment.set(\"tour_id\", jsonData.id);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get All Tours",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours"]
+                }
+              }
+            },
+            {
+              "name": "Get Tour By ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/{{tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "{{tour_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Tour",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/{{tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "{{tour_id}}"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Vienna Walk UPDATED\",\n  \"description\": \"Updated description\",\n  \"startName\": \"Karlsplatz\",\n  \"endName\": \"Donauinsel\"\n}"
+                }
+              }
+            },
+            {
+              "name": "Delete Tour",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/{{tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "{{tour_id}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete User (Unregister)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/user",
+              "host": ["http://localhost:8080"],
+              "path": ["api", "user"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
