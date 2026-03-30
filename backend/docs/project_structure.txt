@@ -50,6 +50,7 @@
     │   │                   │   │   └── TourUpdateRequest.java
     │   │                   │   ├── response
     │   │                   │   │   ├── AuthResponse.java
+    │   │                   │   │   ├── ImageUploadResponse.java
     │   │                   │   │   ├── LoginResponse.java
     │   │                   │   │   ├── RouteResponse.java
     │   │                   │   │   ├── TourListResponse.java
@@ -58,14 +59,12 @@
     │   │                   │   │   └── TourResponse.java
     │   │                   │   ├── TourController.java
     │   │                   │   └── TourLogController.java
-    │   │                   ├── mapper
-    │   │                   │   ├── TourLogMapper.java
-    │   │                   │   └── TourMapper.java
     │   │                   ├── persistence
     │   │                   │   ├── adapter
     │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
     │   │                   │   │   └── JpaUserRepositoryAdapter.java
     │   │                   │   ├── entity
+    │   │                   │   │   ├── Route.java
     │   │                   │   │   ├── Session.java
     │   │                   │   │   ├── Tour.java
     │   │                   │   │   ├── TourLog.java
@@ -93,16 +92,22 @@
     │   │                   │   │   └── UserDto.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
+    │   │                   │   │   ├── ImageStorageService.java
+    │   │                   │   │   ├── OpenRouteServiceClient.java
     │   │                   │   │   ├── SessionCleanupServiceImpl.java
     │   │                   │   │   ├── TourLogServiceImpl.java
     │   │                   │   │   ├── TourServiceImpl.java
     │   │                   │   │   └── UserServiceImpl.java
+    │   │                   │   ├── mapper
+    │   │                   │   │   ├── TourLogMapper.java
+    │   │                   │   │   └── TourMapper.java
     │   │                   │   ├── SessionCleanupService.java
     │   │                   │   ├── TourLogService.java
     │   │                   │   ├── TourService.java
     │   │                   │   └── UserService.java
     │   │                   ├── TourPlannerApplication.java
     │   │                   └── util
+    │   │                       ├── CoordinatesJsonConverter.java
     │   │                       ├── LoggerService.java
     │   │                       └── UUIDv7.java
     │   └── resources
@@ -119,4 +124,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-37 directories, 83 files
+37 directories, 88 files
