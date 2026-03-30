@@ -74,7 +74,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Vienna Walk\",\n  \"description\": \"Nice tour through Vienna\",\n  \"transportType\": \"bike\",\n  \"startName\": \"Stephansplatz\",\n  \"endName\": \"Prater\"\n}"
+                  "raw": "{\n  \"name\": \"Vienna Walk\",\n  \"description\": \"Nice tour through Vienna\",\n  \"imagePath\": \"/opt/tourplanner/images/550e8400-e29b-41d4-a716-446655440000.png\",\n  \"transportType\": \"bike\",\n  \"startName\": \"Stephansplatz\",\n  \"endName\": \"Prater\"\n}"
                 }
               },
               "event": [
@@ -132,7 +132,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Vienna Walk UPDATED\",\n  \"description\": \"Updated description\",\n  \"startName\": \"Karlsplatz\",\n  \"endName\": \"Donauinsel\"\n}"
+                  "raw": "{\n  \"name\": \"Vienna Walk UPDATED\",\n  \"description\": \"Updated description\",\n  \"imagePath\": \"/opt/tourplanner/images/550e8400-e29b-41d4-a716-446655449999.png\",\n  \"transportType\": \"walk\",\n  \"startName\": \"Karlsplatz\",\n  \"endName\": \"Donauinsel\"\n}"
                 }
               }
             },

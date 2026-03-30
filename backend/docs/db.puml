@@ -37,6 +37,7 @@ entity tours {
   created_by : UUID <<FK>>
   name : TEXT
   description : TEXT
+  image_path : TEXT
   transport_type : TEXT
   start_name : TEXT
   end_name : TEXT
