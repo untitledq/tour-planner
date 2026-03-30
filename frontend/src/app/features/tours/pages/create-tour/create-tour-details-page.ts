@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { afterNextRender, Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -7,23 +8,46 @@ import { AuthSessionService } from '../../../../core/services/auth-session.servi
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { CreateTourDraftService } from '../../services/create-tour-draft.service';
 
 @Component({
   selector: 'app-create-tour-details-page',
   standalone: true,
-  imports: [SidebarComponent, ConfirmDialogComponent],
+  imports: [ReactiveFormsModule, SidebarComponent, ConfirmDialogComponent],
   templateUrl: './create-tour-details-page.html',
   styleUrl: './create-tour-details-page.css'
 })
 export class CreateTourDetailsPage implements PendingChangesAware {
   protected readonly maxDescriptionLength = 500;
+  protected readonly detailsForm;
   protected isLoggingOut = false;
   protected showLeaveDialog = false;
-  protected description = '';
+  private readonly formBuilder = inject(FormBuilder);
   private readonly authApi = inject(AuthApiService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly draftService = inject(CreateTourDraftService);
   private pendingLeaveResolver: ((value: boolean) => void) | null = null;
+  private allowRouteChange = false;
+
+  constructor() {
+    const draft = this.draftService.draft();
+
+    this.detailsForm = this.formBuilder.nonNullable.group({
+      name: [draft.name, [Validators.required]],
+      transportType: [draft.transportType, [Validators.required]],
+      from: [draft.from, [Validators.required]],
+      to: [draft.to, [Validators.required]],
+      description: [
+        draft.description,
+        [Validators.required, Validators.maxLength(this.maxDescriptionLength)]
+      ]
+    });
+
+    afterNextRender(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+  }
 
   protected logout(): void {
     this.isLoggingOut = true;
@@ -43,6 +67,7 @@ export class CreateTourDetailsPage implements PendingChangesAware {
   }
 
   protected confirmLeave(): void {
+    this.draftService.reset();
     this.showLeaveDialog = false;
     this.pendingLeaveResolver?.(true);
     this.pendingLeaveResolver = null;
@@ -58,12 +83,20 @@ export class CreateTourDetailsPage implements PendingChangesAware {
     void this.router.navigateByUrl('/dashboard');
   }
 
-  protected updateDescription(event: Event): void {
-    this.description = (event.target as HTMLTextAreaElement).value;
+  protected goToSummary(): void {
+    this.detailsForm.markAllAsTouched();
+
+    if (this.detailsForm.invalid) {
+      return;
+    }
+
+    this.draftService.update(this.detailsForm.getRawValue());
+    this.allowRouteChange = true;
+    void this.router.navigateByUrl('/tours/create/summary');
   }
 
   protected get descriptionLength(): number {
-    return this.description.length;
+    return this.detailsForm.controls.description.value.length;
   }
 
   protected get isDescriptionTooLong(): boolean {
@@ -71,6 +104,11 @@ export class CreateTourDetailsPage implements PendingChangesAware {
   }
 
   canDeactivate(): boolean | Promise<boolean> {
+    if (this.allowRouteChange) {
+      this.allowRouteChange = false;
+      return true;
+    }
+
     if (this.pendingLeaveResolver) {
       return false;
     }

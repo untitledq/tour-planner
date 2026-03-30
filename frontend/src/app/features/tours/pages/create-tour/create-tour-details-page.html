@@ -22,16 +22,16 @@
       <section class="create-tour-card">
         <h3>Tour Details</h3>
 
-        <form class="create-tour-form">
+        <form [formGroup]="detailsForm" class="create-tour-form">
           <div class="create-tour-form__row create-tour-form__row--wide">
             <label class="create-tour-field">
               <span>Tour Name</span>
-              <input type="text" />
+              <input type="text" formControlName="name" />
             </label>
 
             <label class="create-tour-field create-tour-field--compact create-tour-field--select">
               <span>Transport Type</span>
-              <select>
+              <select formControlName="transportType">
                 <option value=""></option>
                 <option value="car">Car</option>
                 <option value="bike">Bike</option>
@@ -43,12 +43,12 @@
           <div class="create-tour-form__row">
             <label class="create-tour-field">
               <span>From</span>
-              <input type="text" />
+              <input type="text" formControlName="from" />
             </label>
 
             <label class="create-tour-field">
               <span>To</span>
-              <input type="text" />
+              <input type="text" formControlName="to" />
             </label>
           </div>
 
@@ -56,8 +56,7 @@
             <span>Description</span>
             <textarea
               [class.create-tour-field__control--invalid]="isDescriptionTooLong"
-              [value]="description"
-              (input)="updateDescription($event)"
+              formControlName="description"
             ></textarea>
             <small [class.create-tour-field__counter--invalid]="isDescriptionTooLong">
               {{ descriptionLength }}/{{ maxDescriptionLength }}
@@ -107,6 +106,7 @@
             <button
               type="button"
               class="create-tour-actions__button create-tour-actions__button--primary"
+              (click)="goToSummary()"
             >
               Go to summary
             </button>
