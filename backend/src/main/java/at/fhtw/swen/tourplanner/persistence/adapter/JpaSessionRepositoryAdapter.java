@@ -1,9 +1,9 @@
 package at.fhtw.swen.tourplanner.persistence.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.repository.SpringDataSessionJpaRepository;
-import at.fhtw.swen.tourplanner.service.dto.Session;
+import at.fhtw.swen.tourplanner.service.dto.SessionDto;
 import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
-import at.fhtw.swen.tourplanner.persistence.entity.SessionEntity;
+import at.fhtw.swen.tourplanner.persistence.entity.Session;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -20,13 +20,13 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
     }
 
     @Override
-    public void save(Session session){
-        SessionEntity saved = repository.save(toEntity(session));
+    public void save(SessionDto sessionDto){
+        Session saved = repository.save(toEntity(sessionDto));
         toDomain(saved);
     }
 
     @Override
-    public Optional<Session> findByJti(UUID jti) {
+    public Optional<SessionDto> findByJti(UUID jti) {
         return repository.findByJti(jti).map(this::toDomain);
     }
 
@@ -40,19 +40,19 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
         repository.deleteByRevokedTrueOrExpiresAtBefore(now);
     }
 
-    private SessionEntity toEntity(Session session) {
-        return new SessionEntity(
-                session.getJti(),
-                session.getUserId(),
-                session.getToken(),
-                session.getIssuedAt(),
-                session.getExpiresAt(),
-                session.isRevoked()
+    private Session toEntity(SessionDto sessionDto) {
+        return new Session(
+                sessionDto.getJti(),
+                sessionDto.getUserId(),
+                sessionDto.getToken(),
+                sessionDto.getIssuedAt(),
+                sessionDto.getExpiresAt(),
+                sessionDto.isRevoked()
         );
     }
 
-    private Session toDomain(SessionEntity entity) {
-        return new Session(
+    private SessionDto toDomain(Session entity) {
+        return new SessionDto(
                 entity.getJti(),
                 entity.getUserId(),
                 entity.getToken(),
@@ -62,8 +62,8 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
         );
     }
 
-    private SessionEntity revoke(SessionEntity entity) {
-        return new SessionEntity(
+    private Session revoke(Session entity) {
+        return new Session(
                 entity.getJti(),
                 entity.getUserId(),
                 entity.getToken(),

@@ -2,7 +2,6 @@
 ├── compose.yaml
 ├── docs
 │   ├── code2file.txt
-│   ├── contend.txt
 │   ├── db.json
 │   ├── db.puml
 │   ├── db-recreate.txt
@@ -11,11 +10,9 @@
 ├── .env
 ├── .gitattributes
 ├── .gitignore
-├── HELP.md
 ├── .idea
 │   ├── compiler.xml
 │   ├── encodings.xml
-│   ├── .gitignore
 │   ├── inspectionProfiles
 │   │   └── Project_Default.xml
 │   ├── jarRepositories.xml
@@ -24,10 +21,8 @@
 │   └── workspace.xml
 ├── init.sql
 ├── logs
-│   ├── tourplanner.2026-03-23.0.log
-│   ├── tourplanner.2026-03-24.0.log
-│   ├── tourplanner.2026-03-26.0.log
-│   ├── tourplanner.2026-03-27.0.log
+│   ├── tourplanner.2026-03-28.0.log
+│   ├── tourplanner.2026-03-29.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -48,17 +43,33 @@
     │   │                   │   ├── AuthController.java
     │   │                   │   ├── request
     │   │                   │   │   ├── LoginRequest.java
-    │   │                   │   │   └── RegisterRequest.java
-    │   │                   │   └── response
-    │   │                   │       ├── AuthResponse.java
-    │   │                   │       └── LoginResponse.java
+    │   │                   │   │   ├── RegisterRequest.java
+    │   │                   │   │   ├── TourCreateRequest.java
+    │   │                   │   │   ├── TourLogCreateRequest.java
+    │   │                   │   │   ├── TourLogUpdateRequest.java
+    │   │                   │   │   └── TourUpdateRequest.java
+    │   │                   │   ├── response
+    │   │                   │   │   ├── AuthResponse.java
+    │   │                   │   │   ├── LoginResponse.java
+    │   │                   │   │   ├── RouteResponse.java
+    │   │                   │   │   ├── TourListResponse.java
+    │   │                   │   │   ├── TourLogListResponse.java
+    │   │                   │   │   ├── TourLogResponse.java
+    │   │                   │   │   └── TourResponse.java
+    │   │                   │   ├── TourController.java
+    │   │                   │   └── TourLogController.java
+    │   │                   ├── mapper
+    │   │                   │   ├── TourLogMapper.java
+    │   │                   │   └── TourMapper.java
     │   │                   ├── persistence
     │   │                   │   ├── adapter
     │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
     │   │                   │   │   └── JpaUserRepositoryAdapter.java
     │   │                   │   ├── entity
-    │   │                   │   │   ├── SessionEntity.java
-    │   │                   │   │   └── UserEntity.java
+    │   │                   │   │   ├── Session.java
+    │   │                   │   │   ├── Tour.java
+    │   │                   │   │   ├── TourLog.java
+    │   │                   │   │   └── User.java
     │   │                   │   ├── port
     │   │                   │   │   ├── PasswordHasher.java
     │   │                   │   │   ├── SessionRepository.java
@@ -67,22 +78,28 @@
     │   │                   │   │   └── UserRepository.java
     │   │                   │   └── repository
     │   │                   │       ├── SpringDataSessionJpaRepository.java
-    │   │                   │       └── SpringDataUserJpaRepository.java
+    │   │                   │       ├── SpringDataUserJpaRepository.java
+    │   │                   │       ├── TourJpaRepository.java
+    │   │                   │       └── TourLogJpaRepository.java
     │   │                   ├── security
     │   │                   │   ├── BCryptPasswordHasher.java
     │   │                   │   ├── JwtAuthenticationFilter.java
-    │   │                   │   └── JwtTokenService.java
+    │   │                   │   ├── JwtTokenService.java
+    │   │                   │   └── JwtUserDetails.java
     │   │                   ├── service
     │   │                   │   ├── AuthService.java
     │   │                   │   ├── dto
-    │   │                   │   │   ├── Session.java
-    │   │                   │   │   └── User.java
+    │   │                   │   │   ├── SessionDto.java
+    │   │                   │   │   └── UserDto.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
     │   │                   │   │   ├── SessionCleanupServiceImpl.java
+    │   │                   │   │   ├── TourLogServiceImpl.java
+    │   │                   │   │   ├── TourServiceImpl.java
     │   │                   │   │   └── UserServiceImpl.java
-    │   │                   │   ├── mapper
     │   │                   │   ├── SessionCleanupService.java
+    │   │                   │   ├── TourLogService.java
+    │   │                   │   ├── TourService.java
     │   │                   │   └── UserService.java
     │   │                   ├── TourPlannerApplication.java
     │   │                   └── util
@@ -91,9 +108,7 @@
     │   └── resources
     │       ├── application.yaml
     │       ├── logback.xml
-    │       ├── static
-    │       ├── templates
-    │       └── User_Postman.json
+    │       └── Tour_Postman.json
     └── test
         └── java
             └── at
@@ -104,4 +119,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-39 directories, 66 files
+37 directories, 83 files

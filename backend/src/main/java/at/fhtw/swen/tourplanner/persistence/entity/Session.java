@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "sessions")
-public class SessionEntity {
+public class Session {
 
     @Id
     private UUID jti;
@@ -29,10 +29,10 @@ public class SessionEntity {
     @Column(nullable = false)
     private boolean revoked;
 
-    protected SessionEntity() {
+    protected Session() {
     }
 
-    public SessionEntity(UUID jti, UUID userId, String token, Instant issuedAt, Instant expiresAt, boolean revoked) {
+    public Session(UUID jti, UUID userId, String token, Instant issuedAt, Instant expiresAt, boolean revoked) {
         this.jti = jti;
         this.userId = userId;
         this.token = token;

@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.persistence.port;
 
-import at.fhtw.swen.tourplanner.service.dto.User;
+import at.fhtw.swen.tourplanner.service.dto.UserDto;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -9,9 +9,9 @@ public interface UserRepository {
 
     boolean existsByUsername(String username);
 
-    User save(User user);
+    UserDto save(UserDto userDto);
 
-    Optional<User> findByUsername(String username);
+    Optional<UserDto> findByUsername(String username);
 
     boolean existsById(UUID uuid);
 

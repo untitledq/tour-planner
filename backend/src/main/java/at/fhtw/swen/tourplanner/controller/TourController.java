@@ -1,0 +1,80 @@
+package at.fhtw.swen.tourplanner.controller;
+
+import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
+import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
+import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
+import at.fhtw.swen.tourplanner.controller.response.TourResponse;
+import at.fhtw.swen.tourplanner.security.JwtUserDetails;
+import at.fhtw.swen.tourplanner.service.impl.TourServiceImpl;
+import at.fhtw.swen.tourplanner.util.LoggerService;
+import at.fhtw.swen.tourplanner.util.UUIDv7;
+import org.slf4j.Logger;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/tours")
+public class TourController {
+
+    private final TourServiceImpl service;
+    private final Logger logger;
+
+    public TourController(TourServiceImpl service) {
+        this.service = service;
+        LoggerService logService = new LoggerService();
+        this.logger = logService.getInstance().getLogger(getClass());
+    }
+
+    @PostMapping
+    public TourResponse create(
+            @RequestBody TourCreateRequest req,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
+        UUID userId = userDetails.getUserId();
+        UUID id = UUIDv7.randomUUID();
+
+        logger.info("Create Tour called by user: {}", userId);
+        return service.create(userId, req, id);
+    }
+    
+    @GetMapping
+    public List<TourListResponse> all(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get All Tours called by user: {}", userId);
+        return service.findAllByUser(userId);
+    }
+
+    @GetMapping("/{id}")
+    public TourResponse getById(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get Tour {} called by user {}", id, userId);
+        return service.findByIdAndUser(id, userId);
+    }
+
+    @PutMapping("/{id}")
+    public TourResponse update(
+            @PathVariable UUID id,
+            @RequestBody TourUpdateRequest req,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Update Tour {} called by user {}", id, userId);
+        return service.update(id, userId, req);
+    }
+    
+    @DeleteMapping("/{id}")
+    public void delete(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Delete Tour {} called by user {}", id, userId);
+        service.deleteByUser(id, userId);
+    }
+}

@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-public class Session {
+public class SessionDto {
     private final UUID jti;
     private final UUID userId;
     private final String token;
@@ -14,7 +14,7 @@ public class Session {
     private final Instant issuedAt;
     private final boolean revoked;
 
-    public Session(UUID jti, UUID userId, String token, Instant issuedAt, Instant expiresAt, boolean revoked) {
+    public SessionDto(UUID jti, UUID userId, String token, Instant issuedAt, Instant expiresAt, boolean revoked) {
         this.jti = jti;
         this.userId = userId;
         this.token = token;

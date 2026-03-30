@@ -1,7 +1,7 @@
 package at.fhtw.swen.tourplanner.security;
 
 import at.fhtw.swen.tourplanner.util.LoggerService;
-import at.fhtw.swen.tourplanner.service.dto.Session;
+import at.fhtw.swen.tourplanner.service.dto.SessionDto;
 import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
 import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
 import at.fhtw.swen.tourplanner.persistence.port.TokenService;
@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -55,27 +55,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             TokenPayload tokenPayload = tokenService.parseAndValidate(token);
 
-            Optional<Session> optionalSession = sessionRepository.findByJti(tokenPayload.sessionId());
-            logger.info("Session found in DB: {}", optionalSession.isPresent());
+            Optional<SessionDto> optionalSession = sessionRepository.findByJti(tokenPayload.sessionId());
+            logger.info("SessionDto found in DB: {}", optionalSession.isPresent());
 
             if (optionalSession.isPresent()) {
-                Session session = optionalSession.get();
+                SessionDto sessionDto = optionalSession.get();
 
-                boolean valid = !session.isRevoked()
-                        && session.getExpiresAt().isAfter(Instant.now())
-                        && session.getToken().equals(token);
+                boolean valid = !sessionDto.isRevoked()
+                        && sessionDto.getExpiresAt().isAfter(Instant.now())
+                        && sessionDto.getToken().equals(token);
 
-                logger.info("Session valid: {}", valid);
+                logger.info("SessionDto valid: {}", valid);
 
                 if (valid) {
+                    UserDetails user = new JwtUserDetails(tokenPayload.uuid(), tokenPayload.username());
                     UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    tokenPayload.username(),
-                                    null,
-                                    AuthorityUtils.NO_AUTHORITIES
-                            );
+                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.info("User {} authenticated successfully", tokenPayload.username());
+                    logger.info("UserDto {} authenticated successfully", tokenPayload.username());
                 }
             }
         } catch (Exception e) {

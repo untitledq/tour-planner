@@ -37,6 +37,7 @@ entity tours {
   created_by : UUID <<FK>>
   name : TEXT
   description : TEXT
+  transport_type : TEXT
   start_name : TEXT
   end_name : TEXT
 }
@@ -45,7 +46,6 @@ entity routes {
   +id : UUID <<PK>>
   --
   tour_id : UUID <<FK>> <<U>>
-  transport_type : TEXT
   distance : INTEGER
   duration : INTEGER
   coordinates : JSONB
@@ -66,6 +66,7 @@ entity user_favorite_tours {
   +tour_id : UUID <<FK>> <<PK>>
 }
 
+' Relationships
 users ||--o{ login_tokens
 users ||--o{ sessions
 users ||--o{ tours : created_by
