@@ -4,7 +4,7 @@ import at.fhtw.swen.tourplanner.controller.request.TourLogCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourLogUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourLogListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourLogResponse;
-import at.fhtw.swen.tourplanner.mapper.TourLogMapper;
+import at.fhtw.swen.tourplanner.service.mapper.TourLogMapper;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 import at.fhtw.swen.tourplanner.persistence.repository.TourLogJpaRepository;
 import at.fhtw.swen.tourplanner.service.TourLogService;

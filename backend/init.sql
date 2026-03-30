@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS tours (
     created_by UUID NOT NULL,
     name TEXT,
     description TEXT,
+    transport_type TEXT,
     start_name TEXT,
     end_name TEXT,
     CONSTRAINT fk_tours_user
@@ -65,7 +66,6 @@ CREATE INDEX IF NOT EXISTS idx_tours_name ON tours(name);
 CREATE TABLE IF NOT EXISTS routes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tour_id UUID UNIQUE NOT NULL,
-    transport_type TEXT,
     distance INTEGER,
     duration INTEGER,
     coordinates JSONB,

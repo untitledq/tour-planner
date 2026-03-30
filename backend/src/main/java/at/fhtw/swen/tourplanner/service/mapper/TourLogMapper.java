@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.mapper;
+package at.fhtw.swen.tourplanner.service.mapper;
 
 import at.fhtw.swen.tourplanner.controller.request.TourLogCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourLogUpdateRequest;

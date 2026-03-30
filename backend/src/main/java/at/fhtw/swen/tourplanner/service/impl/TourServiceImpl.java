@@ -4,7 +4,7 @@ import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourResponse;
-import at.fhtw.swen.tourplanner.mapper.TourMapper;
+import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
 import at.fhtw.swen.tourplanner.service.TourService;
@@ -27,6 +27,9 @@ public class TourServiceImpl implements TourService {
     public TourResponse create(UUID userId, TourCreateRequest req, UUID id) {
         Tour entity = TourMapper.fromCreateRequest(id, userId, req);
         repository.save(entity);
+
+        //TODO: create route using "startName" & "endName"
+
         return TourMapper.toResponse(entity);
     }
 
