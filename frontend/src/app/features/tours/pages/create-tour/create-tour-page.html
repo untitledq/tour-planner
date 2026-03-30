@@ -1,0 +1,23 @@
+<section class="create-tour-layout">
+  <app-sidebar
+    class="create-tour-layout__sidebar"
+    title="[Placeholder]"
+    (logoutClick)="logout()"
+  />
+
+  <section class="create-tour-content">
+    <div class="create-tour-page">
+      <h1>Create Tour</h1>
+    </div>
+  </section>
+</section>
+
+<app-confirm-dialog
+  [visible]="showLeaveDialog"
+  title="Cancel tour creation?"
+  message="Do you really want to cancel creating this tour? Your current progress will be lost."
+  confirmLabel="Leave page"
+  cancelLabel="Stay here"
+  (confirm)="confirmLeave()"
+  (cancel)="stayOnPage()"
+/>

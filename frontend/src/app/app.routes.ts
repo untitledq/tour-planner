@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { pendingChangesGuard } from './core/guards/pending-changes.guard';
 import { LoginPage } from './features/auth/pages/login/login-page';
 import { SigninPage } from './features/auth/pages/signin/signin-page';
 import { DashboardPage } from './features/dashboard/pages/dashboard/dashboard-page';
 import { ExportPage } from './features/export/pages/export/export-page';
 import { ImportPage } from './features/import/pages/import/import-page';
 import { TourLogsPage } from './features/tour-logs/pages/tour-logs/tour-logs-page';
+import { CreateTourPage } from './features/tours/pages/create-tour/create-tour-page';
 import { ToursPage } from './features/tours/pages/tours/tours-page';
 
 export const routes: Routes = [
@@ -31,6 +33,12 @@ export const routes: Routes = [
     path: 'tours',
     component: ToursPage,
     canActivate: [authGuard]
+  },
+  {
+    path: 'tours/create',
+    component: CreateTourPage,
+    canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard]
   },
   {
     path: 'tour-logs',

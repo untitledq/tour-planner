@@ -16,7 +16,11 @@
           </p>
         </div>
 
-        <p-button label="+ New Tour" styleClass="tours-new-tour-button" />
+        <p-button
+          label="+ New Tour"
+          styleClass="tours-new-tour-button"
+          (onClick)="openNewTour()"
+        />
       </div>
 
       <section class="tours-placeholder">
