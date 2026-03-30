@@ -1,0 +1,128 @@
+<section class="create-tour-layout">
+  <app-sidebar
+    class="create-tour-layout__sidebar"
+    title="[Placeholder]"
+    (logoutClick)="logout()"
+  />
+
+  <section class="create-tour-content">
+    <div class="create-tour-page">
+      <header class="create-tour-header">
+        <h1>Create New Tour</h1>
+
+        <div class="create-tour-progress" aria-label="Create tour progress">
+          <h2 class="create-tour-progress__step create-tour-progress__step--active">
+            Details
+          </h2>
+          <h2 class="create-tour-progress__step">Summary</h2>
+          <h2 class="create-tour-progress__step">Done</h2>
+        </div>
+      </header>
+
+      <section class="create-tour-card">
+        <h3>Tour Details</h3>
+
+        <form class="create-tour-form">
+          <div class="create-tour-form__row create-tour-form__row--wide">
+            <label class="create-tour-field">
+              <span>Tour Name</span>
+              <input type="text" />
+            </label>
+
+            <label class="create-tour-field create-tour-field--compact create-tour-field--select">
+              <span>Transport Type</span>
+              <select>
+                <option value=""></option>
+                <option value="car">Car</option>
+                <option value="bike">Bike</option>
+                <option value="walk">Walk</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="create-tour-form__row">
+            <label class="create-tour-field">
+              <span>From</span>
+              <input type="text" />
+            </label>
+
+            <label class="create-tour-field">
+              <span>To</span>
+              <input type="text" />
+            </label>
+          </div>
+
+          <label class="create-tour-field create-tour-field--textarea">
+            <span>Description</span>
+            <textarea
+              [class.create-tour-field__control--invalid]="isDescriptionTooLong"
+              [value]="description"
+              (input)="updateDescription($event)"
+            ></textarea>
+            <small [class.create-tour-field__counter--invalid]="isDescriptionTooLong">
+              {{ descriptionLength }}/{{ maxDescriptionLength }}
+            </small>
+          </label>
+        </form>
+
+        <section class="create-tour-map">
+          <h3>Tour Map</h3>
+
+          <div class="create-tour-map__placeholder">
+            <div class="create-tour-map__controls">
+              <button type="button">+</button>
+              <button type="button">-</button>
+            </div>
+
+            <div class="create-tour-map__canvas">
+              <span>Leaflet route preview placeholder</span>
+            </div>
+          </div>
+        </section>
+
+        <footer class="create-tour-footer">
+          <section class="create-tour-stats">
+            <h3>Tour Details</h3>
+
+            <div class="create-tour-stats__row">
+              <span>Tour Distance</span>
+              <strong>Placeholder</strong>
+            </div>
+
+            <div class="create-tour-stats__row">
+              <span>Estimated Time</span>
+              <strong>Placeholder</strong>
+            </div>
+          </section>
+
+          <div class="create-tour-actions">
+            <button
+              type="button"
+              class="create-tour-actions__button create-tour-actions__button--secondary"
+              (click)="cancelCreation()"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="create-tour-actions__button create-tour-actions__button--primary"
+            >
+              Go to summary
+            </button>
+          </div>
+        </footer>
+      </section>
+    </div>
+  </section>
+</section>
+
+<app-confirm-dialog
+  [visible]="showLeaveDialog"
+  title="Cancel tour creation?"
+  message="Do you really want to cancel creating this tour? Your current progress will be lost."
+  confirmLabel="Leave page"
+  cancelLabel="Stay here"
+  (confirm)="confirmLeave()"
+  (cancel)="stayOnPage()"
+/>

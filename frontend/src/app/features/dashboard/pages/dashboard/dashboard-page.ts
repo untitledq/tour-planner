@@ -38,6 +38,6 @@ export class DashboardPage {
   }
 
   protected openNewTour(): void {
-    void this.router.navigateByUrl('/tours/create');
+    void this.router.navigateByUrl('/tours/create/details');
   }
 }

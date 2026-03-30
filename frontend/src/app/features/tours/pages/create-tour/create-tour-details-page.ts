@@ -9,15 +9,17 @@ import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar'
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 
 @Component({
-  selector: 'app-create-tour-page',
+  selector: 'app-create-tour-details-page',
   standalone: true,
   imports: [SidebarComponent, ConfirmDialogComponent],
-  templateUrl: './create-tour-page.html',
-  styleUrl: './create-tour-page.css'
+  templateUrl: './create-tour-details-page.html',
+  styleUrl: './create-tour-details-page.css'
 })
-export class CreateTourPage implements PendingChangesAware {
+export class CreateTourDetailsPage implements PendingChangesAware {
+  protected readonly maxDescriptionLength = 500;
   protected isLoggingOut = false;
   protected showLeaveDialog = false;
+  protected description = '';
   private readonly authApi = inject(AuthApiService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
@@ -50,6 +52,22 @@ export class CreateTourPage implements PendingChangesAware {
     this.showLeaveDialog = false;
     this.pendingLeaveResolver?.(false);
     this.pendingLeaveResolver = null;
+  }
+
+  protected cancelCreation(): void {
+    void this.router.navigateByUrl('/dashboard');
+  }
+
+  protected updateDescription(event: Event): void {
+    this.description = (event.target as HTMLTextAreaElement).value;
+  }
+
+  protected get descriptionLength(): number {
+    return this.description.length;
+  }
+
+  protected get isDescriptionTooLong(): boolean {
+    return this.descriptionLength > this.maxDescriptionLength;
   }
 
   canDeactivate(): boolean | Promise<boolean> {

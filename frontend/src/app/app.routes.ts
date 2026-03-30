@@ -7,7 +7,7 @@ import { DashboardPage } from './features/dashboard/pages/dashboard/dashboard-pa
 import { ExportPage } from './features/export/pages/export/export-page';
 import { ImportPage } from './features/import/pages/import/import-page';
 import { TourLogsPage } from './features/tour-logs/pages/tour-logs/tour-logs-page';
-import { CreateTourPage } from './features/tours/pages/create-tour/create-tour-page';
+import { CreateTourDetailsPage } from './features/tours/pages/create-tour/create-tour-details-page';
 import { ToursPage } from './features/tours/pages/tours/tours-page';
 
 export const routes: Routes = [
@@ -35,8 +35,8 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'tours/create',
-    component: CreateTourPage,
+    path: 'tours/create/details',
+    component: CreateTourDetailsPage,
     canActivate: [authGuard],
     canDeactivate: [pendingChangesGuard]
   },
