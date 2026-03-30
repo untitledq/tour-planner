@@ -1,22 +1,22 @@
 package at.fhtw.swen.tourplanner.persistence.repository;
 
-import at.fhtw.swen.tourplanner.persistence.entity.TourLogEntity;
+import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface TourLogJpaRepository extends JpaRepository<TourLogEntity, UUID> {
+public interface TourLogJpaRepository extends JpaRepository<TourLog, UUID> {
 
     // Find all tour logs for a specific tour
-    List<TourLogEntity> findByTourId(UUID tourId);
+    List<TourLog> findByTourId(UUID tourId);
 
     // Find all tour logs created by a specific user
-    List<TourLogEntity> findAllByCreatedBy(UUID userId);
+    List<TourLog> findAllByCreatedBy(UUID userId);
 
     // Find a specific tour log by ID and user (for access control)
-    Optional<TourLogEntity> findByIdAndCreatedBy(UUID id, UUID userId);
+    Optional<TourLog> findByIdAndCreatedBy(UUID id, UUID userId);
 
     // Delete a specific tour log by ID and user
     void deleteByIdAndCreatedBy(UUID id, UUID userId);

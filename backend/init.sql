@@ -1,6 +1,6 @@
 -- USERS
 CREATE TABLE IF NOT EXISTS users (
-                                     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -29,7 +29,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_login_tokens_token
 
 -- SESSIONS
 CREATE TABLE IF NOT EXISTS sessions (
-                                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     jti UUID NOT NULL UNIQUE,
     user_id UUID NOT NULL,
     token TEXT NOT NULL,
@@ -49,11 +49,13 @@ CREATE INDEX IF NOT EXISTS idx_sessions_user_active ON sessions(user_id, revoked
 -- TOURS
 CREATE TABLE IF NOT EXISTS tours (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    created_by UUID REFERENCES users(id),
+    created_by UUID NOT NULL,
     name TEXT,
     description TEXT,
     start_name TEXT,
-    end_name TEXT
+    end_name TEXT,
+    CONSTRAINT fk_tours_user
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
     );
 
 CREATE INDEX IF NOT EXISTS idx_tours_created_by ON tours(created_by);
@@ -62,31 +64,42 @@ CREATE INDEX IF NOT EXISTS idx_tours_name ON tours(name);
 -- ROUTES
 CREATE TABLE IF NOT EXISTS routes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tour_id UUID UNIQUE REFERENCES tours(id),
+    tour_id UUID UNIQUE NOT NULL,
     transport_type TEXT,
     distance INTEGER,
     duration INTEGER,
-    coordinates JSONB
+    coordinates JSONB,
+    CONSTRAINT fk_routes_tour
+    FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
     );
 
+-- TOUR LOGS
 CREATE TABLE IF NOT EXISTS tour_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tour_id UUID REFERENCES tours(id),
-    created_by UUID REFERENCES users(id),
+    tour_id UUID NOT NULL,
+    created_by UUID NOT NULL,
     date_time TIMESTAMP,
     rating INTEGER CHECK (rating >= 0 AND rating <= 5),
-    comment TEXT
+    comment TEXT,
+    CONSTRAINT fk_tour_logs_tour
+    FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
+    CONSTRAINT fk_tour_logs_user
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
     );
 
 CREATE INDEX IF NOT EXISTS idx_tour_logs_tour_id ON tour_logs(tour_id);
 CREATE INDEX IF NOT EXISTS idx_tour_logs_created_by ON tour_logs(created_by);
 CREATE INDEX IF NOT EXISTS idx_tour_logs_date_time ON tour_logs(date_time);
 
--- FAVORITE_TOURS
+-- FAVORITE TOURS
 CREATE TABLE IF NOT EXISTS user_favorite_tours (
-    user_id UUID REFERENCES users(id),
-    tour_id UUID REFERENCES tours(id),
-    PRIMARY KEY (user_id, tour_id)
+    user_id UUID NOT NULL,
+    tour_id UUID NOT NULL,
+    PRIMARY KEY (user_id, tour_id),
+    CONSTRAINT fk_user_fav_user
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_fav_tour
+    FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE
     );
 
 CREATE INDEX IF NOT EXISTS idx_user_fav_tour_id ON user_favorite_tours(tour_id);

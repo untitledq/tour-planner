@@ -1,12 +1,12 @@
 package at.fhtw.swen.tourplanner.persistence.repository;
 
-import at.fhtw.swen.tourplanner.persistence.entity.UserEntity;
+import at.fhtw.swen.tourplanner.persistence.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface SpringDataUserJpaRepository extends JpaRepository<UserEntity, UUID> {
+public interface SpringDataUserJpaRepository extends JpaRepository<User, UUID> {
     boolean existsByUsername(String username);
-    Optional<UserEntity> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 }

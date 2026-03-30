@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class User {
 
     @Id
     private UUID id;
@@ -26,10 +26,10 @@ public class UserEntity {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    protected UserEntity() {
+    protected User() {
     }
 
-    public UserEntity(UUID id, String username, String password, String email, Instant createdAt) {
+    public User(UUID id, String username, String password, String email, Instant createdAt) {
         this.id = id;
         this.username = username;
         this.password = password;

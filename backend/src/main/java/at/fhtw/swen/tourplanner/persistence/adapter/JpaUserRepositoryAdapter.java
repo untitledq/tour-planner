@@ -1,9 +1,9 @@
 package at.fhtw.swen.tourplanner.persistence.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.repository.SpringDataUserJpaRepository;
-import at.fhtw.swen.tourplanner.service.dto.User;
+import at.fhtw.swen.tourplanner.service.dto.UserDto;
 import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
-import at.fhtw.swen.tourplanner.persistence.entity.UserEntity;
+import at.fhtw.swen.tourplanner.persistence.entity.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -24,13 +24,13 @@ public class JpaUserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
-        UserEntity saved = repository.save(toEntity(user));
+    public UserDto save(UserDto userDto) {
+        User saved = repository.save(toEntity(userDto));
         return toDomain(saved);
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public Optional<UserDto> findByUsername(String username) {
         return repository.findByUsername(username).map(this::toDomain);
     }
 
@@ -44,18 +44,18 @@ public class JpaUserRepositoryAdapter implements UserRepository {
         repository.deleteById(uuid);
     }
 
-    private UserEntity toEntity(User user) {
-        return new UserEntity(
-                user.id(),
-                user.username(),
-                user.passwordHash(),
-                user.email(),
-                user.createdAt()
+    private User toEntity(UserDto userDto) {
+        return new User(
+                userDto.id(),
+                userDto.username(),
+                userDto.passwordHash(),
+                userDto.email(),
+                userDto.createdAt()
         );
     }
 
-    private User toDomain(UserEntity entity) {
-        return new User(
+    private UserDto toDomain(User entity) {
+        return new UserDto(
                 entity.getId(),
                 entity.getUsername(),
                 entity.getPassword(),

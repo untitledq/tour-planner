@@ -1,11 +1,11 @@
 package at.fhtw.swen.tourplanner.service;
 
-import at.fhtw.swen.tourplanner.service.dto.User;
+import at.fhtw.swen.tourplanner.service.dto.UserDto;
 
 import java.util.UUID;
 
 public interface UserService {
-    User register(String username, String password, String email);
+    UserDto register(String username, String password, String email);
 
     String login(String username, String rawPassword);
 
