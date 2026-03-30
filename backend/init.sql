@@ -75,14 +75,19 @@ CREATE TABLE IF NOT EXISTS routes (
 
 -- TOUR LOGS
 CREATE TABLE IF NOT EXISTS tour_logs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                                         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tour_id UUID NOT NULL,
     created_by UUID NOT NULL,
     date_time TIMESTAMP,
+
     rating INTEGER CHECK (rating >= 0 AND rating <= 5),
+    difficulty INTEGER CHECK (difficulty >= 1 AND difficulty <= 5),
+    total_time INTEGER,
     comment TEXT,
+
     CONSTRAINT fk_tour_logs_tour
     FOREIGN KEY (tour_id) REFERENCES tours(id) ON DELETE CASCADE,
+
     CONSTRAINT fk_tour_logs_user
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
     );

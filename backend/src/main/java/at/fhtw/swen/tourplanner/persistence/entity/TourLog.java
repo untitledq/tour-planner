@@ -32,21 +32,35 @@ public class TourLog {
 
     @Setter
     @Column
+    private Integer difficulty;
+
+    @Setter
+    @Column
+    private Integer totalTime;
+
+    @Setter
+    @Column
     private String comment;
 
     protected TourLog() {}
+
+    // TourLog: difficulty, total time,  ?? total distance ?? -> not from route?
 
     public TourLog(UUID id,
                    UUID tourId,
                    UUID createdBy,
                    Instant dateTime,
                    Integer rating,
+                   Integer difficulty,
+                   Integer totalTime,
                    String comment) {
         this.id = id;
         this.tourId = tourId;
         this.createdBy = createdBy;
         this.dateTime = dateTime;
         this.rating = rating;
+        this.difficulty = difficulty;
+        this.totalTime = totalTime;
         this.comment = comment;
     }
 }

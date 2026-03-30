@@ -7,5 +7,7 @@ public record TourLogCreateRequest(
         UUID tourId,
         Instant dateTime,
         Integer rating,
+        Integer difficulty,
+        Integer totalTime,
         String comment
 ) {}

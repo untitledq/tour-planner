@@ -58,6 +58,8 @@ entity tour_logs {
   created_by : UUID <<FK>>
   date_time : TIMESTAMP
   rating : INTEGER
+  difficulty : INTEGER
+  total_time : INTEGER
   comment : TEXT
 }
 

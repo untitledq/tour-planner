@@ -3,7 +3,9 @@ package at.fhtw.swen.tourplanner.controller.request;
 import java.time.Instant;
 
 public record TourLogUpdateRequest(
-        String comment,
+        Instant dateTime,
         Integer rating,
-        Instant dateTime
+        Integer difficulty,
+        Integer totalTime,
+        String comment
 ) {}

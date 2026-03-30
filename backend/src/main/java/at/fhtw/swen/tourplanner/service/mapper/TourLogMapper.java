@@ -18,6 +18,8 @@ public class TourLogMapper {
                 userId,
                 req.dateTime(),
                 req.rating(),
+                req.difficulty(),
+                req.totalTime(),
                 req.comment()
         );
     }
@@ -25,6 +27,8 @@ public class TourLogMapper {
     public static void updateEntity(TourLogUpdateRequest req, TourLog entity) {
         entity.setDateTime(req.dateTime());
         entity.setRating(req.rating());
+        entity.setDifficulty(req.difficulty());
+        entity.setTotalTime(req.totalTime());
         entity.setComment(req.comment());
     }
 
@@ -34,6 +38,8 @@ public class TourLogMapper {
                 entity.getTourId(),
                 entity.getDateTime(),
                 entity.getRating(),
+                entity.getDifficulty(),
+                entity.getTotalTime(),
                 entity.getComment()
         );
     }
@@ -43,10 +49,6 @@ public class TourLogMapper {
                 entity.getId().toString(),
                 entity.getRating()
         );
-    }
-
-    public static List<TourLogResponse> toResponseList(List<TourLog> entities) {
-        return entities.stream().map(TourLogMapper::toResponse).toList();
     }
 
     public static List<TourLogListResponse> toListResponseList(List<TourLog> entities) {
