@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.mapper;
+package at.fhtw.swen.tourplanner.service.mapper;
 
 import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
@@ -17,6 +17,7 @@ public class TourMapper {
                 userId,
                 req.name(),
                 req.description(),
+                req.transportType(),
                 req.startName(),
                 req.endName()
         );

@@ -39,6 +39,7 @@ public class Tour {
                 UUID createdBy,
                 String name,
                 String description,
+                String transportType,
                 String startName,
                 String endName) {
         this.id = id;

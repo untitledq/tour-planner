@@ -74,7 +74,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Vienna Walk\",\n  \"description\": \"Nice tour through Vienna\",\n  \"startName\": \"Stephansplatz\",\n  \"endName\": \"Prater\"\n}"
+                  "raw": "{\n  \"name\": \"Vienna Walk\",\n  \"description\": \"Nice tour through Vienna\",\n  \"transportType\": \"bike\",\n  \"startName\": \"Stephansplatz\",\n  \"endName\": \"Prater\"\n}"
                 }
               },
               "event": [
