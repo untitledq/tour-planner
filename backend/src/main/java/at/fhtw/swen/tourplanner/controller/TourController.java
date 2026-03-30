@@ -9,9 +9,17 @@ import at.fhtw.swen.tourplanner.service.impl.TourServiceImpl;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.slf4j.Logger;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +47,34 @@ public class TourController {
         logger.info("Create Tour called by user: {}", userId);
         return service.create(userId, req, id);
     }
-    
+
+//    @PostMapping(
+//            value = "/api/tours/{tourId}/image",
+//            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+//    )
+//    public ResponseEntity<Void> uploadTourImage(
+//            @PathVariable UUID tourId,
+//            @RequestPart MultipartFile file) {
+//
+//        String path = imageStorageService.saveTourImage(tourId, file);
+//        tourService.updateImagePath(tourId, path);
+//
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @GetMapping("/api/tours/{tourId}/image")
+//    public ResponseEntity<Resource> getTourImage(@PathVariable UUID tourId) throws IOException {
+//
+//        String path = tourService.getImagePath(tourId);
+//        Path file = Paths.get(path);
+//
+//        Resource resource = new UrlResource(file.toUri());
+//
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.IMAGE_JPEG)
+//                .body(resource);
+//    }
+
     @GetMapping
     public List<TourListResponse> all(@AuthenticationPrincipal JwtUserDetails userDetails) {
         UUID userId = userDetails.getUserId();

@@ -17,6 +17,7 @@ public class TourMapper {
                 userId,
                 req.name(),
                 req.description(),
+                req.imagePath(),
                 req.transportType(),
                 req.startName(),
                 req.endName()
@@ -35,6 +36,8 @@ public class TourMapper {
                 tour.getId().toString(),
                 tour.getName(),
                 tour.getDescription(),
+                tour.getImagePath(),
+                tour.getTransportType(),
                 tour.getStartName(),
                 tour.getEndName()
         );

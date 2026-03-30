@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS tours (
     created_by UUID NOT NULL,
     name TEXT,
     description TEXT,
+    image_path TEXT,
     transport_type TEXT,
     start_name TEXT,
     end_name TEXT,

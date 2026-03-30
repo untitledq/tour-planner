@@ -32,7 +32,6 @@ public class Route {
 
     public Route(UUID id,
                  UUID tourId,
-                 String transportType,
                  Integer distance,
                  Integer duration,
                  List<List<Double>> coordinates) {

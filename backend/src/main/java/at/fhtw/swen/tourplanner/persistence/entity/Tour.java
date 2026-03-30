@@ -26,6 +26,14 @@ public class Tour {
     private String description;
 
     @Setter
+    @Column(name = "image_path")
+    private String imagePath;
+
+    @Setter
+    @Column(name = "transport_type")
+    private String transportType;
+
+    @Setter
     @Column(name = "start_name")
     private String startName;
 
@@ -39,6 +47,7 @@ public class Tour {
                 UUID createdBy,
                 String name,
                 String description,
+                String imagePath,
                 String transportType,
                 String startName,
                 String endName) {
@@ -46,6 +55,8 @@ public class Tour {
         this.createdBy = createdBy;
         this.name = name;
         this.description = description;
+        this.imagePath = imagePath;
+        this.transportType = transportType;
         this.startName = startName;
         this.endName = endName;
     }
