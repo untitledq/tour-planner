@@ -127,19 +127,6 @@ paths:
       responses:
         '204': { }
 
-  /api/tours/{tourId}/route:
-    get:
-      summary: Get computed route for a tour
-      security: [ { bearerAuth: [] } ]
-      parameters:
-        - $ref: '#/components/parameters/TourId'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Route'
-
   /api/tours/{tourId}/logs:
     get:
       summary: List all tour logs
@@ -205,6 +192,19 @@ paths:
         - $ref: '#/components/parameters/LogId'
       responses:
         '204': { }
+
+  /api/tours/{tourId}/route:
+    get:
+      summary: Get computed route for a tour
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Route'
 
   /api/tours/{tourId}/image:
     post:
