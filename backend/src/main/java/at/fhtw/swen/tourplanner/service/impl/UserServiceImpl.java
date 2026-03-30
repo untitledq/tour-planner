@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.service.dto.User;
+import at.fhtw.swen.tourplanner.service.dto.UserDto;
 import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
 import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements at.fhtw.swen.tourplanner.service.UserSer
     }
 
     @Override
-    public User register(String username, String password, String email) {
+    public UserDto register(String username, String password, String email) {
         log.info("Register attempt for username={}", username);
 
         validateCredentials(username, password);
@@ -38,7 +38,7 @@ public class UserServiceImpl implements at.fhtw.swen.tourplanner.service.UserSer
 
         String passwordHash = passwordHasher.hash(password);
 
-        User user = new User(
+        UserDto userDto = new UserDto(
                 UUIDv7.randomUUID(),
                 username,
                 passwordHash,
@@ -46,8 +46,8 @@ public class UserServiceImpl implements at.fhtw.swen.tourplanner.service.UserSer
                 Instant.now()
         );
 
-        User saved = userRepository.save(user);
-        log.info("User registered successfully: username={}, id={}", saved.username(), saved.id());
+        UserDto saved = userRepository.save(userDto);
+        log.info("UserDto registered successfully: username={}, id={}", saved.username(), saved.id());
 
         return saved;
     }
@@ -58,13 +58,13 @@ public class UserServiceImpl implements at.fhtw.swen.tourplanner.service.UserSer
 
         validateCredentials(username, rawPassword);
 
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<UserDto> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             log.warn("Login failed: username not found: {}", username);
             throw new SecurityException("Username not found");
         }
 
-        User u = user.get();
+        UserDto u = user.get();
 
         if (passwordHasher.invalid(rawPassword, u.passwordHash())) {
             log.warn("Login failed: invalid password for username={}", username);
@@ -78,7 +78,7 @@ public class UserServiceImpl implements at.fhtw.swen.tourplanner.service.UserSer
     @Override
     public void deleteUser(UUID uuid) {
         if (!userRepository.existsById(uuid)) {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("UserDto not found");
         }
 
         userRepository.deleteById(uuid);

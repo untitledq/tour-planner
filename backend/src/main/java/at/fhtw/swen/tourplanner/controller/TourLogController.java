@@ -2,9 +2,10 @@ package at.fhtw.swen.tourplanner.controller;
 
 import at.fhtw.swen.tourplanner.controller.request.TourLogCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourLogUpdateRequest;
+import at.fhtw.swen.tourplanner.controller.response.TourLogListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourLogResponse;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
-import at.fhtw.swen.tourplanner.service.impl.TourLogService;
+import at.fhtw.swen.tourplanner.service.impl.TourLogServiceImpl;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +19,17 @@ import java.util.UUID;
 @RequestMapping("/api/tour-logs")
 public class TourLogController {
 
-    private final TourLogService service;
+    private final TourLogServiceImpl service;
     private final Logger logger;
 
-    public TourLogController(TourLogService service) {
+    public TourLogController(TourLogServiceImpl service) {
         this.service = service;
         this.logger = new LoggerService().getInstance().getLogger(getClass());
     }
 
     // Get all tour logs for authenticated user
     @GetMapping
-    public ResponseEntity<List<TourLogResponse>> all(
+    public ResponseEntity<List<TourLogListResponse>> all(
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();

@@ -18,7 +18,7 @@ paths:
               $ref: '#/components/schemas/RegisterRequest'
       responses:
         '201':
-          description: User created
+          description: UserDto created
           content:
             application/json:
               schema:
@@ -57,7 +57,7 @@ paths:
         - bearerAuth: []
       responses:
         '204':
-          description: User deleted
+          description: UserDto deleted
 
   /api/tours:
     get:
@@ -70,9 +70,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Tour'
+                allOf:
+                  - $ref: '#/components/schemas/ListResponse'
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Tour'
 
     post:
       summary: Create a new tour
@@ -165,9 +169,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TourLog'
+                allOf:
+                  - $ref: '#/components/schemas/ListResponse'
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TourLog'
 
     post:
       summary: Add a log entry to a tour
@@ -233,9 +241,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Tour'
+                allOf:
+                  - $ref: '#/components/schemas/ListResponse'
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Tour'
 
   /api/users/me/favorites/{tourId}:
     post:
@@ -283,6 +295,19 @@ components:
         format: uuid
 
   schemas:
+    ListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        total:
+          type: integer
+        page:
+          type: integer
+        size:
+          type: integer
+
     RegisterRequest:
       type: object
       required:

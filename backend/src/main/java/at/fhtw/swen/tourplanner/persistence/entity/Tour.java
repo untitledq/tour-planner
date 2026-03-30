@@ -5,13 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
 @Entity
 @Table(name = "tours")
-public class TourEntity {
+public class Tour {
 
     @Id
     private UUID id;
@@ -19,23 +20,27 @@ public class TourEntity {
     @Column(name = "created_by")
     private UUID createdBy;
 
+    @Setter
     private String name;
+    @Setter
     private String description;
 
+    @Setter
     @Column(name = "start_name")
     private String startName;
 
+    @Setter
     @Column(name = "end_name")
     private String endName;
 
-    protected TourEntity() {}
+    protected Tour() {}
 
-    public TourEntity(UUID id,
-                      UUID createdBy,
-                      String name,
-                      String description,
-                      String startName,
-                      String endName) {
+    public Tour(UUID id,
+                UUID createdBy,
+                String name,
+                String description,
+                String startName,
+                String endName) {
         this.id = id;
         this.createdBy = createdBy;
         this.name = name;

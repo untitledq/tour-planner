@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "tour_logs")
-public class TourLogEntity {
+public class TourLog {
 
     @Id
     private UUID id;
@@ -34,14 +34,14 @@ public class TourLogEntity {
     @Column
     private String comment;
 
-    protected TourLogEntity() {}
+    protected TourLog() {}
 
-    public TourLogEntity(UUID id,
-                         UUID tourId,
-                         UUID createdBy,
-                         Instant dateTime,
-                         Integer rating,
-                         String comment) {
+    public TourLog(UUID id,
+                   UUID tourId,
+                   UUID createdBy,
+                   Instant dateTime,
+                   Integer rating,
+                   String comment) {
         this.id = id;
         this.tourId = tourId;
         this.createdBy = createdBy;

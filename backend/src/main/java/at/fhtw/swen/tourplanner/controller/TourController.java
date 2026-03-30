@@ -1,14 +1,16 @@
 package at.fhtw.swen.tourplanner.controller;
 
 import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
-import at.fhtw.swen.tourplanner.persistence.entity.TourEntity;
-import at.fhtw.swen.tourplanner.service.impl.TourService;
+import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
+import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
+import at.fhtw.swen.tourplanner.controller.response.TourResponse;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
+import at.fhtw.swen.tourplanner.service.impl.TourServiceImpl;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
+import org.slf4j.Logger;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,103 +19,60 @@ import java.util.UUID;
 @RequestMapping("/api/tours")
 public class TourController {
 
-    private final TourService service;
+    private final TourServiceImpl service;
     private final Logger logger;
 
-    public TourController(TourService service) {
+    public TourController(TourServiceImpl service) {
         this.service = service;
         LoggerService logService = new LoggerService();
         this.logger = logService.getInstance().getLogger(getClass());
     }
 
-    // Create a new tour
     @PostMapping
-    public TourEntity create(
+    public TourResponse create(
             @RequestBody TourCreateRequest req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
-        if (userDetails == null) {
-            logger.warn("Create Tour: userDetails is null! JWT not parsed?");
-            throw new RuntimeException("Unauthorized: user not authenticated");
-        }
-
         UUID userId = userDetails.getUserId();
+        UUID id = UUIDv7.randomUUID();
+
         logger.info("Create Tour called by user: {}", userId);
-        logger.debug("Create Tour payload: {}", req);
-
-        TourEntity tour = new TourEntity(
-                UUIDv7.randomUUID(),
-                userId,
-                req.name(),
-                req.description(),
-                req.startName(),
-                req.endName()
-        );
-
-        return service.save(tour);
+        return service.create(userId, req, id);
     }
-
-    // Get all tours for authenticated user
+    
     @GetMapping
-    public List<TourEntity> all(@AuthenticationPrincipal JwtUserDetails userDetails) {
-        if (userDetails == null) {
-            logger.warn("Get All Tours: userDetails is null!");
-            throw new RuntimeException("Unauthorized: user not authenticated");
-        }
-
+    public List<TourListResponse> all(@AuthenticationPrincipal JwtUserDetails userDetails) {
         UUID userId = userDetails.getUserId();
         logger.info("Get All Tours called by user: {}", userId);
         return service.findAllByUser(userId);
     }
 
-    // Get a single tour by ID for authenticated user
     @GetMapping("/{id}")
-    public TourEntity getById(
+    public TourResponse getById(
             @PathVariable UUID id,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
-        if (userDetails == null) {
-            logger.warn("Get Tour {}: userDetails is null!", id);
-            throw new RuntimeException("Unauthorized: user not authenticated");
-        }
-
         UUID userId = userDetails.getUserId();
         logger.info("Get Tour {} called by user {}", id, userId);
-
-        return service.findByIdAndUser(id, userId)
-                .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
+        return service.findByIdAndUser(id, userId);
     }
 
-    // Update a tour by ID for authenticated user
     @PutMapping("/{id}")
-    public TourEntity update(
+    public TourResponse update(
             @PathVariable UUID id,
-            @RequestBody TourCreateRequest req,
+            @RequestBody TourUpdateRequest req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
-        if (userDetails == null) {
-            logger.warn("Update Tour {}: userDetails is null!", id);
-            throw new RuntimeException("Unauthorized: user not authenticated");
-        }
-
         UUID userId = userDetails.getUserId();
         logger.info("Update Tour {} called by user {}", id, userId);
-        logger.debug("Update Tour payload: {}", req);
-
-        return service.updateTour(id, userId, req);
+        return service.update(id, userId, req);
     }
-
-    // Delete a tour by ID for authenticated user
+    
     @DeleteMapping("/{id}")
     public void delete(
             @PathVariable UUID id,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
-        if (userDetails == null) {
-            logger.warn("Delete Tour {}: userDetails is null!", id);
-            throw new RuntimeException("Unauthorized: user not authenticated");
-        }
-
         UUID userId = userDetails.getUserId();
         logger.info("Delete Tour {} called by user {}", id, userId);
         service.deleteByUser(id, userId);

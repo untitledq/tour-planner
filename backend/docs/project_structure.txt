@@ -22,6 +22,7 @@
 ├── init.sql
 ├── logs
 │   ├── tourplanner.2026-03-28.0.log
+│   ├── tourplanner.2026-03-29.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -45,24 +46,30 @@
     │   │                   │   │   ├── RegisterRequest.java
     │   │                   │   │   ├── TourCreateRequest.java
     │   │                   │   │   ├── TourLogCreateRequest.java
-    │   │                   │   │   └── TourLogUpdateRequest.java
+    │   │                   │   │   ├── TourLogUpdateRequest.java
+    │   │                   │   │   └── TourUpdateRequest.java
     │   │                   │   ├── response
     │   │                   │   │   ├── AuthResponse.java
     │   │                   │   │   ├── LoginResponse.java
     │   │                   │   │   ├── RouteResponse.java
+    │   │                   │   │   ├── TourListResponse.java
+    │   │                   │   │   ├── TourLogListResponse.java
     │   │                   │   │   ├── TourLogResponse.java
     │   │                   │   │   └── TourResponse.java
     │   │                   │   ├── TourController.java
     │   │                   │   └── TourLogController.java
+    │   │                   ├── mapper
+    │   │                   │   ├── TourLogMapper.java
+    │   │                   │   └── TourMapper.java
     │   │                   ├── persistence
     │   │                   │   ├── adapter
     │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
     │   │                   │   │   └── JpaUserRepositoryAdapter.java
     │   │                   │   ├── entity
-    │   │                   │   │   ├── SessionEntity.java
-    │   │                   │   │   ├── TourEntity.java
-    │   │                   │   │   ├── TourLogEntity.java
-    │   │                   │   │   └── UserEntity.java
+    │   │                   │   │   ├── Session.java
+    │   │                   │   │   ├── Tour.java
+    │   │                   │   │   ├── TourLog.java
+    │   │                   │   │   └── User.java
     │   │                   │   ├── port
     │   │                   │   │   ├── PasswordHasher.java
     │   │                   │   │   ├── SessionRepository.java
@@ -82,15 +89,17 @@
     │   │                   ├── service
     │   │                   │   ├── AuthService.java
     │   │                   │   ├── dto
-    │   │                   │   │   ├── Session.java
-    │   │                   │   │   └── User.java
+    │   │                   │   │   ├── SessionDto.java
+    │   │                   │   │   └── UserDto.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
     │   │                   │   │   ├── SessionCleanupServiceImpl.java
-    │   │                   │   │   ├── TourLogService.java
-    │   │                   │   │   ├── TourService.java
+    │   │                   │   │   ├── TourLogServiceImpl.java
+    │   │                   │   │   ├── TourServiceImpl.java
     │   │                   │   │   └── UserServiceImpl.java
     │   │                   │   ├── SessionCleanupService.java
+    │   │                   │   ├── TourLogService.java
+    │   │                   │   ├── TourService.java
     │   │                   │   └── UserService.java
     │   │                   ├── TourPlannerApplication.java
     │   │                   └── util
@@ -110,4 +119,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-36 directories, 75 files
+37 directories, 83 files

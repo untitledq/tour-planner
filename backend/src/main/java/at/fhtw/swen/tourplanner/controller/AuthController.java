@@ -1,7 +1,7 @@
 package at.fhtw.swen.tourplanner.controller;
 
+import at.fhtw.swen.tourplanner.service.dto.UserDto;
 import at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl;
-import at.fhtw.swen.tourplanner.service.dto.User;
 import at.fhtw.swen.tourplanner.service.impl.UserServiceImpl;
 import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
 import at.fhtw.swen.tourplanner.controller.request.LoginRequest;
@@ -28,7 +28,7 @@ public class AuthController {
     @PostMapping("/user/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse register(@RequestBody RegisterRequest request) {
-        User user = userServiceImpl.register(
+        UserDto userDto = userServiceImpl.register(
                 request.username(),
                 request.password(),
                 request.email()
@@ -39,9 +39,9 @@ public class AuthController {
         );
 
         return new AuthResponse(
-                user.id(),
-                user.username(),
-                user.createdAt(),
+                userDto.id(),
+                userDto.username(),
+                userDto.createdAt(),
                 login.token()
         );
     }

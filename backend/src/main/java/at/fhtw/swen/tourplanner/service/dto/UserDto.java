@@ -3,13 +3,13 @@ package at.fhtw.swen.tourplanner.service.dto;
 import java.time.Instant;
 import java.util.UUID;
 
-public record User(UUID id, String username, String passwordHash, String email, Instant createdAt) {
+public record UserDto(UUID id, String username, String passwordHash, String email, Instant createdAt) {
 
-    public User(UUID id, String username, String password, String email) {
+    public UserDto(UUID id, String username, String password, String email) {
         this(id, username, password, email, null);
     }
 
-    public User {
+    public UserDto {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }
