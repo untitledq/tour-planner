@@ -34,6 +34,10 @@ h1 {
 }
 
 .create-tour-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -247,6 +251,11 @@ h1 {
   margin-left: auto;
 }
 
+.create-tour-actions--header {
+  align-self: flex-end;
+  margin-left: 0;
+}
+
 .create-tour-actions__button {
   min-width: 9.5rem;
   border: 0;
@@ -278,6 +287,11 @@ h1 {
 @media (max-width: 980px) {
   .create-tour-page {
     padding-left: 0;
+  }
+
+  .create-tour-header {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .create-tour-form__row,

@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourDraftService } from '../../services/create-tour-draft.service';
+import { TourApiService } from '../../services/tour-api.service';
 
 @Component({
   selector: 'app-create-tour-summary-page',
@@ -20,10 +21,12 @@ export class CreateTourSummaryPage implements PendingChangesAware {
   protected readonly maxDescriptionLength = 500;
   protected readonly draftService = inject(CreateTourDraftService);
   protected isLoggingOut = false;
+  protected isSaving = false;
   protected showLeaveDialog = false;
   private readonly authApi = inject(AuthApiService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly tourApi = inject(TourApiService);
   private pendingLeaveResolver: ((value: boolean) => void) | null = null;
   private allowRouteChange = false;
 
@@ -66,6 +69,48 @@ export class CreateTourSummaryPage implements PendingChangesAware {
   protected editTour(): void {
     this.allowRouteChange = true;
     void this.router.navigateByUrl('/tours/create/details');
+  }
+
+  protected saveTour(): void {
+    if (this.isSaving) {
+      return;
+    }
+
+    this.isSaving = true;
+    this.draftService.setSaveResult(null);
+
+    this.tourApi
+      .create({
+        name: this.draft.name,
+        description: this.draft.description,
+        imagePath: '',
+        transportType: this.draft.transportType,
+        startName: this.draft.from,
+        endName: this.draft.to
+      })
+      .pipe(finalize(() => (this.isSaving = false)))
+      .subscribe({
+        next: (tour) => {
+          this.draftService.setSaveResult({
+            status: 'success',
+            title: 'Tour successfully created!',
+            message: 'Your tour has been stored and is ready for the next steps.',
+            tourId: tour.id
+          });
+          this.draftService.reset();
+          this.allowRouteChange = true;
+          void this.router.navigateByUrl('/tours/create/done');
+        },
+        error: () => {
+          this.draftService.setSaveResult({
+            status: 'error',
+            title: 'Tour could not be created',
+            message: 'Saving failed. Please review the data or try again.'
+          });
+          this.allowRouteChange = true;
+          void this.router.navigateByUrl('/tours/create/done');
+        }
+      });
   }
 
   protected get draft() {

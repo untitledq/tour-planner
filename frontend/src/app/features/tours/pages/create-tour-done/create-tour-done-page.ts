@@ -1,0 +1,75 @@
+import { afterNextRender, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
+
+import { CreateTourSaveResult } from '../../models/tour.models';
+import { CreateTourDraftService } from '../../services/create-tour-draft.service';
+import { AuthSessionService } from '../../../../core/services/auth-session.service';
+import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
+import { AuthApiService } from '../../../auth/services/auth-api.service';
+
+@Component({
+  selector: 'app-create-tour-done-page',
+  standalone: true,
+  imports: [SidebarComponent],
+  templateUrl: './create-tour-done-page.html',
+  styleUrl: './create-tour-done-page.css'
+})
+export class CreateTourDonePage {
+  protected isLoggingOut = false;
+  private readonly draftService = inject(CreateTourDraftService);
+  private readonly router = inject(Router);
+  private readonly authApi = inject(AuthApiService);
+  private readonly authSession = inject(AuthSessionService);
+
+  constructor() {
+    afterNextRender(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+  }
+
+  protected logout(): void {
+    this.isLoggingOut = true;
+
+    this.authApi
+      .logout()
+      .pipe(finalize(() => (this.isLoggingOut = false)))
+      .subscribe({
+        next: () => {
+          void this.router.navigateByUrl('/login');
+        },
+        error: () => {
+          this.authSession.clearToken();
+          void this.router.navigateByUrl('/login');
+        }
+      });
+  }
+
+  protected get result(): CreateTourSaveResult {
+    return (
+      this.draftService.saveResult() ?? {
+        status: 'error',
+        title: 'Tour could not be created',
+        message: 'No save result is available for this flow.'
+      }
+    );
+  }
+
+  protected goToDashboard(): void {
+    this.draftService.setSaveResult(null);
+    void this.router.navigateByUrl('/dashboard');
+  }
+
+  protected goToPrimaryDestination(): void {
+    const status = this.result.status;
+
+    this.draftService.setSaveResult(null);
+
+    if (status === 'success') {
+      void this.router.navigateByUrl('/tours');
+      return;
+    }
+
+    void this.router.navigateByUrl('/tours/create/summary');
+  }
+}

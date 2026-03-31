@@ -28,6 +28,10 @@
 }
 
 .create-tour-summary-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -205,6 +209,11 @@
   margin-left: auto;
 }
 
+.create-tour-summary-actions--header {
+  align-self: flex-end;
+  margin-left: 0;
+}
+
 .create-tour-summary-actions__button {
   min-width: 9.5rem;
   border: 0;
@@ -236,6 +245,11 @@
 @media (max-width: 980px) {
   .create-tour-summary-page {
     padding-left: 0;
+  }
+
+  .create-tour-summary-header {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .create-tour-summary-form__row {

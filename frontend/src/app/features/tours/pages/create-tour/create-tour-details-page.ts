@@ -32,6 +32,7 @@ export class CreateTourDetailsPage implements PendingChangesAware {
 
   constructor() {
     const draft = this.draftService.draft();
+    this.draftService.setSaveResult(null);
 
     this.detailsForm = this.formBuilder.nonNullable.group({
       name: [draft.name, [Validators.required]],

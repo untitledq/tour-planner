@@ -8,14 +8,34 @@
   <section class="create-tour-content">
     <div class="create-tour-page">
       <header class="create-tour-header">
-        <h1>Create New Tour</h1>
+        <div>
+          <h1>Create New Tour</h1>
 
-        <div class="create-tour-progress" aria-label="Create tour progress">
-          <h2 class="create-tour-progress__step create-tour-progress__step--active">
-            Details
-          </h2>
-          <h2 class="create-tour-progress__step">Summary</h2>
-          <h2 class="create-tour-progress__step">Done</h2>
+          <div class="create-tour-progress" aria-label="Create tour progress">
+            <h2 class="create-tour-progress__step create-tour-progress__step--active">
+              Details
+            </h2>
+            <h2 class="create-tour-progress__step">Summary</h2>
+            <h2 class="create-tour-progress__step">Done</h2>
+          </div>
+        </div>
+
+        <div class="create-tour-actions create-tour-actions--header">
+          <button
+            type="button"
+            class="create-tour-actions__button create-tour-actions__button--secondary"
+            (click)="cancelCreation()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="create-tour-actions__button create-tour-actions__button--primary"
+            (click)="goToSummary()"
+          >
+            Go to summary
+          </button>
         </div>
       </header>
 
@@ -93,24 +113,6 @@
               <strong>Placeholder</strong>
             </div>
           </section>
-
-          <div class="create-tour-actions">
-            <button
-              type="button"
-              class="create-tour-actions__button create-tour-actions__button--secondary"
-              (click)="cancelCreation()"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="button"
-              class="create-tour-actions__button create-tour-actions__button--primary"
-              (click)="goToSummary()"
-            >
-              Go to summary
-            </button>
-          </div>
         </footer>
       </section>
     </div>

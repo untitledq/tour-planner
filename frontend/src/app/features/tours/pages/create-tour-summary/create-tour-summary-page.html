@@ -8,19 +8,39 @@
   <section class="create-tour-summary-content">
     <div class="create-tour-summary-page">
       <header class="create-tour-summary-header">
-        <h1>Create New Tour</h1>
+        <div>
+          <h1>Create New Tour</h1>
 
-        <div
-          class="create-tour-summary-progress"
-          aria-label="Create tour progress"
-        >
-          <h2 class="create-tour-summary-progress__step">Details</h2>
-          <h2
-            class="create-tour-summary-progress__step create-tour-summary-progress__step--active"
+          <div
+            class="create-tour-summary-progress"
+            aria-label="Create tour progress"
           >
-            Summary
-          </h2>
-          <h2 class="create-tour-summary-progress__step">Done</h2>
+            <h2 class="create-tour-summary-progress__step">Details</h2>
+            <h2
+              class="create-tour-summary-progress__step create-tour-summary-progress__step--active"
+            >
+              Summary
+            </h2>
+            <h2 class="create-tour-summary-progress__step">Done</h2>
+          </div>
+        </div>
+
+        <div class="create-tour-summary-actions create-tour-summary-actions--header">
+          <button
+            type="button"
+            class="create-tour-summary-actions__button create-tour-summary-actions__button--secondary"
+            (click)="editTour()"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            class="create-tour-summary-actions__button create-tour-summary-actions__button--primary"
+            (click)="saveTour()"
+          >
+            {{ isSaving ? 'Saving...' : 'Save' }}
+          </button>
         </div>
       </header>
 
@@ -88,23 +108,6 @@
               <strong>Placeholder</strong>
             </div>
           </section>
-
-          <div class="create-tour-summary-actions">
-            <button
-              type="button"
-              class="create-tour-summary-actions__button create-tour-summary-actions__button--secondary"
-              (click)="editTour()"
-            >
-              Edit
-            </button>
-
-            <button
-              type="button"
-              class="create-tour-summary-actions__button create-tour-summary-actions__button--primary"
-            >
-              Save
-            </button>
-          </div>
         </footer>
       </section>
     </div>

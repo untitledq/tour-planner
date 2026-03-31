@@ -8,6 +8,7 @@ import { ExportPage } from './features/export/pages/export/export-page';
 import { ImportPage } from './features/import/pages/import/import-page';
 import { TourLogsPage } from './features/tour-logs/pages/tour-logs/tour-logs-page';
 import { CreateTourDetailsPage } from './features/tours/pages/create-tour/create-tour-details-page';
+import { CreateTourDonePage } from './features/tours/pages/create-tour-done/create-tour-done-page';
 import { CreateTourSummaryPage } from './features/tours/pages/create-tour-summary/create-tour-summary-page';
 import { ToursPage } from './features/tours/pages/tours/tours-page';
 
@@ -46,6 +47,11 @@ export const routes: Routes = [
     component: CreateTourSummaryPage,
     canActivate: [authGuard],
     canDeactivate: [pendingChangesGuard]
+  },
+  {
+    path: 'tours/create/done',
+    component: CreateTourDonePage,
+    canActivate: [authGuard]
   },
   {
     path: 'tour-logs',
