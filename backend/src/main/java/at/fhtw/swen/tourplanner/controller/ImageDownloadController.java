@@ -1,6 +1,7 @@
 package at.fhtw.swen.tourplanner.controller;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
+import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,9 +19,11 @@ import java.util.UUID;
 public class ImageDownloadController {
 
     private final TourJpaRepository tourRepository;
+    private final UserRepository userRepository;
 
-    public ImageDownloadController(TourJpaRepository tourRepository) {
+    public ImageDownloadController(TourJpaRepository tourRepository, UserRepository userRepository) {
         this.tourRepository = tourRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/api/tours/{tourId}/image")
@@ -29,7 +32,9 @@ public class ImageDownloadController {
             Principal principal
     ) throws Exception {
 
-        UUID userId = UUID.fromString(principal.getName());
+        UUID userId = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
 
         Tour tour = tourRepository.findByIdAndCreatedBy(tourId, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));

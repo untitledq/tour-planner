@@ -2,6 +2,7 @@ package at.fhtw.swen.tourplanner.controller;
 
 import at.fhtw.swen.tourplanner.controller.response.ImageUploadResponse;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
+import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
 import at.fhtw.swen.tourplanner.service.impl.ImageServiceImpl;
 import org.springframework.http.MediaType;
@@ -17,11 +18,14 @@ public class ImageUploadController {
 
     private final ImageServiceImpl imageServiceImpl;
     private final TourJpaRepository tourRepository;
+    private final UserRepository userRepository;
 
     public ImageUploadController(ImageServiceImpl imageServiceImpl,
-                                 TourJpaRepository tourRepository) {
+                                 TourJpaRepository tourRepository,
+                                 UserRepository userRepository) {
         this.imageServiceImpl = imageServiceImpl;
         this.tourRepository = tourRepository;
+        this.userRepository = userRepository;
     }
 
     @PostMapping(
@@ -35,7 +39,9 @@ public class ImageUploadController {
             Principal principal
     ) {
 
-        UUID userId = UUID.fromString(principal.getName());
+        UUID userId = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
 
         Tour tour = tourRepository.findByIdAndCreatedBy(tourId, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
