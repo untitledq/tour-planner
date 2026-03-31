@@ -104,6 +104,14 @@ export class CreateTourDetailsPage implements PendingChangesAware {
     return this.descriptionLength > this.maxDescriptionLength;
   }
 
+  protected showRequiredError(
+    controlName: 'name' | 'transportType' | 'from' | 'to' | 'description'
+  ): boolean {
+    const control = this.detailsForm.controls[controlName];
+
+    return control.touched && control.hasError('required');
+  }
+
   canDeactivate(): boolean | Promise<boolean> {
     if (this.allowRouteChange) {
       this.allowRouteChange = false;
