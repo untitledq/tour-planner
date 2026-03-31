@@ -23,6 +23,7 @@
 ├── logs
 │   ├── tourplanner.2026-03-28.0.log
 │   ├── tourplanner.2026-03-29.0.log
+│   ├── tourplanner.2026-03-30.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -38,9 +39,12 @@
     │   │           └── swen
     │   │               └── tourplanner
     │   │                   ├── config
+    │   │                   │   ├── ImageStorageProperties.java
     │   │                   │   └── SecurityConfig.java
     │   │                   ├── controller
     │   │                   │   ├── AuthController.java
+    │   │                   │   ├── ImageDownloadController.java
+    │   │                   │   ├── ImageUploadController.java
     │   │                   │   ├── request
     │   │                   │   │   ├── LoginRequest.java
     │   │                   │   │   ├── RegisterRequest.java
@@ -50,6 +54,7 @@
     │   │                   │   │   └── TourUpdateRequest.java
     │   │                   │   ├── response
     │   │                   │   │   ├── AuthResponse.java
+    │   │                   │   │   ├── ImageUploadResponse.java
     │   │                   │   │   ├── LoginResponse.java
     │   │                   │   │   ├── RouteResponse.java
     │   │                   │   │   ├── TourListResponse.java
@@ -58,14 +63,12 @@
     │   │                   │   │   └── TourResponse.java
     │   │                   │   ├── TourController.java
     │   │                   │   └── TourLogController.java
-    │   │                   ├── mapper
-    │   │                   │   ├── TourLogMapper.java
-    │   │                   │   └── TourMapper.java
     │   │                   ├── persistence
     │   │                   │   ├── adapter
     │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
     │   │                   │   │   └── JpaUserRepositoryAdapter.java
     │   │                   │   ├── entity
+    │   │                   │   │   ├── Route.java
     │   │                   │   │   ├── Session.java
     │   │                   │   │   ├── Tour.java
     │   │                   │   │   ├── TourLog.java
@@ -93,16 +96,22 @@
     │   │                   │   │   └── UserDto.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
+    │   │                   │   │   ├── ImageServiceImpl.java
+    │   │                   │   │   ├── OpenRouteServiceClientImpl.java
     │   │                   │   │   ├── SessionCleanupServiceImpl.java
     │   │                   │   │   ├── TourLogServiceImpl.java
     │   │                   │   │   ├── TourServiceImpl.java
     │   │                   │   │   └── UserServiceImpl.java
+    │   │                   │   ├── mapper
+    │   │                   │   │   ├── TourLogMapper.java
+    │   │                   │   │   └── TourMapper.java
     │   │                   │   ├── SessionCleanupService.java
     │   │                   │   ├── TourLogService.java
     │   │                   │   ├── TourService.java
     │   │                   │   └── UserService.java
     │   │                   ├── TourPlannerApplication.java
     │   │                   └── util
+    │   │                       ├── CoordinatesJsonConverter.java
     │   │                       ├── LoggerService.java
     │   │                       └── UUIDv7.java
     │   └── resources
@@ -119,4 +128,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-37 directories, 83 files
+37 directories, 92 files

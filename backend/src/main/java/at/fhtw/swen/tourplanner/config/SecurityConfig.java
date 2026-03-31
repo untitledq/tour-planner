@@ -38,6 +38,7 @@ public class SecurityConfig {
 
                         // Authenticated endpoints
                         .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
+                        .requestMatchers("/api/tours/*/image").authenticated()
                         .requestMatchers("/api/tours/**").authenticated()
                         .requestMatchers("/api/tour-logs/**").authenticated()
 

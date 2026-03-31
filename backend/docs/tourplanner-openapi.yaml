@@ -70,7 +70,7 @@ paths:
                       data:
                         type: array
                         items:
-                          $ref: '#/components/schemas/Tour'
+                          $ref: '#/components/schemas/TourListItem'
 
     post:
       summary: Create a new tour (backend resolves route)
@@ -204,7 +204,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Route'
+                $ref: '#/components/schemas/RouteResponse'
 
   /api/tours/{tourId}/image:
     post:
@@ -227,6 +227,10 @@ paths:
       responses:
         '200':
           description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageUploadResponse'
         '400':
           description: Invalid file
         '404':
@@ -268,7 +272,7 @@ paths:
                       data:
                         type: array
                         items:
-                          $ref: '#/components/schemas/Tour'
+                          $ref: '#/components/schemas/TourListItem'
 
   /api/users/me/favorites/{tourId}:
     post:
@@ -375,18 +379,15 @@ components:
         endName:       { type: string }
         transportType: { type: string, enum: [CAR, BIKE, FOOT] }
 
-    Route:
+    TourListItem:
       type: object
       properties:
-        distance: { type: integer, description: meters }
-        duration: { type: integer, description: seconds }
-        coordinates:
-          type: array
-          items:
-            type: object
-            properties:
-              lat: { type: number }
-              lng: { type: number }
+        id: { type: string, format: uuid }
+        name: { type: string }
+        startName: { type: string }
+        endName: { type: string }
+        transportType: { type: string }
+        hasImage: { type: boolean }
 
     TourLog:
       type: object
@@ -394,6 +395,8 @@ components:
         id:       { type: string, format: uuid }
         dateTime: { type: string, format: date-time }
         rating:   { type: integer }
+        difficulty: { type: integer }
+        totalTime: { type: integer }
         comment:  { type: string }
 
     TourLogCreateRequest:
@@ -410,3 +413,37 @@ components:
         dateTime: { type: string, format: date-time }
         rating:   { type: integer }
         comment:  { type: string }
+
+    Route:
+      type: object
+      properties:
+        distance: { type: integer, description: meters }
+        duration: { type: integer, description: seconds }
+        coordinates:
+          type: array
+          items:
+            type: object
+            properties:
+              lat: { type: number }
+              lng: { type: number }
+
+    RouteResponse:
+      type: object
+      properties:
+        distance: { type: integer, description: meters }
+        duration: { type: integer, description: seconds }
+        coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/LatLng'
+
+    LatLng:
+      type: object
+      properties:
+        lat: { type: number }
+        lng: { type: number }
+
+    ImageUploadResponse:
+      type: object
+      properties:
+        hasImage: { type: boolean }
