@@ -23,6 +23,7 @@
 ├── logs
 │   ├── tourplanner.2026-03-28.0.log
 │   ├── tourplanner.2026-03-29.0.log
+│   ├── tourplanner.2026-03-30.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -38,9 +39,12 @@
     │   │           └── swen
     │   │               └── tourplanner
     │   │                   ├── config
+    │   │                   │   ├── ImageStorageProperties.java
     │   │                   │   └── SecurityConfig.java
     │   │                   ├── controller
     │   │                   │   ├── AuthController.java
+    │   │                   │   ├── ImageDownloadController.java
+    │   │                   │   ├── ImageUploadController.java
     │   │                   │   ├── request
     │   │                   │   │   ├── LoginRequest.java
     │   │                   │   │   ├── RegisterRequest.java
@@ -92,8 +96,8 @@
     │   │                   │   │   └── UserDto.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
-    │   │                   │   │   ├── ImageStorageService.java
-    │   │                   │   │   ├── OpenRouteServiceClient.java
+    │   │                   │   │   ├── ImageServiceImpl.java
+    │   │                   │   │   ├── OpenRouteServiceClientImpl.java
     │   │                   │   │   ├── SessionCleanupServiceImpl.java
     │   │                   │   │   ├── TourLogServiceImpl.java
     │   │                   │   │   ├── TourServiceImpl.java
@@ -124,4 +128,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-37 directories, 88 files
+37 directories, 92 files

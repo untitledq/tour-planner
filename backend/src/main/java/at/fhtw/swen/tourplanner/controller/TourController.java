@@ -5,21 +5,13 @@ import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourResponse;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
-import at.fhtw.swen.tourplanner.service.impl.TourServiceImpl;
+import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.slf4j.Logger;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,10 +19,10 @@ import java.util.UUID;
 @RequestMapping("/api/tours")
 public class TourController {
 
-    private final TourServiceImpl service;
+    private final TourService service;
     private final Logger logger;
 
-    public TourController(TourServiceImpl service) {
+    public TourController(TourService service) {
         this.service = service;
         LoggerService logService = new LoggerService();
         this.logger = logService.getInstance().getLogger(getClass());
@@ -47,33 +39,6 @@ public class TourController {
         logger.info("Create Tour called by user: {}", userId);
         return service.create(userId, req, id);
     }
-
-//    @PostMapping(
-//            value = "/api/tours/{tourId}/image",
-//            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-//    )
-//    public ResponseEntity<Void> uploadTourImage(
-//            @PathVariable UUID tourId,
-//            @RequestPart MultipartFile file) {
-//
-//        String path = imageStorageService.saveTourImage(tourId, file);
-//        tourService.updateImagePath(tourId, path);
-//
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @GetMapping("/api/tours/{tourId}/image")
-//    public ResponseEntity<Resource> getTourImage(@PathVariable UUID tourId) throws IOException {
-//
-//        String path = tourService.getImagePath(tourId);
-//        Path file = Paths.get(path);
-//
-//        Resource resource = new UrlResource(file.toUri());
-//
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.IMAGE_JPEG)
-//                .body(resource);
-//    }
 
     @GetMapping
     public List<TourListResponse> all(@AuthenticationPrincipal JwtUserDetails userDetails) {

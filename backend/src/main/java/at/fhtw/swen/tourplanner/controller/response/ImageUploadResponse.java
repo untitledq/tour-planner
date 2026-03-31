@@ -9,8 +9,7 @@ public class ImageUploadResponse {
 
     private boolean hasImage;
 
-    public ImageUploadResponse() {
-    }
+    public ImageUploadResponse() {}
 
     public ImageUploadResponse(boolean hasImage) {
         this.hasImage = hasImage;

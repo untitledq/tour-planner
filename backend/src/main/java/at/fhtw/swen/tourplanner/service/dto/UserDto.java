@@ -24,4 +24,8 @@ public record UserDto(UUID id, String username, String passwordHash, String emai
         }
 
     }
+
+    public UUID getId() {
+        return id;
+    }
 }
