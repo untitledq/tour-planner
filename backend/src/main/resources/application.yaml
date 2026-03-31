@@ -29,5 +29,6 @@ session:
   cleanup:
     fixed-delay-ms: 900000
 
-app:
-  image-base-directory: /opt/tourplanner/images
+tour-planner:
+  image:
+    base-dir: /opt/tourplanner/images
