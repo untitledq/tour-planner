@@ -6,59 +6,129 @@ Beispielszenario:
 
 - der User ist eingeloggt
 - der User klickt auf `+ New Tour`
-- der User gibt Tourdaten ein
-- der User wechselt zu `Summary`
-- der User kann zur Bearbeitung zurueck
-- wenn der User den Flow verlassen will, erscheint ein Leave-Dialog
+- der User fuellt `Details` aus
+- der User geht auf `Summary`
+- der User speichert die Tour
+- der User landet auf `Done`
+- falls der User den Flow zwischendurch verlassen will, greift ein Leave-Dialog
 
 Der Fokus liegt dabei auf:
 
 - `Reactive Forms`
-- `signal` fuer den Draft zwischen den Wizard-Schritten
+- `signal` fuer den gemeinsamen Draft
+- Feature-Flow-Guard fuer das gesamte `Create Tour`-Feature
 - `canDeactivate` Leave-Guard
-- Zusammenspiel zwischen Guard, Dialog und Draft-Reset
+- Zusammenspiel von Guard, Dialog und Draft-/Flow-Reset
 
 ## Ausgangspunkt: User klickt auf `+ New Tour`
 
-Der Einstieg passiert aktuell ueber Dashboard oder Tours. Beide Buttons navigieren auf die Details-Seite:
+Der Einstieg passiert ueber Dashboard oder Tours. Die Buttons machen nicht nur Navigation, sondern starten den Flow bewusst.
 
-- Route: `/tours/create/details`
-- Seite: `CreateTourDetailsPage`
+Beispiel aus [dashboard-page.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/dashboard/pages/dashboard/dashboard-page.ts):
 
-Die Route ist in [app.routes.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/app.routes.ts) definiert:
+```ts
+protected openNewTour(): void {
+  this.createTourFlow.startFlow();
+  void this.router.navigateByUrl('/tours/create/details');
+}
+```
+
+Das ist wichtig, weil das gesamte `Create Tour`-Feature nicht direkt per URL betreten werden soll.
+
+## Vor dem Wizard: Flow Guard fuer das gesamte Feature
+
+Die drei Wizard-Schritte sind:
+
+- `/tours/create/details`
+- `/tours/create/summary`
+- `/tours/create/done`
+
+In [app.routes.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/app.routes.ts) sind sie so geschuetzt:
 
 ```ts
 {
   path: 'tours/create/details',
   component: CreateTourDetailsPage,
-  canActivate: [authGuard],
+  canActivate: [authGuard, createTourFlowGuard],
   canDeactivate: [pendingChangesGuard]
 },
 {
   path: 'tours/create/summary',
   component: CreateTourSummaryPage,
-  canActivate: [authGuard],
+  canActivate: [authGuard, createTourFlowGuard],
   canDeactivate: [pendingChangesGuard]
+},
+{
+  path: 'tours/create/done',
+  component: CreateTourDonePage,
+  canActivate: [authGuard, createTourFlowGuard]
 }
 ```
 
-Damit ist von Anfang an klar:
+### Rolle des `authGuard`
 
-- nur eingeloggte User duerfen hinein
-- beim Verlassen greift ein Leave-Guard
+`authGuard` prueft nur:
+
+- ist der User eingeloggt?
+
+Wenn nicht, geht es zu `/login`.
+
+### Rolle des `createTourFlowGuard`
+
+`createTourFlowGuard` prueft:
+
+- wurde der Wizard offiziell ueber `+ New Tour` gestartet?
+
+Das passiert ueber den Service [create-tour-flow.service.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/services/create-tour-flow.service.ts):
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class CreateTourFlowService {
+  readonly canAccessFlow = signal(false);
+
+  startFlow(): void {
+    this.canAccessFlow.set(true);
+  }
+
+  resetFlow(): void {
+    this.canAccessFlow.set(false);
+  }
+}
+```
+
+Und im Guard [create-tour-flow.guard.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/core/guards/create-tour-flow.guard.ts):
+
+```ts
+export const createTourFlowGuard: CanActivateFn = () => {
+  const flowService = inject(CreateTourFlowService);
+  const router = inject(Router);
+
+  if (flowService.canAccessFlow()) {
+    return true;
+  }
+
+  return router.createUrlTree(['/dashboard']);
+};
+```
+
+Das bedeutet:
+
+- eingeloggt, aber kein offizieller Flow-Start => `Dashboard`
+- nicht eingeloggt => schon vorher durch `authGuard` nach `Login`
 
 ## Schritt 1: Die Details-Seite wird geoeffnet
 
 Der User landet auf `CreateTourDetailsPage` in [create-tour-details-page.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour/create-tour-details-page.ts).
 
-Beim Laden passieren zwei wichtige Dinge:
+Beim Laden passieren zwei Dinge:
 
-1. Die Seite scrollt nach oben.
-2. Das Formular wird mit dem aktuellen Draft vorbelegt.
+1. die Seite scrollt nach oben
+2. das Formular wird aus dem aktuellen Draft vorbelegt
 
 ```ts
 constructor() {
   const draft = this.draftService.draft();
+  this.draftService.setSaveResult(null);
 
   this.detailsForm = this.formBuilder.nonNullable.group({
     name: [draft.name, [Validators.required]],
@@ -77,51 +147,30 @@ constructor() {
 }
 ```
 
-### Was hier fachlich passiert
+### Warum hier `Reactive Forms`?
 
-Wenn der User zum ersten Mal in den Flow kommt, ist der Draft leer. Dann startet das Formular leer.
-
-Wenn der User spaeter auf `Summary` war und wieder auf `Edit` klickt, liest die Seite denselben Draft erneut ein. Dadurch sieht der User wieder dieselben Werte im Formular.
-
-## Schritt 2: Warum hier `Reactive Forms` verwendet werden
-
-Die Details-Seite ist die eigentliche Eingabeseite. Deshalb liegt die Formlogik in einem `FormGroup`.
-
-Das passt gut fuer:
+Die Details-Seite ist die echte Eingabeseite. Deshalb ist `Reactive Forms` hier die richtige Quelle fuer:
 
 - Pflichtfelder
 - `maxlength`
-- spaetere Validierungsfehler
-- sauberen Submit
+- Touched-/Invalid-State
+- spaetere Submit-Validierung
 
-Im Template [create-tour-details-page.html](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour/create-tour-details-page.html) sieht man die Bindung direkt:
+Im Template [create-tour-details-page.html](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour/create-tour-details-page.html) ist das Formular direkt gebunden:
 
 ```html
 <form [formGroup]="detailsForm" class="create-tour-form">
-  <label class="create-tour-field">
-    <span>Tour Name</span>
-    <input type="text" formControlName="name" />
-  </label>
-
-  <label class="create-tour-field create-tour-field--select">
-    <span>Transport Type</span>
-    <select formControlName="transportType">
-      <option value=""></option>
-      <option value="car">Car</option>
-      <option value="bike">Bike</option>
-      <option value="walk">Walk</option>
-    </select>
-  </label>
+  <input type="text" formControlName="name" />
+  <select formControlName="transportType">...</select>
+  <input type="text" formControlName="from" />
+  <input type="text" formControlName="to" />
+  <textarea formControlName="description"></textarea>
 </form>
 ```
 
-Der User tippt also nicht in lose Variablen der Komponente, sondern direkt in ein Angular-Formmodell.
+## Schritt 2: Wo liegen die Daten zwischen `Details` und `Summary`?
 
-## Schritt 3: Wo kommen die Daten zwischen `Details` und `Summary` hin?
-
-Hier kommt der signal-basierte Draft-Service ins Spiel.
-
-Der gemeinsame Zwischenstand liegt in [create-tour-draft.service.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/services/create-tour-draft.service.ts):
+Der gemeinsam genutzte Zwischenstand liegt im signal-basierten Draft-Service [create-tour-draft.service.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/services/create-tour-draft.service.ts).
 
 ```ts
 export interface CreateTourDraft {
@@ -132,17 +181,10 @@ export interface CreateTourDraft {
   description: string;
 }
 
-const INITIAL_DRAFT: CreateTourDraft = {
-  name: '',
-  transportType: '',
-  from: '',
-  to: '',
-  description: ''
-};
-
 @Injectable({ providedIn: 'root' })
 export class CreateTourDraftService {
   readonly draft = signal<CreateTourDraft>(INITIAL_DRAFT);
+  readonly saveResult = signal<CreateTourSaveResult | null>(null);
 
   update(draft: CreateTourDraft): void {
     this.draft.set(draft);
@@ -151,28 +193,32 @@ export class CreateTourDraftService {
   reset(): void {
     this.draft.set(INITIAL_DRAFT);
   }
+
+  setSaveResult(result: CreateTourSaveResult | null): void {
+    this.saveResult.set(result);
+  }
 }
 ```
 
 ### Warum `signal` hier sinnvoll ist
 
-Der Draft ist kein klassisches Formular mehr, sondern der gemeinsam genutzte Zwischenstand des Wizards.
+Der Draft ist nicht das Formular selbst, sondern der seitenuebergreifende Wizard-Zustand.
 
-Das Signal ist hier praktisch, weil:
+`signal` ist hier praktisch, weil:
 
 - `Details` Werte hineinschreiben kann
-- `Summary` Werte daraus lesen kann
-- die Ruecknavigation `Edit` wieder auf denselben Stand zugreift
-- bei bestaetigtem Leave alles zentral geloescht werden kann
+- `Summary` die Werte read-only lesen kann
+- `Edit` denselben Zwischenstand wieder zurueckbringt
+- Leave und Done den Zustand sauber resetten koennen
 
 Kurz:
 
 - Eingabe = `Reactive Forms`
-- seitenuebergreifender Wizard-Stand = `signal`
+- Wizard-Zwischenstand = `signal`
 
-## Schritt 4: Der User fuellt das Formular aus
+## Schritt 3: Der User fuellt `Details` aus
 
-Angenommen, der User gibt Folgendes ein:
+Beispielwerte:
 
 - `name = Vienna City Center Tour`
 - `transportType = Car`
@@ -180,7 +226,7 @@ Angenommen, der User gibt Folgendes ein:
 - `to = Schloss Schoenbrunn, 1130 Vienna`
 - `description = ...`
 
-Diese Werte liegen zunaechst nur im `Reactive Form`.
+Diese Werte liegen zunaechst im `Reactive Form`.
 
 Der Description-Counter liest direkt aus dem Formular:
 
@@ -188,34 +234,23 @@ Der Description-Counter liest direkt aus dem Formular:
 protected get descriptionLength(): number {
   return this.detailsForm.controls.description.value.length;
 }
+```
 
-protected get isDescriptionTooLong(): boolean {
-  return this.descriptionLength > this.maxDescriptionLength;
+Pflichtfelder werden ueber den Formzustand markiert:
+
+```ts
+protected showRequiredError(
+  controlName: 'name' | 'transportType' | 'from' | 'to' | 'description'
+): boolean {
+  const control = this.detailsForm.controls[controlName];
+
+  return control.touched && control.hasError('required');
 }
 ```
 
-Im Template:
+## Schritt 4: Der User klickt auf `Go to summary`
 
-```html
-<textarea
-  [class.create-tour-field__control--invalid]="isDescriptionTooLong"
-  formControlName="description"
-></textarea>
-<small [class.create-tour-field__counter--invalid]="isDescriptionTooLong">
-  {{ descriptionLength }}/{{ maxDescriptionLength }}
-</small>
-```
-
-Das heisst:
-
-- der Counter zeigt live den aktuellen Stand
-- bei Ueberschreitung wird das Feld rot markiert
-
-## Schritt 5: Der User klickt auf `Go to summary`
-
-Jetzt kommt der entscheidende Uebergang vom Formular in den Draft.
-
-Die Methode `goToSummary()` in [create-tour-details-page.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour/create-tour-details-page.ts) sieht so aus:
+Die Methode `goToSummary()`:
 
 ```ts
 protected goToSummary(): void {
@@ -231,31 +266,19 @@ protected goToSummary(): void {
 }
 ```
 
-### Was in dieser Reihenfolge passiert
+### Reihenfolge
 
-1. Alle Felder werden mit `markAllAsTouched()` als geprueft markiert.
-2. Wenn etwas invalid ist, bleibt der User auf `Details`.
-3. Wenn alles gueltig ist, werden die aktuellen Formularwerte in das `signal` geschrieben:
+1. alle Felder werden als touched markiert
+2. invalides Formular blockiert den Wechsel
+3. bei Erfolg werden die Werte ins `signal` geschrieben
+4. der interne Wizard-Wechsel wird ueber `allowRouteChange` freigegeben
+5. danach geht es auf `Summary`
 
-```ts
-this.draftService.update(this.detailsForm.getRawValue());
-```
+## Schritt 5: Warum der Leave-Guard den internen Wechsel nicht blockiert
 
-4. Danach wird mit `allowRouteChange = true` festgehalten, dass diese Navigation ein interner Wizard-Wechsel ist.
-5. Erst dann wird nach `/tours/create/summary` navigiert.
+`Details` und `Summary` haben beide `canDeactivate`.
 
-## Schritt 6: Warum der Leave-Guard hier nicht stoeren darf
-
-Beide Wizard-Seiten haben `canDeactivate`.
-
-Normalerweise bedeutet das:
-
-- wenn der User die Seite verlaesst
-- dann soll ein Popup erscheinen
-
-Beim internen Wechsel `Details -> Summary` waere das aber falsch. Deshalb gibt es `allowRouteChange`.
-
-Die zentrale Methode ist:
+Die Kernlogik:
 
 ```ts
 canDeactivate(): boolean | Promise<boolean> {
@@ -278,14 +301,15 @@ canDeactivate(): boolean | Promise<boolean> {
 
 Das bedeutet:
 
-- interner Wizard-Wechsel mit `allowRouteChange = true` => sofort erlaubt
-- jede andere Navigation => Dialog und Guard-Pause
+- `Details -> Summary` und `Summary -> Details` sind interne Wizard-Wechsel
+- dafuer wird `allowRouteChange` auf `true` gesetzt
+- deshalb erscheint dabei kein Leave-Popup
 
-## Schritt 7: Die Summary-Seite liest die Daten
+## Schritt 6: Die Summary-Seite liest die Werte aus dem Draft
 
 Auf `/tours/create/summary` landet der User in [create-tour-summary-page.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour-summary/create-tour-summary-page.ts).
 
-Auch diese Seite liest den Draft ueber den Service:
+Auch hier kommt der Zustand aus dem Draft-Service:
 
 ```ts
 protected readonly draftService = inject(CreateTourDraftService);
@@ -295,7 +319,7 @@ protected get draft() {
 }
 ```
 
-Im Template [create-tour-summary-page.html](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour-summary/create-tour-summary-page.html) werden diese Werte read-only angezeigt:
+Im Template [create-tour-summary-page.html](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour-summary/create-tour-summary-page.html) werden die Werte read-only angezeigt:
 
 ```html
 <input type="text" [value]="draft.name" readonly />
@@ -305,13 +329,9 @@ Im Template [create-tour-summary-page.html](/mnt/c/Users/wenha/Documents/FHTW/4.
 <textarea readonly>{{ draft.description }}</textarea>
 ```
 
-Der User sieht also genau die Werte, die vorher in `Details` eingegeben und beim Schrittwechsel in den Draft geschrieben wurden.
+## Schritt 7: Der User klickt auf `Edit`
 
-## Schritt 8: Der User klickt auf `Edit`
-
-Wenn der User merkt, dass `From` oder `Description` noch angepasst werden soll, klickt er auf `Edit`.
-
-Die Methode auf der Summary-Seite:
+Die Methode:
 
 ```ts
 protected editTour(): void {
@@ -320,20 +340,122 @@ protected editTour(): void {
 }
 ```
 
-Wieder passiert Folgendes:
+Dadurch:
 
-1. Die Navigation wird als interner Wizard-Wechsel markiert.
-2. Der Leave-Guard blockiert nicht.
-3. Die Details-Seite baut ihr Formular erneut aus dem Draft auf.
-4. Der User sieht die zuvor eingegebenen Werte wieder im Formular.
+1. wird die Navigation als interner Wizard-Wechsel markiert
+2. blockiert der Leave-Guard nicht
+3. baut `Details` das Formular wieder aus dem Draft auf
 
-## Schritt 9: Was passiert, wenn der User den Flow ueber die Sidebar verlaesst?
+## Schritt 8: Der User klickt auf `Save`
 
-Nehmen wir an, der User ist auf `Summary` und klickt in der Sidebar auf `Dashboard`.
+Jetzt geht der Flow in den API-Teil ueber.
 
-Jetzt ist es keine interne Wizard-Navigation mehr. Also greift der Guard.
+Die Save-Logik in [create-tour-summary-page.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour-summary/create-tour-summary-page.ts):
 
-Der Guard selbst liegt in [pending-changes.guard.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/core/guards/pending-changes.guard.ts):
+```ts
+protected saveTour(): void {
+  if (this.isSaving) {
+    return;
+  }
+
+  this.isSaving = true;
+  this.draftService.setSaveResult(null);
+
+  this.tourApi
+    .create({
+      name: this.draft.name,
+      description: this.draft.description,
+      imagePath: '',
+      transportType: this.draft.transportType,
+      startName: this.draft.from,
+      endName: this.draft.to
+    })
+    .pipe(finalize(() => (this.isSaving = false)))
+    .subscribe({
+      next: (tour) => {
+        this.draftService.setSaveResult({
+          status: 'success',
+          title: 'Tour successfully created!',
+          message: 'Your tour has been stored and is ready for the next steps.',
+          tourId: tour.id
+        });
+        this.draftService.reset();
+        this.allowRouteChange = true;
+        void this.router.navigateByUrl('/tours/create/done');
+      },
+      error: () => {
+        this.draftService.setSaveResult({
+          status: 'error',
+          title: 'Tour could not be created',
+          message: 'Saving failed. Please review the data or try again.'
+        });
+        this.allowRouteChange = true;
+        void this.router.navigateByUrl('/tours/create/done');
+      }
+    });
+}
+```
+
+### Was hier passiert
+
+1. `isSaving` verhindert Doppelklicks
+2. die Summary-Werte werden auf das Backend-DTO gemappt
+3. der API-Call laeuft ueber [tour-api.service.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/services/tour-api.service.ts)
+4. bei Erfolg wird ein Success-Ergebnis gespeichert
+5. bei Fehler wird ein Error-Ergebnis gespeichert
+6. danach geht es auf `Done`
+
+## Schritt 9: Die Done-Seite zeigt Success oder Error
+
+Die Done-Seite liegt in:
+
+- [create-tour-done-page.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour-done/create-tour-done-page.ts)
+- [create-tour-done-page.html](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour-done/create-tour-done-page.html)
+
+Die Seite liest den Save-Ausgang ueber:
+
+```ts
+protected get result(): CreateTourSaveResult {
+  return (
+    this.draftService.saveResult() ?? {
+      status: 'error',
+      title: 'Tour could not be created',
+      message: 'No save result is available for this flow.'
+    }
+  );
+}
+```
+
+Damit zeigt `Done`:
+
+- bei Erfolg eine Success-Darstellung mit `Go back to Dashboard` und `Go to tour`
+- bei Fehler eine Error-Darstellung mit `Go back to Dashboard` und `Back to summary`
+
+## Schritt 10: Wie der Flow nach `Done` sauber beendet wird
+
+Beispiel aus [create-tour-done-page.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/features/tours/pages/create-tour-done/create-tour-done-page.ts):
+
+```ts
+protected goToDashboard(): void {
+  this.flowService.resetFlow();
+  this.draftService.setSaveResult(null);
+  void this.router.navigateByUrl('/dashboard');
+}
+```
+
+Das bedeutet:
+
+1. der Create-Tour-Feature-Flow wird gesperrt
+2. das Save-Ergebnis wird geloescht
+3. der Wizard ist abgeschlossen
+
+Bei erfolgreichem `Go to tour` wird der Flow ebenfalls beendet und zur Tourliste navigiert.
+
+## Schritt 11: Was passiert, wenn der User den Flow ueber die Sidebar verlaesst?
+
+Angenommen, der User ist auf `Summary` und klickt in der Sidebar auf `Dashboard`.
+
+Dann greift der Leave-Guard aus [pending-changes.guard.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/core/guards/pending-changes.guard.ts):
 
 ```ts
 export interface PendingChangesAware {
@@ -345,43 +467,23 @@ export const pendingChangesGuard: CanDeactivateFn<PendingChangesAware> = (
 ) => component.canDeactivate();
 ```
 
-Der Guard entscheidet nicht selbst, sondern ruft `component.canDeactivate()` auf.
+Die Seite gibt in `canDeactivate()` ein `Promise<boolean>` zurueck. Angular pausiert die Navigation und zeigt den Dialog.
 
-In der Seite passiert dann:
+## Schritt 12: Wie der Dialog mit der Seite spricht
 
-```ts
-this.showLeaveDialog = true;
-
-return new Promise<boolean>((resolve) => {
-  this.pendingLeaveResolver = resolve;
-});
-```
-
-### Was das konkret bedeutet
-
-1. Angular will von `Summary` weg navigieren.
-2. Angular fragt `canDeactivate()`.
-3. Die Seite oeffnet den Dialog.
-4. Gleichzeitig gibt sie ein `Promise<boolean>` zurueck.
-5. Angular wartet auf dieses Promise.
-
-Die Navigation ist also gestartet, aber pausiert.
-
-## Schritt 10: Wie der Dialog mit der Seite spricht
-
-Der Dialog ist eine Shared Component:
+Die Shared Component liegt in:
 
 - [confirm-dialog.ts](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/shared/components/confirm-dialog/confirm-dialog.ts)
 - [confirm-dialog.html](/mnt/c/Users/wenha/Documents/FHTW/4.%20Semester/SWEN2/Tour/tour_planner/frontend/src/app/shared/components/confirm-dialog/confirm-dialog.html)
 
-Die Outputs:
+Outputs:
 
 ```ts
 @Output() confirm = new EventEmitter<void>();
 @Output() cancel = new EventEmitter<void>();
 ```
 
-Die Seite bindet diese Events so:
+Im Wizard:
 
 ```html
 <app-confirm-dialog
@@ -393,17 +495,16 @@ Die Seite bindet diese Events so:
 
 Also:
 
-- `Leave page` im Dialog => `confirmLeave()`
-- `Stay here` im Dialog => `stayOnPage()`
+- `Leave page` => `confirmLeave()`
+- `Stay here` => `stayOnPage()`
 
-## Schritt 11: User bestaetigt das Verlassen
-
-Wenn der User wirklich abbrechen will, wird `confirmLeave()` aufgerufen.
+## Schritt 13: User bestaetigt das Verlassen
 
 Beispiel aus den Wizard-Seiten:
 
 ```ts
 protected confirmLeave(): void {
+  this.flowService.resetFlow();
   this.draftService.reset();
   this.showLeaveDialog = false;
   this.pendingLeaveResolver?.(true);
@@ -411,22 +512,23 @@ protected confirmLeave(): void {
 }
 ```
 
-### Reihenfolge bei bestaetigtem Leave
+### Reihenfolge
 
-1. `draftService.reset()` leert das `signal`
-2. der Dialog wird geschlossen
-3. das wartende Promise wird mit `true` aufgeloest
-4. Angular setzt die bereits angefragte Navigation fort
+1. der Feature-Flow wird zurueckgesetzt
+2. der Draft wird geloescht
+3. der Dialog schliesst
+4. das wartende Promise wird mit `true` aufgeloest
+5. Angular setzt die bereits angefragte Navigation fort
 
-Fachlich heisst das:
+Fachlich:
 
-- der User hat den Wizard wirklich verlassen
+- der User verlaesst den Wizard wirklich
 - der Zwischenstand soll verworfen werden
-- ein spaeter neuer `Create Tour`-Durchlauf startet leer
+- ein neuer Direktzugriff auf `details/summary/done` ist danach wieder gesperrt
 
-## Schritt 12: User bleibt doch auf der Seite
+## Schritt 14: User bleibt doch im Flow
 
-Wenn der User im Dialog `Stay here` klickt, laeuft `stayOnPage()`:
+Wenn der User `Stay here` klickt:
 
 ```ts
 protected stayOnPage(): void {
@@ -442,16 +544,15 @@ Dann passiert:
 2. Promise wird mit `false` aufgeloest
 3. Angular bricht die Navigation ab
 4. die aktuelle Seite bleibt offen
-5. der Draft im `signal` bleibt erhalten
-
-Das ist wichtig, weil die bisher eingegebenen Daten dann nicht verloren gehen.
+5. Draft und Flow-State bleiben erhalten
 
 ## Gesamtbild in einem Satz
 
 Der aktuelle `Create Tour`-Flow nutzt:
 
 - `Reactive Forms` fuer die echte Eingabe auf `Details`
-- ein `signal` als gemeinsamen Draft zwischen `Details` und `Summary`
+- ein `signal` als gemeinsamen Draft zwischen `Details`, `Summary` und `Done`
+- einen zusaetzlichen Feature-Flow-Guard fuer kontrollierten Einstieg in den Wizard
 - einen Leave-Guard mit bestaetigendem Dialog fuer externes Verlassen des Wizards
 - `allowRouteChange`, damit interne Wizard-Navigation ohne Popup funktioniert
 
@@ -459,36 +560,27 @@ Der aktuelle `Create Tour`-Flow nutzt:
 
 ### Warum nicht alles nur mit Signals?
 
-Weil die Eingabeseite mit `Reactive Forms` sauberer ist fuer:
-
-- Validierung
-- Formularzustand
-- Pflichtfelder
-- spaeteren Submit
+Weil `Details` eine echte Eingabeseite mit Validierung ist. Dafuer ist `Reactive Forms` sauberer.
 
 ### Warum nicht alles nur im FormGroup?
 
-Weil `Summary` eine eigene Seite ist. Die Form aus `Details` lebt nicht automatisch seitenuebergreifend weiter. Deshalb braucht der Flow einen gemeinsamen Zustand.
+Weil `Summary` und `Done` eigene Seiten sind. Der Zustand muss seitenuebergreifend verfuegbar sein.
 
 ### Warum ein signal-Service?
 
-Weil der Draft damit:
+Weil Draft und Save-Ergebnis damit:
 
 - zentral
 - einfach lesbar
 - leicht zuruecksetzbar
-- sauber zwischen mehreren Seiten teilbar
+- ueber mehrere Wizard-Schritte teilbar
 
-ist.
+sind.
 
 ## Naechste sinnvolle Schritte
 
-Der aktuelle Flow ist fuer den Wizard vorbereitet, aber noch nicht final.
-
 Noch offen:
 
-- Feldfehlermeldungen im Details-Template
-- echte Weitergabe an das Backend bei `Save`
-- finaler `Done`-Schritt
 - Leaflet-Integration
 - echte Distanz- und Zeitwerte
+- spaetere Verfeinerung der Error-/Success-Darstellung
