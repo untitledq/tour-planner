@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { createTourFlowGuard } from './core/guards/create-tour-flow.guard';
 import { pendingChangesGuard } from './core/guards/pending-changes.guard';
 import { LoginPage } from './features/auth/pages/login/login-page';
 import { SigninPage } from './features/auth/pages/signin/signin-page';
@@ -39,19 +40,19 @@ export const routes: Routes = [
   {
     path: 'tours/create/details',
     component: CreateTourDetailsPage,
-    canActivate: [authGuard],
+    canActivate: [authGuard, createTourFlowGuard],
     canDeactivate: [pendingChangesGuard]
   },
   {
     path: 'tours/create/summary',
     component: CreateTourSummaryPage,
-    canActivate: [authGuard],
+    canActivate: [authGuard, createTourFlowGuard],
     canDeactivate: [pendingChangesGuard]
   },
   {
     path: 'tours/create/done',
     component: CreateTourDonePage,
-    canActivate: [authGuard]
+    canActivate: [authGuard, createTourFlowGuard]
   },
   {
     path: 'tour-logs',

@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourDraftService } from '../../services/create-tour-draft.service';
+import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 
 @Component({
   selector: 'app-create-tour-details-page',
@@ -27,6 +28,7 @@ export class CreateTourDetailsPage implements PendingChangesAware {
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
   private readonly draftService = inject(CreateTourDraftService);
+  private readonly flowService = inject(CreateTourFlowService);
   private pendingLeaveResolver: ((value: boolean) => void) | null = null;
   private allowRouteChange = false;
 
@@ -68,6 +70,7 @@ export class CreateTourDetailsPage implements PendingChangesAware {
   }
 
   protected confirmLeave(): void {
+    this.flowService.resetFlow();
     this.draftService.reset();
     this.showLeaveDialog = false;
     this.pendingLeaveResolver?.(true);
@@ -81,6 +84,7 @@ export class CreateTourDetailsPage implements PendingChangesAware {
   }
 
   protected cancelCreation(): void {
+    this.flowService.resetFlow();
     void this.router.navigateByUrl('/dashboard');
   }
 

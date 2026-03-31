@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 
 @Component({
   selector: 'app-tours-page',
@@ -19,6 +20,7 @@ export class ToursPage {
   private readonly authApi = inject(AuthApiService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly createTourFlow = inject(CreateTourFlowService);
 
   protected logout(): void {
     this.isLoggingOut = true;
@@ -38,6 +40,7 @@ export class ToursPage {
   }
 
   protected openNewTour(): void {
+    this.createTourFlow.startFlow();
     void this.router.navigateByUrl('/tours/create/details');
   }
 }

@@ -4,6 +4,7 @@ import { finalize } from 'rxjs';
 
 import { CreateTourSaveResult } from '../../models/tour.models';
 import { CreateTourDraftService } from '../../services/create-tour-draft.service';
+import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
@@ -18,6 +19,7 @@ import { AuthApiService } from '../../../auth/services/auth-api.service';
 export class CreateTourDonePage {
   protected isLoggingOut = false;
   private readonly draftService = inject(CreateTourDraftService);
+  private readonly flowService = inject(CreateTourFlowService);
   private readonly router = inject(Router);
   private readonly authApi = inject(AuthApiService);
   private readonly authSession = inject(AuthSessionService);
@@ -56,12 +58,17 @@ export class CreateTourDonePage {
   }
 
   protected goToDashboard(): void {
+    this.flowService.resetFlow();
     this.draftService.setSaveResult(null);
     void this.router.navigateByUrl('/dashboard');
   }
 
   protected goToPrimaryDestination(): void {
     const status = this.result.status;
+
+    if (status === 'success') {
+      this.flowService.resetFlow();
+    }
 
     this.draftService.setSaveResult(null);
 
