@@ -20,6 +20,7 @@ paths:
               $ref: '#/components/schemas/RegisterRequest'
       responses:
         '201':
+          description: Successfully created user
           content:
             application/json:
               schema:
@@ -36,6 +37,7 @@ paths:
               $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
+          description: User successfully logged in
           content:
             application/json:
               schema:
@@ -46,14 +48,16 @@ paths:
       summary: Logout the current user
       security: [ { bearerAuth: [] } ]
       responses:
-        '204': { }
+        '204':
+          description: User successfully logged out
 
   /api/user:
     delete:
       summary: Delete the current user
       security: [ { bearerAuth: [] } ]
       responses:
-        '204': { }
+        '204':
+          description: User successfully deleted
 
   /api/tours:
     get:
@@ -61,6 +65,7 @@ paths:
       security: [ { bearerAuth: [] } ]
       responses:
         '200':
+          description: A paginated list of tours
           content:
             application/json:
               schema:
@@ -69,8 +74,9 @@ paths:
                   - properties:
                       data:
                         type: array
+                        description: List of tours
                         items:
-                          $ref: '#/components/schemas/TourListItemWithFavorite'
+                          $ref: '#/components/schemas/TourListItem'
 
     post:
       summary: Create a new tour (backend resolves route)
@@ -83,6 +89,7 @@ paths:
               $ref: '#/components/schemas/TourCreateRequest'
       responses:
         '201':
+          description: Newly created tour
           content:
             application/json:
               schema:
@@ -90,12 +97,13 @@ paths:
 
   /api/tours/{tourId}:
     get:
-      summary: Get a specific tour
+      summary: Get a specific tour (includes favorite status)
       security: [ { bearerAuth: [] } ]
       parameters:
         - $ref: '#/components/parameters/TourId'
       responses:
         '200':
+          description: Details of the tour including favorite status
           content:
             application/json:
               schema:
@@ -114,6 +122,7 @@ paths:
               $ref: '#/components/schemas/TourCreateRequest'
       responses:
         '200':
+          description: Updated tour
           content:
             application/json:
               schema:
@@ -125,7 +134,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/TourId'
       responses:
-        '204': { }
+        '204':
+          description: Tour successfully deleted
 
   /api/tours/{tourId}/logs:
     get:
@@ -135,6 +145,7 @@ paths:
         - $ref: '#/components/parameters/TourId'
       responses:
         '200':
+          description: A paginated list of tour logs
           content:
             application/json:
               schema:
@@ -143,6 +154,7 @@ paths:
                   - properties:
                       data:
                         type: array
+                        description: List of tour logs
                         items:
                           $ref: '#/components/schemas/TourLog'
 
@@ -159,6 +171,7 @@ paths:
               $ref: '#/components/schemas/TourLogCreateRequest'
       responses:
         '201':
+          description: Newly created tour log
           content:
             application/json:
               schema:
@@ -179,6 +192,7 @@ paths:
               $ref: '#/components/schemas/TourLogUpdateRequest'
       responses:
         '200':
+          description: Updated tour log
           content:
             application/json:
               schema:
@@ -191,7 +205,8 @@ paths:
         - $ref: '#/components/parameters/TourId'
         - $ref: '#/components/parameters/LogId'
       responses:
-        '204': { }
+        '204':
+          description: Tour log successfully deleted
 
   /api/tours/{tourId}/route:
     get:
@@ -201,6 +216,7 @@ paths:
         - $ref: '#/components/parameters/TourId'
       responses:
         '200':
+          description: Computed route with distance, duration, and coordinates
           content:
             application/json:
               schema:
@@ -219,11 +235,13 @@ paths:
           multipart/form-data:
             schema:
               type: object
+              description: Multipart form data containing image file
               required: [ file ]
               properties:
                 file:
                   type: string
                   format: binary
+                  description: The image file to upload
       responses:
         '200':
           description: Image uploaded successfully
@@ -250,10 +268,12 @@ paths:
               schema:
                 type: string
                 format: binary
+                description: JPEG image file
             image/png:
               schema:
                 type: string
                 format: binary
+                description: PNG image file
         '404':
           description: Image not found
 
@@ -264,7 +284,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/TourId'
       responses:
-        '204': { }
+        '204':
+          description: Tour successfully added to favorites
 
     delete:
       summary: Remove tour from favorites
@@ -272,7 +293,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/TourId'
       responses:
-        '204': { }
+        '204':
+          description: Tour successfully removed from favorites
 
 components:
 
@@ -287,6 +309,7 @@ components:
       name: tourId
       in: path
       required: true
+      description: UUID of the tour
       schema:
         type: string
         format: uuid
@@ -295,6 +318,7 @@ components:
       name: logId
       in: path
       required: true
+      description: UUID of the tour log
       schema:
         type: string
         format: uuid
@@ -303,54 +327,111 @@ components:
 
     ListResponse:
       type: object
+      description: Generic paginated response
       properties:
         data:
           type: array
+          description: List of items
           items: {}
-        total: { type: integer }
-        page:  { type: integer }
-        size:  { type: integer }
+        total:
+          type: integer
+          description: Total number of items
+        page:
+          type: integer
+          description: Current page number
+        size:
+          type: integer
+          description: Number of items per page
 
     RegisterRequest:
       type: object
       required: [ username, password, email ]
+      description: Request to register a new user
       properties:
-        username: { type: string }
-        password: { type: string }
-        email:    { type: string }
+        username:
+          type: string
+          description: Unique username for the user
+        password:
+          type: string
+          description: Password for the user account
+        email:
+          type: string
+          description: Email address of the user
 
     LoginRequest:
       type: object
       required: [ username, password ]
+      description: Request to login an existing user
       properties:
-        username: { type: string }
-        password: { type: string }
+        username:
+          type: string
+          description: Username of the user
+        password:
+          type: string
+          description: Password of the user
 
     AuthResponse:
       type: object
+      description: Response returned after registration
       properties:
-        id:        { type: string, format: uuid }
-        username:  { type: string }
-        createdAt: { type: string, format: date-time }
-        token:     { type: string }
+        id:
+          type: string
+          format: uuid
+          description: UUID of the created user
+        username:
+          type: string
+          description: Username of the created user
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        token:
+          type: string
+          description: JWT token for authentication
 
     LoginResponse:
       type: object
+      description: Response returned after login
       properties:
-        token:     { type: string }
-        expiresAt: { type: string, format: date-time }
-        sessionId: { type: string, format: uuid }
+        token:
+          type: string
+          description: JWT token for authentication
+        expiresAt:
+          type: string
+          format: date-time
+          description: Expiration timestamp of the token
+        sessionId:
+          type: string
+          format: uuid
+          description: UUID of the login session
 
     Tour:
       type: object
+      description: Tour object
       properties:
-        id:            { type: string, format: uuid }
-        name:          { type: string }
-        description:   { type: string }
-        startName:     { type: string }
-        endName:       { type: string }
-        transportType: { type: string, enum: [CAR, BIKE, FOOT] }
-        hasImage:      { type: boolean, description: Indicates if a tour image exists }
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the tour
+        name:
+          type: string
+          description: Name of the tour
+        description:
+          type: string
+          description: Detailed description of the tour
+        startName:
+          type: string
+          description: Name of the start location
+        endName:
+          type: string
+          description: Name of the end location
+        transportType:
+          type: string
+          enum: [CAR, BIKE, FOOT]
+          description: Type of transport used for the tour
+        hasImage:
+          type: boolean
+          description: Indicates if a tour image exists
 
     TourWithFavorite:
       allOf:
@@ -364,87 +445,160 @@ components:
     TourCreateRequest:
       type: object
       required: [ name, startName, endName, transportType ]
+      description: Request to create or update a tour
       properties:
-        name:          { type: string }
-        description:   { type: string }
-        startName:     { type: string }
-        endName:       { type: string }
-        transportType: { type: string, enum: [CAR, BIKE, FOOT] }
-
-    TourListItemWithFavorite:
-      allOf:
-        - $ref: '#/components/schemas/TourListItem'
-        - type: object
-          properties:
-            isFavorite:
-              type: boolean
-              description: Indicates if this tour is a favorite of the current user
+        name:
+          type: string
+          description: Name of the tour
+        description:
+          type: string
+          description: Detailed description of the tour
+        startName:
+          type: string
+          description: Name of the start location
+        endName:
+          type: string
+          description: Name of the end location
+        transportType:
+          type: string
+          enum: [CAR, BIKE, FOOT]
+          description: Type of transport used for the tour
 
     TourListItem:
       type: object
+      description: Tour list item for summaries
       properties:
-        id: { type: string, format: uuid }
-        name: { type: string }
-        startName: { type: string }
-        endName: { type: string }
-        transportType: { type: string }
-        hasImage: { type: boolean }
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the tour
+        name:
+          type: string
+          description: Name of the tour
+        startName:
+          type: string
+          description: Name of the start location
+        endName:
+          type: string
+          description: Name of the end location
+        transportType:
+          type: string
+          description: Type of transport used for the tour
+        hasImage:
+          type: boolean
+          description: Indicates if a tour image exists
 
     TourLog:
       type: object
+      description: Tour log entry
       properties:
-        id:       { type: string, format: uuid }
-        dateTime: { type: string, format: date-time }
-        rating:   { type: integer }
-        difficulty: { type: integer }
-        totalTime: { type: integer }
-        comment:  { type: string }
+        id:
+          type: string
+          format: uuid
+          description: Unique ID of the log
+        dateTime:
+          type: string
+          format: date-time
+          description: Timestamp of the log entry
+        rating:
+          type: integer
+          description: Rating of the tour
+        difficulty:
+          type: integer
+          description: Difficulty of the tour
+        totalTime:
+          type: integer
+          description: Total time in minutes
+        comment:
+          type: string
+          description: Comment or notes about the tour
 
     TourLogCreateRequest:
       type: object
       required: [ rating ]
+      description: Request to create a tour log
       properties:
-        dateTime: { type: string, format: date-time }
-        rating:   { type: integer }
-        comment:  { type: string }
+        dateTime:
+          type: string
+          format: date-time
+          description: Timestamp of the log entry
+        rating:
+          type: integer
+          description: Rating of the tour
+        comment:
+          type: string
+          description: Comment or notes about the tour
 
     TourLogUpdateRequest:
       type: object
+      description: Request to update a tour log
       properties:
-        dateTime: { type: string, format: date-time }
-        rating:   { type: integer }
-        comment:  { type: string }
+        dateTime:
+          type: string
+          format: date-time
+          description: Timestamp of the log entry
+        rating:
+          type: integer
+          description: Rating of the tour
+        comment:
+          type: string
+          description: Comment or notes about the tour
 
     Route:
       type: object
+      description: Raw route object
       properties:
-        distance: { type: integer, description: meters }
-        duration: { type: integer, description: seconds }
+        distance:
+          type: integer
+          description: Distance in meters
+        duration:
+          type: integer
+          description: Duration in seconds
         coordinates:
           type: array
+          description: Array of latitude/longitude points
           items:
             type: object
+            description: Latitude/longitude point
             properties:
-              lat: { type: number }
-              lng: { type: number }
+              lat:
+                type: number
+                description: Latitude
+              lng:
+                type: number
+                description: Longitude
 
     RouteResponse:
       type: object
+      description: Computed route response
       properties:
-        distance: { type: integer, description: meters }
-        duration: { type: integer, description: seconds }
+        distance:
+          type: integer
+          description: Total distance in meters
+        duration:
+          type: integer
+          description: Total duration in seconds
         coordinates:
           type: array
+          description: Ordered list of coordinates for the route
           items:
             $ref: '#/components/schemas/LatLng'
 
     LatLng:
       type: object
+      description: Latitude and longitude point
       properties:
-        lat: { type: number }
-        lng: { type: number }
+        lat:
+          type: number
+          description: Latitude
+        lng:
+          type: number
+          description: Longitude
 
     ImageUploadResponse:
       type: object
+      description: Response returned after image upload
       properties:
-        hasImage: { type: boolean }
+        hasImage:
+          type: boolean
+          description: Indicates whether the image exists

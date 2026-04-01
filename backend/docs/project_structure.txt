@@ -17,6 +17,7 @@
 │   │   └── Project_Default.xml
 │   ├── jarRepositories.xml
 │   ├── misc.xml
+│   ├── modules.xml
 │   ├── vcs.xml
 │   └── workspace.xml
 ├── init.sql
@@ -32,108 +33,109 @@
 ├── mvnw
 ├── mvnw.cmd
 ├── pom.xml
-└── src
-    ├── main
-    │   ├── java
-    │   │   └── at
-    │   │       └── fhtw
-    │   │           └── swen
-    │   │               └── tourplanner
-    │   │                   ├── config
-    │   │                   │   ├── ImageStorageProperties.java
-    │   │                   │   └── SecurityConfig.java
-    │   │                   ├── controller
-    │   │                   │   ├── AuthController.java
-    │   │                   │   ├── FavoriteController.java
-    │   │                   │   ├── ImageDownloadController.java
-    │   │                   │   ├── ImageUploadController.java
-    │   │                   │   ├── request
-    │   │                   │   │   ├── LoginRequest.java
-    │   │                   │   │   ├── RegisterRequest.java
-    │   │                   │   │   ├── TourCreateRequest.java
-    │   │                   │   │   ├── TourLogCreateRequest.java
-    │   │                   │   │   ├── TourLogUpdateRequest.java
-    │   │                   │   │   └── TourUpdateRequest.java
-    │   │                   │   ├── response
-    │   │                   │   │   ├── AuthResponse.java
-    │   │                   │   │   ├── ImageUploadResponse.java
-    │   │                   │   │   ├── LoginResponse.java
-    │   │                   │   │   ├── RouteResponse.java
-    │   │                   │   │   ├── TourListResponse.java
-    │   │                   │   │   ├── TourLogListResponse.java
-    │   │                   │   │   ├── TourLogResponse.java
-    │   │                   │   │   ├── TourResponse.java
-    │   │                   │   │   └── TourWithFavoriteResponse.java
-    │   │                   │   ├── RouteController.java
-    │   │                   │   ├── TourController.java
-    │   │                   │   └── TourLogController.java
-    │   │                   ├── persistence
-    │   │                   │   ├── adapter
-    │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
-    │   │                   │   │   └── JpaUserRepositoryAdapter.java
-    │   │                   │   ├── entity
-    │   │                   │   │   ├── Route.java
-    │   │                   │   │   ├── Session.java
-    │   │                   │   │   ├── Tour.java
-    │   │                   │   │   ├── TourLog.java
-    │   │                   │   │   ├── UserFavoriteTourId.java
-    │   │                   │   │   ├── UserFavoriteTour.java
-    │   │                   │   │   └── User.java
-    │   │                   │   ├── port
-    │   │                   │   │   ├── PasswordHasher.java
-    │   │                   │   │   ├── SessionRepository.java
-    │   │                   │   │   ├── TokenPayload.java
-    │   │                   │   │   ├── TokenService.java
-    │   │                   │   │   └── UserRepository.java
-    │   │                   │   └── repository
-    │   │                   │       ├── RouteJpaRepository.java
-    │   │                   │       ├── SpringDataSessionJpaRepository.java
-    │   │                   │       ├── SpringDataUserJpaRepository.java
-    │   │                   │       ├── TourJpaRepository.java
-    │   │                   │       ├── TourLogJpaRepository.java
-    │   │                   │       └── UserFavoriteTourJpaRepository.java
-    │   │                   ├── security
-    │   │                   │   ├── BCryptPasswordHasher.java
-    │   │                   │   ├── JwtAuthenticationFilter.java
-    │   │                   │   ├── JwtTokenService.java
-    │   │                   │   └── JwtUserDetails.java
-    │   │                   ├── service
-    │   │                   │   ├── AuthService.java
-    │   │                   │   ├── dto
-    │   │                   │   │   ├── SessionDto.java
-    │   │                   │   │   └── UserDto.java
-    │   │                   │   ├── ImageService.java
-    │   │                   │   ├── impl
-    │   │                   │   │   ├── AuthServiceImpl.java
-    │   │                   │   │   ├── ImageServiceImpl.java
-    │   │                   │   │   ├── OpenRouteServiceClientImpl.java
-    │   │                   │   │   ├── SessionCleanupServiceImpl.java
-    │   │                   │   │   ├── TourLogServiceImpl.java
-    │   │                   │   │   ├── TourServiceImpl.java
-    │   │                   │   │   └── UserServiceImpl.java
-    │   │                   │   ├── mapper
-    │   │                   │   │   ├── TourLogMapper.java
-    │   │                   │   │   └── TourMapper.java
-    │   │                   │   ├── SessionCleanupService.java
-    │   │                   │   ├── TourLogService.java
-    │   │                   │   ├── TourService.java
-    │   │                   │   └── UserService.java
-    │   │                   ├── TourPlannerApplication.java
-    │   │                   └── util
-    │   │                       ├── LoggerService.java
-    │   │                       └── UUIDv7.java
-    │   └── resources
-    │       ├── application.yaml
-    │       ├── logback.xml
-    │       └── Tour_Postman.json
-    └── test
-        └── java
-            └── at
-                └── fhtw
-                    └── swen
-                        └── tourplanner
-                            ├── BackendApplicationTests.java
-                            └── devtools
-                                └── UpdateProjectStructure.java
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── at
+│   │   │       └── fhtw
+│   │   │           └── swen
+│   │   │               └── tourplanner
+│   │   │                   ├── config
+│   │   │                   │   ├── ImageStorageProperties.java
+│   │   │                   │   └── SecurityConfig.java
+│   │   │                   ├── controller
+│   │   │                   │   ├── AuthController.java
+│   │   │                   │   ├── FavoriteController.java
+│   │   │                   │   ├── ImageDownloadController.java
+│   │   │                   │   ├── ImageUploadController.java
+│   │   │                   │   ├── request
+│   │   │                   │   │   ├── LoginRequest.java
+│   │   │                   │   │   ├── RegisterRequest.java
+│   │   │                   │   │   ├── TourCreateRequest.java
+│   │   │                   │   │   ├── TourLogCreateRequest.java
+│   │   │                   │   │   ├── TourLogUpdateRequest.java
+│   │   │                   │   │   └── TourUpdateRequest.java
+│   │   │                   │   ├── response
+│   │   │                   │   │   ├── AuthResponse.java
+│   │   │                   │   │   ├── ImageUploadResponse.java
+│   │   │                   │   │   ├── LoginResponse.java
+│   │   │                   │   │   ├── RouteResponse.java
+│   │   │                   │   │   ├── TourListResponse.java
+│   │   │                   │   │   ├── TourLogListResponse.java
+│   │   │                   │   │   ├── TourLogResponse.java
+│   │   │                   │   │   ├── TourResponse.java
+│   │   │                   │   │   └── TourWithFavoriteResponse.java
+│   │   │                   │   ├── RouteController.java
+│   │   │                   │   ├── TourController.java
+│   │   │                   │   └── TourLogController.java
+│   │   │                   ├── persistence
+│   │   │                   │   ├── adapter
+│   │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
+│   │   │                   │   │   └── JpaUserRepositoryAdapter.java
+│   │   │                   │   ├── entity
+│   │   │                   │   │   ├── Route.java
+│   │   │                   │   │   ├── Session.java
+│   │   │                   │   │   ├── Tour.java
+│   │   │                   │   │   ├── TourLog.java
+│   │   │                   │   │   ├── UserFavoriteTourId.java
+│   │   │                   │   │   ├── UserFavoriteTour.java
+│   │   │                   │   │   └── User.java
+│   │   │                   │   ├── port
+│   │   │                   │   │   ├── PasswordHasher.java
+│   │   │                   │   │   ├── SessionRepository.java
+│   │   │                   │   │   ├── TokenPayload.java
+│   │   │                   │   │   ├── TokenService.java
+│   │   │                   │   │   └── UserRepository.java
+│   │   │                   │   └── repository
+│   │   │                   │       ├── RouteJpaRepository.java
+│   │   │                   │       ├── SpringDataSessionJpaRepository.java
+│   │   │                   │       ├── SpringDataUserJpaRepository.java
+│   │   │                   │       ├── TourJpaRepository.java
+│   │   │                   │       ├── TourLogJpaRepository.java
+│   │   │                   │       └── UserFavoriteTourJpaRepository.java
+│   │   │                   ├── security
+│   │   │                   │   ├── BCryptPasswordHasher.java
+│   │   │                   │   ├── JwtAuthenticationFilter.java
+│   │   │                   │   ├── JwtTokenService.java
+│   │   │                   │   └── JwtUserDetails.java
+│   │   │                   ├── service
+│   │   │                   │   ├── AuthService.java
+│   │   │                   │   ├── dto
+│   │   │                   │   │   ├── SessionDto.java
+│   │   │                   │   │   └── UserDto.java
+│   │   │                   │   ├── ImageService.java
+│   │   │                   │   ├── impl
+│   │   │                   │   │   ├── AuthServiceImpl.java
+│   │   │                   │   │   ├── ImageServiceImpl.java
+│   │   │                   │   │   ├── OpenRouteServiceClientImpl.java
+│   │   │                   │   │   ├── SessionCleanupServiceImpl.java
+│   │   │                   │   │   ├── TourLogServiceImpl.java
+│   │   │                   │   │   ├── TourServiceImpl.java
+│   │   │                   │   │   └── UserServiceImpl.java
+│   │   │                   │   ├── mapper
+│   │   │                   │   │   ├── TourLogMapper.java
+│   │   │                   │   │   └── TourMapper.java
+│   │   │                   │   ├── SessionCleanupService.java
+│   │   │                   │   ├── TourLogService.java
+│   │   │                   │   ├── TourService.java
+│   │   │                   │   └── UserService.java
+│   │   │                   ├── TourPlannerApplication.java
+│   │   │                   └── util
+│   │   │                       ├── LoggerService.java
+│   │   │                       └── UUIDv7.java
+│   │   └── resources
+│   │       ├── application.yaml
+│   │       ├── logback.xml
+│   │       └── Tour_Postman.json
+│   └── test
+│       └── java
+│           └── at
+│               └── fhtw
+│                   └── swen
+│                       └── tourplanner
+│                           ├── BackendApplicationTests.java
+│                           └── devtools
+│                               └── UpdateProjectStructure.java
+└── tourplanner.iml
 
-37 directories, 100 files
+37 directories, 102 files
