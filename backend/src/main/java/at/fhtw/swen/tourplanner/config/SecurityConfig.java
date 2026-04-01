@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/tours/*/image").authenticated()
                         .requestMatchers("/api/tours/**").authenticated()
                         .requestMatchers("/api/tour-logs/**").authenticated()
+                        .requestMatchers("/api/routes/**").authenticated()
 
                         // Any other request must be authenticated
                         .anyRequest().authenticated()

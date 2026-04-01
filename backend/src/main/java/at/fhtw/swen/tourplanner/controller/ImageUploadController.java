@@ -4,7 +4,7 @@ import at.fhtw.swen.tourplanner.controller.response.ImageUploadResponse;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
-import at.fhtw.swen.tourplanner.service.impl.ImageServiceImpl;
+import at.fhtw.swen.tourplanner.service.ImageService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +16,14 @@ import java.util.UUID;
 @RestController
 public class ImageUploadController {
 
-    private final ImageServiceImpl imageServiceImpl;
+    private final ImageService imageService;
     private final TourJpaRepository tourRepository;
     private final UserRepository userRepository;
 
-    public ImageUploadController(ImageServiceImpl imageServiceImpl,
+    public ImageUploadController(ImageService imageService,
                                  TourJpaRepository tourRepository,
                                  UserRepository userRepository) {
-        this.imageServiceImpl = imageServiceImpl;
+        this.imageService = imageService;
         this.tourRepository = tourRepository;
         this.userRepository = userRepository;
     }
@@ -46,7 +46,7 @@ public class ImageUploadController {
         Tour tour = tourRepository.findByIdAndCreatedBy(tourId, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
-        String path = imageServiceImpl.saveTourImage(tourId, file, principal.getName());
+        String path = imageService.saveTourImage(tourId, file, principal.getName());
 
         tour.setImagePath(path);
         tourRepository.save(tour);

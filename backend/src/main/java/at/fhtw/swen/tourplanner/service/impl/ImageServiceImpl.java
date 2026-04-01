@@ -1,6 +1,7 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.config.ImageStorageProperties;
+import at.fhtw.swen.tourplanner.service.ImageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Service
-public class ImageServiceImpl {
+public class ImageServiceImpl implements ImageService {
 
     private final Path basePath;
 
@@ -20,6 +21,7 @@ public class ImageServiceImpl {
         this.basePath = Paths.get(props.getBaseDir());
     }
 
+    @Override
     public String saveTourImage(UUID tourId, MultipartFile file, String frontendUsername) {
         try {
             String safeUsername = sanitizeUsername(frontendUsername);
@@ -40,14 +42,4 @@ public class ImageServiceImpl {
         }
     }
 
-    private String getExtension(String name) {
-        if (name == null || !name.contains(".")) {
-            return "jpg";
-        }
-        return name.substring(name.lastIndexOf('.') + 1);
-    }
-
-    private String sanitizeUsername(String username) {
-        return username.replaceAll("[^a-zA-Z0-9._-]", "_");
-    }
 }
