@@ -1,6 +1,5 @@
 :host {
   display: block;
-  min-height: 100dvh;
   background: #ffffff;
   color: #183b2d;
   font-family: Arial, Helvetica, sans-serif;
@@ -10,16 +9,6 @@
   --tp-gray-hover: #767676;
   --tp-red: #dc2626;
   --tp-red-hover: #b91c1c;
-}
-
-.tours-layout {
-  display: grid;
-  min-height: 100dvh;
-  grid-template-columns: 260px minmax(0, 1fr);
-}
-
-.tours-layout__sidebar {
-  min-width: 0;
 }
 
 .tours-content {
@@ -296,10 +285,6 @@ h1 {
 }
 
 @media (max-width: 900px) {
-  .tours-layout {
-    grid-template-columns: 1fr;
-  }
-
   .tours-content {
     padding: 1.25rem;
   }

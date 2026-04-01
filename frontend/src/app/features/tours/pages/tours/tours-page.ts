@@ -9,7 +9,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
-import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
+import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 
@@ -34,7 +34,7 @@ interface TourListItem {
     InputIconModule,
     InputTextModule,
     PaginatorModule,
-    SidebarComponent
+    AppShellComponent
   ],
   templateUrl: './tours-page.html',
   styleUrl: './tours-page.css'
