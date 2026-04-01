@@ -88,9 +88,9 @@ public class TourServiceImpl implements TourService {
     private void createOrUpdateRoute(Tour tour) {
 
         var routeResponse = routeClient.calculateRoute(
-                tour.getTransportType(),
                 tour.getStartName(),
-                tour.getEndName()
+                tour.getEndName(),
+                tour.getTransportType()
         );
 
         Route route = routeRepository.findByTourId(tour.getId())
