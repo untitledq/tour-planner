@@ -4,6 +4,7 @@ import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourResponse;
+import at.fhtw.swen.tourplanner.controller.response.TourWithFavoriteResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,8 @@ public interface TourService {
     List<TourListResponse> findAllByUser(UUID userId);
 
     TourResponse findByIdAndUser(UUID id, UUID userId);
+
+    TourWithFavoriteResponse findByIdAndUserWithFavorite(UUID tourId, UUID userId);
 
     TourResponse update(UUID id, UUID userId, TourUpdateRequest req);
 

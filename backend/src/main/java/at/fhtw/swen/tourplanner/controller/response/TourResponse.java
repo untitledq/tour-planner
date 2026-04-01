@@ -12,7 +12,8 @@ public class TourResponse {
     private final String startName;
     private final String endName;
 
-    public TourResponse(String id, String name, String description, String imagePath, String transportType, String startName, String endName) {
+    public TourResponse(String id, String name, String description, String imagePath,
+                        String transportType, String startName, String endName) {
         this.id = id;
         this.name = name;
         this.description = description;

@@ -260,6 +260,84 @@
               }
             },
             {
+              "name": "Favorites",
+              "item": [
+                {
+                  "name": "Add Favorite",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/users/me/favorites/{{tour_id}}",
+                      "host": ["http://localhost:8080"],
+                      "path": ["api", "users", "me", "favorites", "{{tour_id}}"]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status is 204\", function () {",
+                          "  pm.response.to.have.status(204);",
+                          "});"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Get Tour By ID with favorite status",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/tours/{{tour_id}}?withFavorite=true",
+                      "host": ["http://localhost"],
+                      "port": "8080",
+                      "path": ["api", "tours", "{{tour_id}}"],
+                      "query": [
+                        {
+                          "key": "withFavorite",
+                          "value": "true"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "name": "Remove Favorite",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                    ],
+                    "url": {
+                      "raw": "http://localhost:8080/api/users/me/favorites/{{tour_id}}",
+                      "host": ["http://localhost:8080"],
+                      "path": ["api", "users", "me", "favorites", "{{tour_id}}"]
+                    }
+                  },
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status is 204\", function () {",
+                          "  pm.response.to.have.status(204);",
+                          "});"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "name": "Delete Tour Log",
               "request": {
                 "method": "DELETE",

@@ -4,10 +4,12 @@ import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourResponse;
+import at.fhtw.swen.tourplanner.controller.response.TourWithFavoriteResponse;
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.RouteJpaRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourJpaRepository;
 import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
 import org.springframework.stereotype.Service;
@@ -22,13 +24,16 @@ public class TourServiceImpl implements TourService {
 
     private final TourJpaRepository repository;
     private final RouteJpaRepository routeRepository;
+    private final UserFavoriteTourJpaRepository favoriteRepository;
     private final OpenRouteServiceClientImpl routeClient;
 
     public TourServiceImpl(TourJpaRepository repository,
                            RouteJpaRepository routeRepository,
+                           UserFavoriteTourJpaRepository favoriteRepository,
                            OpenRouteServiceClientImpl routeClient) {
         this.repository = repository;
         this.routeRepository = routeRepository;
+        this.favoriteRepository = favoriteRepository;
         this.routeClient = routeClient;
     }
 
@@ -54,6 +59,16 @@ public class TourServiceImpl implements TourService {
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
         return TourMapper.toResponse(tour);
+    }
+
+    @Override
+    public TourWithFavoriteResponse findByIdAndUserWithFavorite(UUID tourId, UUID userId) {
+        Tour tour = repository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        boolean isFavorite = favoriteRepository.existsByUserIdAndTourId(userId, tourId);
+
+        return TourMapper.toWithFavoriteResponse(tour, isFavorite);
     }
 
     @Override
@@ -103,7 +118,6 @@ public class TourServiceImpl implements TourService {
 
         route.setDistance(routeResponse.getDistance());
         route.setDuration(routeResponse.getDuration());
-
         route.setCoordinates(routeResponse.getCoordinates());
 
         routeRepository.save(route);

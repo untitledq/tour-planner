@@ -24,6 +24,7 @@
 │   ├── tourplanner.2026-03-28.0.log
 │   ├── tourplanner.2026-03-29.0.log
 │   ├── tourplanner.2026-03-30.0.log
+│   ├── tourplanner.2026-03-31.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -43,6 +44,7 @@
     │   │                   │   └── SecurityConfig.java
     │   │                   ├── controller
     │   │                   │   ├── AuthController.java
+    │   │                   │   ├── FavoriteController.java
     │   │                   │   ├── ImageDownloadController.java
     │   │                   │   ├── ImageUploadController.java
     │   │                   │   ├── request
@@ -60,7 +62,9 @@
     │   │                   │   │   ├── TourListResponse.java
     │   │                   │   │   ├── TourLogListResponse.java
     │   │                   │   │   ├── TourLogResponse.java
-    │   │                   │   │   └── TourResponse.java
+    │   │                   │   │   ├── TourResponse.java
+    │   │                   │   │   └── TourWithFavoriteResponse.java
+    │   │                   │   ├── RouteController.java
     │   │                   │   ├── TourController.java
     │   │                   │   └── TourLogController.java
     │   │                   ├── persistence
@@ -72,6 +76,8 @@
     │   │                   │   │   ├── Session.java
     │   │                   │   │   ├── Tour.java
     │   │                   │   │   ├── TourLog.java
+    │   │                   │   │   ├── UserFavoriteTourId.java
+    │   │                   │   │   ├── UserFavoriteTour.java
     │   │                   │   │   └── User.java
     │   │                   │   ├── port
     │   │                   │   │   ├── PasswordHasher.java
@@ -80,10 +86,12 @@
     │   │                   │   │   ├── TokenService.java
     │   │                   │   │   └── UserRepository.java
     │   │                   │   └── repository
+    │   │                   │       ├── RouteJpaRepository.java
     │   │                   │       ├── SpringDataSessionJpaRepository.java
     │   │                   │       ├── SpringDataUserJpaRepository.java
     │   │                   │       ├── TourJpaRepository.java
-    │   │                   │       └── TourLogJpaRepository.java
+    │   │                   │       ├── TourLogJpaRepository.java
+    │   │                   │       └── UserFavoriteTourJpaRepository.java
     │   │                   ├── security
     │   │                   │   ├── BCryptPasswordHasher.java
     │   │                   │   ├── JwtAuthenticationFilter.java
@@ -94,6 +102,7 @@
     │   │                   │   ├── dto
     │   │                   │   │   ├── SessionDto.java
     │   │                   │   │   └── UserDto.java
+    │   │                   │   ├── ImageService.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
     │   │                   │   │   ├── ImageServiceImpl.java
@@ -111,7 +120,6 @@
     │   │                   │   └── UserService.java
     │   │                   ├── TourPlannerApplication.java
     │   │                   └── util
-    │   │                       ├── CoordinatesJsonConverter.java
     │   │                       ├── LoggerService.java
     │   │                       └── UUIDv7.java
     │   └── resources
@@ -128,4 +136,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-37 directories, 92 files
+37 directories, 100 files
