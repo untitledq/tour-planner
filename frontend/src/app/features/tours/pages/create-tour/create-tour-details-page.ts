@@ -5,8 +5,8 @@ import { finalize } from 'rxjs';
 
 import { PendingChangesAware } from '../../../../core/guards/pending-changes.guard';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
+import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
-import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourDraftService } from '../../services/create-tour-draft.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
@@ -14,7 +14,7 @@ import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 @Component({
   selector: 'app-create-tour-details-page',
   standalone: true,
-  imports: [ReactiveFormsModule, SidebarComponent, ConfirmDialogComponent],
+  imports: [ReactiveFormsModule, AppShellComponent, ConfirmDialogComponent],
   templateUrl: './create-tour-details-page.html',
   styleUrl: './create-tour-details-page.css'
 })

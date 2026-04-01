@@ -1,10 +1,4 @@
-<section class="create-tour-layout">
-  <app-sidebar
-    class="create-tour-layout__sidebar"
-    title="[Placeholder]"
-    (logoutClick)="logout()"
-  />
-
+<app-shell title="[Placeholder]" (logoutClick)="logout()">
   <section class="create-tour-content">
     <div class="create-tour-page">
       <header class="create-tour-header">
@@ -168,7 +162,7 @@
       </section>
     </div>
   </section>
-</section>
+</app-shell>
 
 <app-confirm-dialog
   [visible]="showLeaveDialog"

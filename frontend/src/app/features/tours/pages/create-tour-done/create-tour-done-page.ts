@@ -6,13 +6,13 @@ import { CreateTourSaveResult } from '../../models/tour.models';
 import { CreateTourDraftService } from '../../services/create-tour-draft.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
-import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
+import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 
 @Component({
   selector: 'app-create-tour-done-page',
   standalone: true,
-  imports: [SidebarComponent],
+  imports: [AppShellComponent],
   templateUrl: './create-tour-done-page.html',
   styleUrl: './create-tour-done-page.css'
 })

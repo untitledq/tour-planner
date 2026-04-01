@@ -1,19 +1,8 @@
 :host {
   display: block;
-  min-height: 100dvh;
   background: #ffffff;
   color: #111827;
   font-family: Arial, Helvetica, sans-serif;
-}
-
-.create-tour-done-layout {
-  display: grid;
-  min-height: 100dvh;
-  grid-template-columns: 260px minmax(0, 1fr);
-}
-
-.create-tour-done-layout__sidebar {
-  min-width: 0;
 }
 
 .create-tour-done-content {
@@ -127,10 +116,6 @@
 }
 
 @media (max-width: 640px) {
-  .create-tour-done-layout {
-    grid-template-columns: 1fr;
-  }
-
   .create-tour-done-content {
     padding: 1.25rem;
   }
