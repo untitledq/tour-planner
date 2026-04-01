@@ -4,6 +4,7 @@ import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourResponse;
+import at.fhtw.swen.tourplanner.controller.response.TourWithFavoriteResponse;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
 import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
@@ -48,13 +49,19 @@ public class TourController {
     }
 
     @GetMapping("/{id}")
-    public TourResponse getById(
+    public Object getById(
             @PathVariable UUID id,
+            @RequestParam(name = "withFavorite", defaultValue = "false") boolean withFavorite,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
-        logger.info("Get Tour {} called by user {}", id, userId);
-        return service.findByIdAndUser(id, userId);
+        logger.info("Get Tour {} called by user {}, withFavorite={}", id, userId, withFavorite);
+
+        if (withFavorite) {
+            return service.findByIdAndUserWithFavorite(id, userId);
+        } else {
+            return service.findByIdAndUser(id, userId);
+        }
     }
 
     @PutMapping("/{id}")

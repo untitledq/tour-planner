@@ -4,6 +4,7 @@ import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourResponse;
+import at.fhtw.swen.tourplanner.controller.response.TourWithFavoriteResponse;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 
 import java.util.List;
@@ -43,15 +44,24 @@ public class TourMapper {
         );
     }
 
+    public static TourWithFavoriteResponse toWithFavoriteResponse(Tour tour, boolean isFavorite) {
+        return new TourWithFavoriteResponse(
+                tour.getId().toString(),
+                tour.getName(),
+                tour.getDescription(),
+                tour.getImagePath(),
+                tour.getTransportType(),
+                tour.getStartName(),
+                tour.getEndName(),
+                isFavorite
+        );
+    }
+
     public static TourListResponse toListResponse(Tour tour) {
         return new TourListResponse(
                 tour.getId().toString(),
                 tour.getName()
         );
-    }
-
-    public static List<TourResponse> toResponseList(List<Tour> tours) {
-        return tours.stream().map(TourMapper::toResponse).toList();
     }
 
     public static List<TourListResponse> toListResponseList(List<Tour> tours) {
