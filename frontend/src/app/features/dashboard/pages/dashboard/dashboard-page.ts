@@ -5,13 +5,13 @@ import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
-import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
+import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { CreateTourFlowService } from '../../../tours/services/create-tour-flow.service';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [ButtonModule, SidebarComponent],
+  imports: [ButtonModule, AppShellComponent],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css'
 })

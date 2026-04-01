@@ -4,13 +4,13 @@ import { ButtonModule } from 'primeng/button';
 import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
-import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
+import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 
 @Component({
   selector: 'app-tour-logs-page',
   standalone: true,
-  imports: [ButtonModule, SidebarComponent],
+  imports: [ButtonModule, AppShellComponent],
   templateUrl: './tour-logs-page.html',
   styleUrl: './tour-logs-page.css'
 })

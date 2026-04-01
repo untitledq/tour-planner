@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
-import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
+import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 
 @Component({
   selector: 'app-import-page',
   standalone: true,
-  imports: [SidebarComponent],
+  imports: [AppShellComponent],
   templateUrl: './import-page.html',
   styleUrl: './import-page.css'
 })
