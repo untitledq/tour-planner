@@ -7,13 +7,10 @@
 
   <section class="tours-content">
     <div class="tours-shell">
-      <div class="tours-header">
+      <header class="tours-header">
         <div>
-          <h1>Your tour collection</h1>
-          <p class="tours-description">
-            Manage your routes, keep your destinations organized, and prepare
-            the next trip.
-          </p>
+          <h1>My Tours</h1>
+          <p class="tours-description">Manage, edit and analyze your created tours.</p>
         </div>
 
         <p-button
@@ -21,15 +18,96 @@
           styleClass="tours-new-tour-button"
           (onClick)="openNewTour()"
         />
-      </div>
+      </header>
 
-      <section class="tours-placeholder">
-        <h2>No tours yet</h2>
-        <p>
-          This page is ready for the upcoming tour list, filters, and detailed
-          route information.
-        </p>
+      <section class="tours-filter-bar">
+        <p-iconfield class="tours-search">
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            placeholder="Search tours..."
+            [formControl]="searchControl"
+          />
+        </p-iconfield>
       </section>
+
+      @if (filteredTours().length > 0) {
+        <section class="tours-list">
+          @for (tour of visibleTours(); track trackTour($index, tour)) {
+            <article class="tour-card">
+              <div class="tour-card__content">
+                <div class="tour-card__details">
+                  <div class="tour-card__intro">
+                    <h2>{{ tour.name }}</h2>
+                    <p>{{ tour.description }}</p>
+                  </div>
+
+                  <div class="tour-card__meta-grid">
+                    <div class="tour-card__meta-item">
+                      <span>From</span>
+                      <strong>{{ tour.startName }}</strong>
+                    </div>
+
+                    <div class="tour-card__meta-item">
+                      <span>To</span>
+                      <strong>{{ tour.endName }}</strong>
+                    </div>
+
+                    <div class="tour-card__meta-item">
+                      <span>Transport</span>
+                      <strong>{{ transportLabel(tour.transportType) }}</strong>
+                    </div>
+
+                    <div class="tour-card__meta-item">
+                      <span>Distance</span>
+                      <strong>{{ tour.distanceKm }} km</strong>
+                    </div>
+
+                    <div class="tour-card__meta-item">
+                      <span>Est. Time</span>
+                      <strong>{{ tour.estimatedTime }}</strong>
+                    </div>
+                  </div>
+
+                  <div class="tour-card__actions">
+                    <p-button
+                      label="View"
+                      icon="pi pi-eye"
+                      styleClass="tour-card__action tour-card__action--view"
+                    />
+
+                    <p-button
+                      label="Edit"
+                      styleClass="tour-card__action tour-card__action--edit"
+                    />
+
+                    <p-button
+                      label="Delete"
+                      styleClass="tour-card__action tour-card__action--delete"
+                    />
+                  </div>
+                </div>
+              </div>
+            </article>
+          }
+        </section>
+
+        <p-paginator
+          styleClass="tours-paginator"
+          [first]="first()"
+          [rows]="rows"
+          [totalRecords]="filteredTours().length"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}"
+          (onPageChange)="onPageChange($event)"
+        />
+      } @else {
+        <section class="tours-empty-state">
+          <h2>No matching tours</h2>
+          <p>Adjust the search to see your mock tour list again.</p>
+        </section>
+      }
     </div>
   </section>
 </section>
