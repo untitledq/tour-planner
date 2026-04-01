@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers("/api/user/register", "/api/user/login").permitAll()
-
+                        .requestMatchers("/api/users/me/favorites/**").authenticated()
                         // Authenticated endpoints
                         .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
                         .requestMatchers("/api/tours/*/image").authenticated()
