@@ -4,33 +4,42 @@ import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
 import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourResponse;
-import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
+import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
+import at.fhtw.swen.tourplanner.persistence.repository.RouteJpaRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
 import at.fhtw.swen.tourplanner.service.TourService;
+import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class TourServiceImpl implements TourService {
 
     private final TourJpaRepository repository;
+    private final RouteJpaRepository routeRepository;
+    private final OpenRouteServiceClientImpl routeClient;
 
-    public TourServiceImpl(TourJpaRepository repository) {
+    public TourServiceImpl(TourJpaRepository repository,
+                           RouteJpaRepository routeRepository,
+                           OpenRouteServiceClientImpl routeClient) {
         this.repository = repository;
+        this.routeRepository = routeRepository;
+        this.routeClient = routeClient;
     }
 
     @Override
     public TourResponse create(UUID userId, TourCreateRequest req, UUID id) {
-        Tour entity = TourMapper.fromCreateRequest(id, userId, req);
-        repository.save(entity);
+        Tour tour = TourMapper.fromCreateRequest(id, userId, req);
+        repository.save(tour);
 
-        //TODO: create route using "startName" & "endName"
+        createOrUpdateRoute(tour);
 
-        return TourMapper.toResponse(entity);
+        return TourMapper.toResponse(tour);
     }
 
     @Override
@@ -52,7 +61,17 @@ public class TourServiceImpl implements TourService {
         Tour tour = repository.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
+        boolean routeRelevantChanged =
+                !Objects.equals(tour.getTransportType(), req.transportType()) ||
+                        !Objects.equals(tour.getStartName(), req.startName()) ||
+                        !Objects.equals(tour.getEndName(), req.endName());
+
         TourMapper.updateEntity(req, tour);
+        repository.save(tour);
+
+        if (routeRelevantChanged) {
+            createOrUpdateRoute(tour);
+        }
 
         return TourMapper.toResponse(tour);
     }
@@ -64,5 +83,29 @@ public class TourServiceImpl implements TourService {
             throw new RuntimeException("Tour not found or access denied");
         }
         repository.deleteByIdAndCreatedBy(id, userId);
+    }
+
+    private void createOrUpdateRoute(Tour tour) {
+
+        var routeResponse = routeClient.calculateRoute(
+                tour.getTransportType(),
+                tour.getStartName(),
+                tour.getEndName()
+        );
+
+        Route route = routeRepository.findByTourId(tour.getId())
+                .orElseGet(() -> {
+                    Route r = new Route();
+                    r.setId(UUID.randomUUID());
+                    r.setTourId(tour.getId());
+                    return r;
+                });
+
+        route.setDistance(routeResponse.getDistance());
+        route.setDuration(routeResponse.getDuration());
+
+        route.setCoordinates(routeResponse.getCoordinates());
+
+        routeRepository.save(route);
     }
 }
