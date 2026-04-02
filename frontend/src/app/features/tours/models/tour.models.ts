@@ -19,6 +19,11 @@ export interface TourResponse {
   endName: string;
 }
 
+export interface TourListResponse {
+  id: string;
+  name: string;
+}
+
 export interface CreateTourSaveResult {
   status: 'success' | 'error';
   title: string;

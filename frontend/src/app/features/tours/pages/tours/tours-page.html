@@ -26,7 +26,16 @@
         </p-iconfield>
       </section>
 
-      @if (filteredTours().length > 0) {
+      @if (isLoadingTours()) {
+        <section class="tours-empty-state">
+          <h2>Loading tours...</h2>
+        </section>
+      } @else if (toursLoadError()) {
+        <section class="tours-empty-state">
+          <h2>Could not load tours</h2>
+          <p>{{ toursLoadError() }}</p>
+        </section>
+      } @else if (filteredTours().length > 0) {
         <section class="tours-list">
           @for (tour of visibleTours(); track trackTour($index, tour)) {
             <article class="tour-card">
@@ -34,33 +43,12 @@
                 <div class="tour-card__details">
                   <div class="tour-card__intro">
                     <h2>{{ tour.name }}</h2>
-                    <p>{{ tour.description }}</p>
                   </div>
 
-                  <div class="tour-card__meta-grid">
+                  <div class="tour-card__meta-grid tour-card__meta-grid--compact">
                     <div class="tour-card__meta-item">
-                      <span>From</span>
-                      <strong>{{ tour.startName }}</strong>
-                    </div>
-
-                    <div class="tour-card__meta-item">
-                      <span>To</span>
-                      <strong>{{ tour.endName }}</strong>
-                    </div>
-
-                    <div class="tour-card__meta-item">
-                      <span>Tour Type</span>
-                      <strong>{{ tourTypeLabel(tour.tourType) }}</strong>
-                    </div>
-
-                    <div class="tour-card__meta-item">
-                      <span>Distance</span>
-                      <strong>{{ tour.distanceKm }} km</strong>
-                    </div>
-
-                    <div class="tour-card__meta-item">
-                      <span>Est. Time</span>
-                      <strong>{{ tour.estimatedTime }}</strong>
+                      <span>Tour ID</span>
+                      <strong>{{ tour.id }}</strong>
                     </div>
                   </div>
 
@@ -98,8 +86,8 @@
         />
       } @else {
         <section class="tours-empty-state">
-          <h2>No matching tours</h2>
-          <p>Adjust the search to see your mock tour list again.</p>
+          <h2>No tours found</h2>
+          <p>Create your first tour or adjust the search to find an existing one.</p>
         </section>
       }
     </div>

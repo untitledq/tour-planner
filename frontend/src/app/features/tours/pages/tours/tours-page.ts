@@ -11,19 +11,9 @@ import { finalize } from 'rxjs';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
-import { TourType } from '../../models/tour.models';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
-
-interface TourListItem {
-  id: string;
-  name: string;
-  description: string;
-  tourType: TourType;
-  startName: string;
-  endName: string;
-  distanceKm: number;
-  estimatedTime: string;
-}
+import { TourListResponse } from '../../models/tour.models';
+import { TourApiService } from '../../services/tour-api.service';
 
 @Component({
   selector: 'app-tours-page',
@@ -46,95 +36,16 @@ export class ToursPage {
   protected readonly searchTerm = signal('');
   protected readonly first = signal(0);
   protected isLoggingOut = false;
+  protected readonly isLoadingTours = signal(true);
+  protected readonly toursLoadError = signal('');
 
-  protected readonly mockTours = signal<TourListItem[]>([
-    {
-      id: 'tour-001',
-      name: 'Vienna City Center Tour',
-      description: 'Historic city walk from Stephansdom to Schoenbrunn.',
-      tourType: 'HIKE',
-      startName: 'Stephansdom',
-      endName: 'Schoenbrunn',
-      distanceKm: 5.4,
-      estimatedTime: '2h'
-    },
-    {
-      id: 'tour-002',
-      name: 'Danube Riverside Ride',
-      description: 'Relaxed bike route along the Danube canal.',
-      tourType: 'BIKE',
-      startName: 'Schwedenplatz',
-      endName: 'Donauinsel',
-      distanceKm: 11.2,
-      estimatedTime: '55 min'
-    },
-    {
-      id: 'tour-003',
-      name: 'Imperial Sights Drive',
-      description: 'Short vacation route between the main imperial landmarks.',
-      tourType: 'VACATION',
-      startName: 'Belvedere',
-      endName: 'Hofburg',
-      distanceKm: 8.1,
-      estimatedTime: '28 min'
-    },
-    {
-      id: 'tour-004',
-      name: 'Prater Evening Hike',
-      description: 'Easy evening hike through the Prater area.',
-      tourType: 'HIKE',
-      startName: 'Praterstern',
-      endName: 'Lusthaus',
-      distanceKm: 4.8,
-      estimatedTime: '1h 20 min'
-    },
-    {
-      id: 'tour-005',
-      name: 'Castle and Gardens Loop',
-      description: 'Bike loop connecting palaces and urban green spots.',
-      tourType: 'BIKE',
-      startName: 'Schoenbrunn',
-      endName: 'Volksgarten',
-      distanceKm: 13.7,
-      estimatedTime: '1h 10 min'
-    },
-    {
-      id: 'tour-006',
-      name: 'Ringstrasse Vacation Highlights',
-      description: 'Compact vacation route around the classic Vienna landmarks.',
-      tourType: 'VACATION',
-      startName: 'Karlsplatz',
-      endName: 'Rathausplatz',
-      distanceKm: 6.3,
-      estimatedTime: '24 min'
-    },
-    {
-      id: 'tour-007',
-      name: 'Old Town Running Tour',
-      description: 'Compact running route through narrow streets and squares.',
-      tourType: 'RUNNING',
-      startName: 'Michaelerplatz',
-      endName: 'Stadtpark',
-      distanceKm: 3.6,
-      estimatedTime: '1h'
-    }
-  ]);
+  protected readonly tours = signal<TourListResponse[]>([]);
 
   protected readonly filteredTours = computed(() => {
     const normalizedSearch = this.searchTerm().trim().toLowerCase();
 
-    return this.mockTours().filter((tour) => {
-      const matchesSearch =
-        normalizedSearch === '' ||
-        [
-          tour.name,
-          tour.description,
-          tour.startName,
-          tour.endName,
-          this.tourTypeLabel(tour.tourType)
-        ].some((value) => value.toLowerCase().includes(normalizedSearch));
-
-      return matchesSearch;
+    return this.tours().filter((tour) => {
+      return normalizedSearch === '' || tour.name.toLowerCase().includes(normalizedSearch);
     });
   });
 
@@ -147,12 +58,15 @@ export class ToursPage {
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
   private readonly createTourFlow = inject(CreateTourFlowService);
+  private readonly tourApi = inject(TourApiService);
 
   constructor() {
     this.searchControl.valueChanges.subscribe((value) => {
       this.searchTerm.set(value);
       this.first.set(0);
     });
+
+    this.loadTours();
   }
 
   protected logout(): void {
@@ -181,20 +95,25 @@ export class ToursPage {
     this.first.set(event.first ?? 0);
   }
 
-  protected tourTypeLabel(value: TourType): string {
-    switch (value) {
-      case 'BIKE':
-        return 'Bike';
-      case 'HIKE':
-        return 'Hike';
-      case 'RUNNING':
-        return 'Running';
-      case 'VACATION':
-        return 'Vacation';
-    }
+  protected trackTour(_: number, tour: TourListResponse): string {
+    return tour.id;
   }
 
-  protected trackTour(_: number, tour: TourListItem): string {
-    return tour.id;
+  private loadTours(): void {
+    this.isLoadingTours.set(true);
+    this.toursLoadError.set('');
+
+    this.tourApi
+      .list()
+      .pipe(finalize(() => this.isLoadingTours.set(false)))
+      .subscribe({
+        next: (tours) => {
+          this.tours.set(tours);
+        },
+        error: () => {
+          this.toursLoadError.set('Tours could not be loaded.');
+          this.tours.set([]);
+        }
+      });
   }
 }

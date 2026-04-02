@@ -3,12 +3,16 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 
 import { API_BASE_URL, USE_MOCK_AUTH } from '../../../core/config/api.config';
-import { CreateTourRequest, TourResponse } from '../models/tour.models';
+import { CreateTourRequest, TourListResponse, TourResponse } from '../models/tour.models';
 
 @Injectable({ providedIn: 'root' })
 export class TourApiService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${API_BASE_URL}/tours`;
+
+  list(): Observable<TourListResponse[]> {
+    return this.http.get<TourListResponse[]>(this.apiUrl);
+  }
 
   create(payload: CreateTourRequest): Observable<TourResponse> {
     if (USE_MOCK_AUTH) {
