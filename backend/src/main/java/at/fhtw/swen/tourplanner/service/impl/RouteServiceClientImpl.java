@@ -1,13 +1,15 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.controller.response.RouteResponse;
+import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class RouteServiceClientImpl {
+public class RouteServiceClientImpl implements RouteServiceClient {
 
+    @Override
     public RouteResponse calculateRoute(String start, String end, String tourType) {
 
         // TODO: replace hard-coded demo route with calculation

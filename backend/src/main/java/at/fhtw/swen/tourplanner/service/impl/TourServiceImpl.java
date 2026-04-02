@@ -1,10 +1,9 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
-import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
+import at.fhtw.swen.tourplanner.service.RouteServiceClient;
+import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourWithFavoriteResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.RouteJpaRepository;
@@ -25,12 +24,12 @@ public class TourServiceImpl implements TourService {
     private final TourJpaRepository repository;
     private final RouteJpaRepository routeRepository;
     private final UserFavoriteTourJpaRepository favoriteRepository;
-    private final RouteServiceClientImpl routeClient;
+    private final RouteServiceClient routeClient;
 
     public TourServiceImpl(TourJpaRepository repository,
                            RouteJpaRepository routeRepository,
                            UserFavoriteTourJpaRepository favoriteRepository,
-                           RouteServiceClientImpl routeClient) {
+                           RouteServiceClient routeClient) {
         this.repository = repository;
         this.routeRepository = routeRepository;
         this.favoriteRepository = favoriteRepository;
@@ -38,7 +37,7 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourResponse create(UUID userId, TourCreateRequest req, UUID id) {
+    public TourDto create(UUID userId, TourDto req, UUID id) {
         Tour tour = TourMapper.fromCreateRequest(id, userId, req);
         repository.save(tour);
 
@@ -54,7 +53,7 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourResponse findByIdAndUser(UUID id, UUID userId) {
+    public TourDto findByIdAndUser(UUID id, UUID userId) {
         Tour tour = repository.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
@@ -62,7 +61,7 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourWithFavoriteResponse findByIdAndUserWithFavorite(UUID tourId, UUID userId) {
+    public TourWithFavoriteDto findByIdAndUserWithFavorite(UUID tourId, UUID userId) {
         Tour tour = repository.findById(tourId)
                 .orElseThrow(() -> new RuntimeException("Tour not found"));
 
@@ -72,16 +71,16 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourResponse update(UUID id, UUID userId, TourUpdateRequest req) {
+    public TourDto update(UUID id, UUID userId, TourDto tourDto) {
         Tour tour = repository.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
         boolean routeRelevantChanged =
-                !Objects.equals(tour.getTourType(), req.tourType()) ||
-                        !Objects.equals(tour.getStartName(), req.startName()) ||
-                        !Objects.equals(tour.getEndName(), req.endName());
+                !Objects.equals(tour.getTourType(), tourDto.getTourType()) ||
+                        !Objects.equals(tour.getStartName(), tourDto.getStartName()) ||
+                        !Objects.equals(tour.getEndName(), tourDto.getEndName());
 
-        TourMapper.updateEntity(req, tour);
+        TourMapper.updateEntity(tourDto, tour);
         repository.save(tour);
 
         if (routeRelevantChanged) {
