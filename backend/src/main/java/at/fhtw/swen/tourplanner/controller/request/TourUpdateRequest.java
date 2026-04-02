@@ -1,10 +1,12 @@
 package at.fhtw.swen.tourplanner.controller.request;
 
+import at.fhtw.swen.tourplanner.persistence.entity.TourType;
+
 public record TourUpdateRequest(
         String name,
         String description,
         String imagePath,
-        String transportType,
+        TourType tourType,
         String startName,
         String endName
 ) {}

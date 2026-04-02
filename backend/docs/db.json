@@ -8,7 +8,7 @@
     "end_name": "End Point",
     "route": {
       "id": "018f5e8c-91ab-7a2d-b5c3-2d7e9f0a5678",
-      "transportType": "car",
+      "tourType": "CAR",
       "distance": 185000,
       "duration": 7200,
       "coordinates": [
