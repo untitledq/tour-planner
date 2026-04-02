@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.controller.response.RouteResponse;
+import at.fhtw.swen.tourplanner.service.dto.RouteDto;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class RouteServiceClientImpl implements RouteServiceClient {
 
     @Override
-    public RouteResponse calculateRoute(String start, String end, String tourType) {
+    public RouteDto calculateRoute(String start, String end, String tourType) {
 
         // TODO: replace hard-coded demo route with calculation
         // OpenRouteservice.org
@@ -21,7 +21,7 @@ public class RouteServiceClientImpl implements RouteServiceClient {
                 List.of(48.1845, 16.3122)  // Schloss Schönbrunn
         );
 
-        return new RouteResponse(
+        return new RouteDto(
                 5200,   // meters
                 900,    // seconds
                 coords
