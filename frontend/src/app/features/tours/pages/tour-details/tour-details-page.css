@@ -1,0 +1,180 @@
+:host {
+  display: block;
+  background: #ffffff;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.tour-details-content {
+  padding: 2rem;
+  background: #ffffff;
+}
+
+.tour-details-shell {
+  width: 100%;
+  max-width: 1100px;
+  padding-left: 2rem;
+}
+
+.tour-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+h1 {
+  margin: 0 0 0.7rem;
+  color: #111827;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.tour-details-description {
+  margin: 0;
+  color: #374151;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+:host ::ng-deep .tour-details-breadcrumb.p-breadcrumb {
+  margin-top: 1rem;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-list {
+  gap: 0.45rem;
+}
+
+:host ::ng-deep .tour-details-breadcrumb .p-menuitem-link,
+:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-item-link {
+  color: #ff8a33;
+  font-size: 0.98rem;
+  text-decoration: none;
+}
+
+:host ::ng-deep .tour-details-breadcrumb .p-menuitem-link:hover,
+:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-item-link:hover,
+:host ::ng-deep .tour-details-breadcrumb .p-menuitem-link:hover span,
+:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-item-link:hover span {
+  color: #111827;
+}
+
+:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-separator {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+:host ::ng-deep .tour-details-back-button.p-button {
+  border: 0;
+  border-radius: 0.55rem;
+  background: #8b8b8b;
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+:host ::ng-deep .tour-details-back-button.p-button:hover {
+  background: #767676;
+  color: #ffffff;
+}
+
+.tour-details-card,
+.tour-details-empty-state {
+  border: 1px solid #d1d5db;
+  border-radius: 0.95rem;
+  background: #ffffff;
+  padding: 1.3rem;
+}
+
+.tour-details-card__intro {
+  margin-bottom: 1.4rem;
+}
+
+.tour-details-card__intro h2 {
+  margin: 0 0 0.45rem;
+  color: #111827;
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.tour-details-card__intro p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.55;
+}
+
+.tour-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.tour-details-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.tour-details-item--wide {
+  grid-column: 1 / -1;
+}
+
+.tour-details-item span {
+  color: #6b7280;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.tour-details-item strong {
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.tour-details-empty-state h2 {
+  margin: 0 0 0.6rem;
+  color: #111827;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.tour-details-empty-state p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .tour-details-content {
+    padding: 1.25rem;
+  }
+
+  .tour-details-shell {
+    padding-left: 0;
+  }
+
+  .tour-details-header {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  .tour-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tour-details-item--wide {
+    grid-column: auto;
+  }
+}

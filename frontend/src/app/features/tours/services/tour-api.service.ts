@@ -14,6 +14,10 @@ export class TourApiService {
     return this.http.get<TourListResponse[]>(this.apiUrl);
   }
 
+  getById(id: string): Observable<TourResponse> {
+    return this.http.get<TourResponse>(`${this.apiUrl}/${id}`);
+  }
+
   create(payload: CreateTourRequest): Observable<TourResponse> {
     if (USE_MOCK_AUTH) {
       return of({

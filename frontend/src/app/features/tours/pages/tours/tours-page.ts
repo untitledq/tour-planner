@@ -95,6 +95,10 @@ export class ToursPage {
     this.first.set(event.first ?? 0);
   }
 
+  protected openTourDetails(tourId: string): void {
+    void this.router.navigate(['/tours', tourId]);
+  }
+
   protected trackTour(_: number, tour: TourListResponse): string {
     return tour.id;
   }
