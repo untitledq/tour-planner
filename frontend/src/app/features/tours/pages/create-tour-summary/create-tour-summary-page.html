@@ -49,8 +49,8 @@
             </label>
 
             <label class="create-tour-summary-field">
-              <span>Transport Type</span>
-              <input type="text" [value]="draft.transportType" readonly />
+              <span>Tour Type</span>
+              <input type="text" [value]="tourTypeLabel(draft.tourType)" readonly />
             </label>
           </div>
 
@@ -73,24 +73,9 @@
           </label>
         </form>
 
-        <section class="create-tour-summary-map">
-          <h3>Tour Map</h3>
-
-          <div class="create-tour-summary-map__placeholder">
-            <div class="create-tour-summary-map__controls">
-              <button type="button">+</button>
-              <button type="button">-</button>
-            </div>
-
-            <div class="create-tour-summary-map__canvas">
-              <span>Leaflet route preview placeholder</span>
-            </div>
-          </div>
-        </section>
-
         <footer class="create-tour-summary-footer">
           <section class="create-tour-summary-stats">
-            <h3>Tour Details</h3>
+            <h3>Tour Route Details</h3>
 
             <div class="create-tour-summary-stats__row">
               <span>Tour Distance</span>
@@ -103,6 +88,22 @@
             </div>
           </section>
         </footer>
+
+        <section class="create-tour-summary-map">
+          <h3>Tour Map</h3>
+          <h4 class="create-tour-map__subtitle">Route preview on the map based on your starting point and end point</h4>
+
+          <div class="create-tour-summary-map__placeholder">
+            <div class="create-tour-summary-map__controls">
+              <button type="button">+</button>
+              <button type="button">-</button>
+            </div>
+
+            <div class="create-tour-summary-map__canvas">
+              <span>Leaflet route preview placeholder</span>
+            </div>
+          </div>
+        </section>
       </section>
     </div>
   </section>

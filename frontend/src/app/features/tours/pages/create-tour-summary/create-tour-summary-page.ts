@@ -7,6 +7,7 @@ import { AuthSessionService } from '../../../../core/services/auth-session.servi
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { TourType } from '../../models/tour.models';
 import { CreateTourDraftService } from '../../services/create-tour-draft.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 import { TourApiService } from '../../services/tour-api.service';
@@ -87,7 +88,7 @@ export class CreateTourSummaryPage implements PendingChangesAware {
         name: this.draft.name,
         description: this.draft.description,
         imagePath: '',
-        transportType: this.draft.transportType,
+        tourType: this.draft.tourType as TourType,
         startName: this.draft.from,
         endName: this.draft.to
       })
@@ -122,6 +123,21 @@ export class CreateTourSummaryPage implements PendingChangesAware {
 
   protected get descriptionLength(): number {
     return this.draft.description.length;
+  }
+
+  protected tourTypeLabel(value: TourType | ''): string {
+    switch (value) {
+      case 'BIKE':
+        return 'Bike';
+      case 'HIKE':
+        return 'Hike';
+      case 'RUNNING':
+        return 'Running';
+      case 'VACATION':
+        return 'Vacation';
+      default:
+        return '';
+    }
   }
 
   canDeactivate(): boolean | Promise<boolean> {

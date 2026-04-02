@@ -11,13 +11,14 @@ import { finalize } from 'rxjs';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { TourType } from '../../models/tour.models';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 
 interface TourListItem {
   id: string;
   name: string;
   description: string;
-  transportType: 'walk' | 'bike' | 'car';
+  tourType: TourType;
   startName: string;
   endName: string;
   distanceKm: number;
@@ -51,7 +52,7 @@ export class ToursPage {
       id: 'tour-001',
       name: 'Vienna City Center Tour',
       description: 'Historic city walk from Stephansdom to Schoenbrunn.',
-      transportType: 'walk',
+      tourType: 'HIKE',
       startName: 'Stephansdom',
       endName: 'Schoenbrunn',
       distanceKm: 5.4,
@@ -61,7 +62,7 @@ export class ToursPage {
       id: 'tour-002',
       name: 'Danube Riverside Ride',
       description: 'Relaxed bike route along the Danube canal.',
-      transportType: 'bike',
+      tourType: 'BIKE',
       startName: 'Schwedenplatz',
       endName: 'Donauinsel',
       distanceKm: 11.2,
@@ -70,8 +71,8 @@ export class ToursPage {
     {
       id: 'tour-003',
       name: 'Imperial Sights Drive',
-      description: 'Short car tour between the main imperial landmarks.',
-      transportType: 'car',
+      description: 'Short vacation route between the main imperial landmarks.',
+      tourType: 'VACATION',
       startName: 'Belvedere',
       endName: 'Hofburg',
       distanceKm: 8.1,
@@ -79,9 +80,9 @@ export class ToursPage {
     },
     {
       id: 'tour-004',
-      name: 'Prater Evening Walk',
-      description: 'Easy evening walk through the Prater area.',
-      transportType: 'walk',
+      name: 'Prater Evening Hike',
+      description: 'Easy evening hike through the Prater area.',
+      tourType: 'HIKE',
       startName: 'Praterstern',
       endName: 'Lusthaus',
       distanceKm: 4.8,
@@ -91,7 +92,7 @@ export class ToursPage {
       id: 'tour-005',
       name: 'Castle and Gardens Loop',
       description: 'Bike loop connecting palaces and urban green spots.',
-      transportType: 'bike',
+      tourType: 'BIKE',
       startName: 'Schoenbrunn',
       endName: 'Volksgarten',
       distanceKm: 13.7,
@@ -99,9 +100,9 @@ export class ToursPage {
     },
     {
       id: 'tour-006',
-      name: 'Ringstrasse Highlights',
-      description: 'Compact route around the classic Vienna landmarks.',
-      transportType: 'car',
+      name: 'Ringstrasse Vacation Highlights',
+      description: 'Compact vacation route around the classic Vienna landmarks.',
+      tourType: 'VACATION',
       startName: 'Karlsplatz',
       endName: 'Rathausplatz',
       distanceKm: 6.3,
@@ -109,9 +110,9 @@ export class ToursPage {
     },
     {
       id: 'tour-007',
-      name: 'Old Town Discovery',
-      description: 'Compact walking route through narrow streets and squares.',
-      transportType: 'walk',
+      name: 'Old Town Running Tour',
+      description: 'Compact running route through narrow streets and squares.',
+      tourType: 'RUNNING',
       startName: 'Michaelerplatz',
       endName: 'Stadtpark',
       distanceKm: 3.6,
@@ -130,7 +131,7 @@ export class ToursPage {
           tour.description,
           tour.startName,
           tour.endName,
-          this.transportLabel(tour.transportType)
+          this.tourTypeLabel(tour.tourType)
         ].some((value) => value.toLowerCase().includes(normalizedSearch));
 
       return matchesSearch;
@@ -180,14 +181,16 @@ export class ToursPage {
     this.first.set(event.first ?? 0);
   }
 
-  protected transportLabel(value: TourListItem['transportType']): string {
+  protected tourTypeLabel(value: TourType): string {
     switch (value) {
-      case 'walk':
-        return 'Walking';
-      case 'bike':
+      case 'BIKE':
         return 'Bike';
-      case 'car':
-        return 'Car';
+      case 'HIKE':
+        return 'Hike';
+      case 'RUNNING':
+        return 'Running';
+      case 'VACATION':
+        return 'Vacation';
     }
   }
 

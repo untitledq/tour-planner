@@ -56,22 +56,23 @@
 
             <label
               class="create-tour-field create-tour-field--compact create-tour-field--select"
-              [class.create-tour-field--invalid]="showRequiredError('transportType')"
+              [class.create-tour-field--invalid]="showRequiredError('tourType')"
             >
-              <span>Transport Type</span>
+              <span>Tour Type</span>
               <span class="create-tour-field__select-wrap">
                 <select
-                  formControlName="transportType"
-                  [class.create-tour-field__control--invalid]="showRequiredError('transportType')"
+                  formControlName="tourType"
+                  [class.create-tour-field__control--invalid]="showRequiredError('tourType')"
                 >
                   <option value=""></option>
-                  <option value="car">Car</option>
-                  <option value="bike">Bike</option>
-                  <option value="walk">Walk</option>
+                  <option value="BIKE">{{ tourTypeLabel('BIKE') }}</option>
+                  <option value="HIKE">{{ tourTypeLabel('HIKE') }}</option>
+                  <option value="RUNNING">{{ tourTypeLabel('RUNNING') }}</option>
+                  <option value="VACATION">{{ tourTypeLabel('VACATION') }}</option>
                 </select>
               </span>
-              @if (showRequiredError('transportType')) {
-                <small class="create-tour-field__error">Transport type is required.</small>
+              @if (showRequiredError('tourType')) {
+                <small class="create-tour-field__error">Tour type is required.</small>
               }
             </label>
           </div>

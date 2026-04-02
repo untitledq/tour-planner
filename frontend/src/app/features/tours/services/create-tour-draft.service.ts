@@ -1,10 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 
-import { CreateTourSaveResult } from '../models/tour.models';
+import { CreateTourSaveResult, TourType } from '../models/tour.models';
 
 export interface CreateTourDraft {
   name: string;
-  transportType: string;
+  tourType: TourType | '';
   from: string;
   to: string;
   description: string;
@@ -12,7 +12,7 @@ export interface CreateTourDraft {
 
 const INITIAL_DRAFT: CreateTourDraft = {
   name: '',
-  transportType: '',
+  tourType: '',
   from: '',
   to: '',
   description: ''

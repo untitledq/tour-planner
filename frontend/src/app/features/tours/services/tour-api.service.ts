@@ -17,7 +17,7 @@ export class TourApiService {
         name: payload.name,
         description: payload.description,
         imagePath: payload.imagePath,
-        transportType: payload.transportType,
+        tourType: payload.tourType,
         startName: payload.startName,
         endName: payload.endName
       }).pipe(delay(300));

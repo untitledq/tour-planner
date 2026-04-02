@@ -1,8 +1,10 @@
+export type TourType = 'BIKE' | 'HIKE' | 'RUNNING' | 'VACATION';
+
 export interface CreateTourRequest {
   name: string;
   description: string;
   imagePath: string;
-  transportType: string;
+  tourType: TourType;
   startName: string;
   endName: string;
 }
@@ -12,7 +14,7 @@ export interface TourResponse {
   name: string;
   description: string;
   imagePath: string;
-  transportType: string;
+  tourType: TourType;
   startName: string;
   endName: string;
 }

@@ -8,6 +8,7 @@ import { AuthSessionService } from '../../../../core/services/auth-session.servi
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { TourType } from '../../models/tour.models';
 import { CreateTourDraftService } from '../../services/create-tour-draft.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 
@@ -38,7 +39,7 @@ export class CreateTourDetailsPage implements PendingChangesAware {
 
     this.detailsForm = this.formBuilder.nonNullable.group({
       name: [draft.name, [Validators.required]],
-      transportType: [draft.transportType, [Validators.required]],
+      tourType: [draft.tourType, [Validators.required]],
       from: [draft.from, [Validators.required]],
       to: [draft.to, [Validators.required]],
       description: [
@@ -109,11 +110,24 @@ export class CreateTourDetailsPage implements PendingChangesAware {
   }
 
   protected showRequiredError(
-    controlName: 'name' | 'transportType' | 'from' | 'to' | 'description'
+    controlName: 'name' | 'tourType' | 'from' | 'to' | 'description'
   ): boolean {
     const control = this.detailsForm.controls[controlName];
 
     return control.touched && control.hasError('required');
+  }
+
+  protected tourTypeLabel(value: TourType): string {
+    switch (value) {
+      case 'BIKE':
+        return 'Bike';
+      case 'HIKE':
+        return 'Hike';
+      case 'RUNNING':
+        return 'Running';
+      case 'VACATION':
+        return 'Vacation';
+    }
   }
 
   canDeactivate(): boolean | Promise<boolean> {

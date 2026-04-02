@@ -159,6 +159,13 @@
   font-weight: 600;
 }
 
+.create-tour-map__subtitle{
+  margin: 0.5rem 0 1rem;
+  padding-left: 0.3rem;
+  color: #6b7280;
+  font-size: 14.4px;
+}
+
 .create-tour-summary-footer {
   display: flex;
   align-items: flex-end;
