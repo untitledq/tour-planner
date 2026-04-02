@@ -19,7 +19,7 @@ public class TourMapper {
                 req.name(),
                 req.description(),
                 req.imagePath(),
-                req.transportType(),
+                req.TourType(),
                 req.startName(),
                 req.endName()
         );
@@ -38,7 +38,7 @@ public class TourMapper {
                 tour.getName(),
                 tour.getDescription(),
                 tour.getImagePath(),
-                tour.getTransportType(),
+                tour.getTourType(),
                 tour.getStartName(),
                 tour.getEndName()
         );
@@ -50,7 +50,7 @@ public class TourMapper {
                 tour.getName(),
                 tour.getDescription(),
                 tour.getImagePath(),
-                tour.getTransportType(),
+                tour.getTourType(),
                 tour.getStartName(),
                 tour.getEndName(),
                 isFavorite

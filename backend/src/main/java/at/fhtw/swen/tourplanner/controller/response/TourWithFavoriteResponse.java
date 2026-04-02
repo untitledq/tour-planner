@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.controller.response;
 
+import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import lombok.Getter;
 
 @Getter
@@ -11,12 +12,12 @@ public class TourWithFavoriteResponse extends TourResponse {
             String name,
             String description,
             String imagePath,
-            String transportType,
+            TourType tourType,
             String startName,
             String endName,
             boolean favorite
     ) {
-        super(id, name, description, imagePath, transportType, startName, endName);
+        super(id, name, description, imagePath, tourType, startName, endName);
         this.favorite = favorite;
     }
 }

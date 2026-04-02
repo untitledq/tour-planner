@@ -1,9 +1,6 @@
 package at.fhtw.swen.tourplanner.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,8 +27,9 @@ public class Tour {
     private String imagePath;
 
     @Setter
-    @Column(name = "transport_type")
-    private String transportType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tour_type", nullable = false, length = 20)
+    private TourType tourType;
 
     @Setter
     @Column(name = "start_name")
@@ -48,7 +46,7 @@ public class Tour {
                 String name,
                 String description,
                 String imagePath,
-                String transportType,
+                TourType tourType,
                 String startName,
                 String endName) {
         this.id = id;
@@ -56,8 +54,9 @@ public class Tour {
         this.name = name;
         this.description = description;
         this.imagePath = imagePath;
-        this.transportType = transportType;
+        this.tourType = tourType;
         this.startName = startName;
         this.endName = endName;
     }
+
 }

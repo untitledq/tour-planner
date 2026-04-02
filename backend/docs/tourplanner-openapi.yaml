@@ -425,9 +425,9 @@ components:
         endName:
           type: string
           description: Name of the end location
-        transportType:
+        tourType:
           type: string
-          enum: [CAR, BIKE, FOOT]
+          enum: [BIKE, HIKE, RUNNING, VACATION]
           description: Type of transport used for the tour
         hasImage:
           type: boolean
@@ -444,7 +444,7 @@ components:
 
     TourCreateRequest:
       type: object
-      required: [ name, startName, endName, transportType ]
+      required: [ name, startName, endName, tourType ]
       description: Request to create or update a tour
       properties:
         name:
@@ -459,9 +459,9 @@ components:
         endName:
           type: string
           description: Name of the end location
-        transportType:
+        tourType:
           type: string
-          enum: [CAR, BIKE, FOOT]
+          enum: [ BIKE, HIKE, RUNNING, VACATION ]
           description: Type of transport used for the tour
 
     TourListItem:
@@ -481,7 +481,7 @@ components:
         endName:
           type: string
           description: Name of the end location
-        transportType:
+        tourType:
           type: string
           description: Type of transport used for the tour
         hasImage:

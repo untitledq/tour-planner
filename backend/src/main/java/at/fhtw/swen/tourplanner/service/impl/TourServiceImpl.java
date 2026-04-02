@@ -25,12 +25,12 @@ public class TourServiceImpl implements TourService {
     private final TourJpaRepository repository;
     private final RouteJpaRepository routeRepository;
     private final UserFavoriteTourJpaRepository favoriteRepository;
-    private final OpenRouteServiceClientImpl routeClient;
+    private final RouteServiceClientImpl routeClient;
 
     public TourServiceImpl(TourJpaRepository repository,
                            RouteJpaRepository routeRepository,
                            UserFavoriteTourJpaRepository favoriteRepository,
-                           OpenRouteServiceClientImpl routeClient) {
+                           RouteServiceClientImpl routeClient) {
         this.repository = repository;
         this.routeRepository = routeRepository;
         this.favoriteRepository = favoriteRepository;
@@ -77,7 +77,7 @@ public class TourServiceImpl implements TourService {
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
         boolean routeRelevantChanged =
-                !Objects.equals(tour.getTransportType(), req.transportType()) ||
+                !Objects.equals(tour.getTourType(), req.tourType()) ||
                         !Objects.equals(tour.getStartName(), req.startName()) ||
                         !Objects.equals(tour.getEndName(), req.endName());
 
@@ -105,7 +105,7 @@ public class TourServiceImpl implements TourService {
         var routeResponse = routeClient.calculateRoute(
                 tour.getStartName(),
                 tour.getEndName(),
-                tour.getTransportType()
+                String.valueOf(tour.getTourType())
         );
 
         Route route = routeRepository.findByTourId(tour.getId())

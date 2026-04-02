@@ -50,14 +50,16 @@ CREATE INDEX IF NOT EXISTS idx_sessions_user_active ON sessions(user_id, revoked
 CREATE TABLE IF NOT EXISTS tours (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_by UUID NOT NULL,
-    name TEXT,
+    name TEXT NOT NULL,
     description TEXT,
     image_path TEXT,
-    transport_type TEXT,
-    start_name TEXT,
-    end_name TEXT,
+    tour_type VARCHAR(20) NOT NULL,
+    start_name TEXT NOT NULL,
+    end_name TEXT NOT NULL,
     CONSTRAINT fk_tours_user
-    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT chk_tour_type
+    CHECK (tour_type IN ('BIKE','HIKE','RUNNING','VACATION'))
     );
 
 CREATE INDEX IF NOT EXISTS idx_tours_created_by ON tours(created_by);
