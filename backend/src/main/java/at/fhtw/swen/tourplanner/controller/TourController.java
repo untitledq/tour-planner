@@ -1,10 +1,7 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
-import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
+import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourWithFavoriteResponse;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
 import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
@@ -30,8 +27,8 @@ public class TourController {
     }
 
     @PostMapping
-    public TourResponse create(
-            @RequestBody TourCreateRequest req,
+    public TourDto create(
+            @RequestBody TourDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
@@ -65,9 +62,9 @@ public class TourController {
     }
 
     @PutMapping("/{id}")
-    public TourResponse update(
+    public TourDto update(
             @PathVariable UUID id,
-            @RequestBody TourUpdateRequest req,
+            @RequestBody TourDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();

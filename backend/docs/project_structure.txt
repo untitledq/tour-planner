@@ -51,21 +51,11 @@
 │   │   │                   │   ├── ImageUploadController.java
 │   │   │                   │   ├── request
 │   │   │                   │   │   ├── LoginRequest.java
-│   │   │                   │   │   ├── RegisterRequest.java
-│   │   │                   │   │   ├── TourCreateRequest.java
-│   │   │                   │   │   ├── TourLogCreateRequest.java
-│   │   │                   │   │   ├── TourLogUpdateRequest.java
-│   │   │                   │   │   └── TourUpdateRequest.java
+│   │   │                   │   │   └── RegisterRequest.java
 │   │   │                   │   ├── response
 │   │   │                   │   │   ├── AuthResponse.java
-│   │   │                   │   │   ├── ImageUploadResponse.java
 │   │   │                   │   │   ├── LoginResponse.java
-│   │   │                   │   │   ├── RouteResponse.java
-│   │   │                   │   │   ├── TourListResponse.java
-│   │   │                   │   │   ├── TourLogListResponse.java
-│   │   │                   │   │   ├── TourLogResponse.java
-│   │   │                   │   │   ├── TourResponse.java
-│   │   │                   │   │   └── TourWithFavoriteResponse.java
+│   │   │                   │   │   └── TourListResponse.java
 │   │   │                   │   ├── RouteController.java
 │   │   │                   │   ├── TourController.java
 │   │   │                   │   └── TourLogController.java
@@ -103,7 +93,11 @@
 │   │   │                   ├── service
 │   │   │                   │   ├── AuthService.java
 │   │   │                   │   ├── dto
+│   │   │                   │   │   ├── RouteDto.java
 │   │   │                   │   │   ├── SessionDto.java
+│   │   │                   │   │   ├── TourDto.java
+│   │   │                   │   │   ├── TourLogDto.java
+│   │   │                   │   │   ├── TourWithFavoriteDto.java
 │   │   │                   │   │   └── UserDto.java
 │   │   │                   │   ├── ImageService.java
 │   │   │                   │   ├── impl
@@ -118,6 +112,7 @@
 │   │   │                   │   │   ├── OrsProfileMapper.java
 │   │   │                   │   │   ├── TourLogMapper.java
 │   │   │                   │   │   └── TourMapper.java
+│   │   │                   │   ├── RouteServiceClient.java
 │   │   │                   │   ├── SessionCleanupService.java
 │   │   │                   │   ├── TourLogService.java
 │   │   │                   │   ├── TourService.java
@@ -141,4 +136,4 @@
 │                               └── UpdateProjectStructure.java
 └── tourplanner.iml
 
-37 directories, 105 files
+37 directories, 100 files

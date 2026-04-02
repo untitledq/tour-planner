@@ -1,10 +1,11 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.controller.response.ImageUploadResponse;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
 import at.fhtw.swen.tourplanner.service.ImageService;
+import at.fhtw.swen.tourplanner.service.dto.TourDto;
+import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class ImageUploadController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ImageUploadResponse> uploadTourImage(
+    public ResponseEntity<TourDto> uploadTourImage(
             @PathVariable UUID tourId,
             @RequestPart("file") MultipartFile file,
             Principal principal
@@ -51,6 +52,7 @@ public class ImageUploadController {
         tour.setImagePath(path);
         tourRepository.save(tour);
 
-        return ResponseEntity.ok(new ImageUploadResponse(true));
+        // return the updated tour
+        return ResponseEntity.ok(TourMapper.toResponse(tour));
     }
 }

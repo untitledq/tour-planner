@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.controller.response.RouteResponse;
+import at.fhtw.swen.tourplanner.service.dto.RouteDto;
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.RouteJpaRepository;
@@ -29,7 +29,7 @@ public class RouteController {
     }
 
     @GetMapping("/{tourId}/route") // changed mapping to match OpenAPI
-    public ResponseEntity<RouteResponse> getRouteForTour(
+    public ResponseEntity<RouteDto> getRouteForTour(
             @PathVariable UUID tourId,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
@@ -60,7 +60,7 @@ public class RouteController {
         logger.info("Fetched route {} for tour {}", route.getId(), tour.getId());
 
         // Step 3: Build response
-        RouteResponse response = new RouteResponse(
+        RouteDto response = new RouteDto(
                 route.getDistance(),
                 route.getDuration(),
                 route.getCoordinates()

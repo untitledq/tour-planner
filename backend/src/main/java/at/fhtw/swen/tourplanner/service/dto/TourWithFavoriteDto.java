@@ -1,13 +1,13 @@
-package at.fhtw.swen.tourplanner.controller.response;
+package at.fhtw.swen.tourplanner.service.dto;
 
 import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import lombok.Getter;
 
 @Getter
-public class TourWithFavoriteResponse extends TourResponse {
+public class TourWithFavoriteDto extends TourDto {
     private final boolean favorite;
 
-    public TourWithFavoriteResponse(
+    public TourWithFavoriteDto(
             String id,
             String name,
             String description,

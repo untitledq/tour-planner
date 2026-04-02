@@ -1,9 +1,6 @@
 package at.fhtw.swen.tourplanner.service.mapper;
 
-import at.fhtw.swen.tourplanner.controller.request.TourLogCreateRequest;
-import at.fhtw.swen.tourplanner.controller.request.TourLogUpdateRequest;
-import at.fhtw.swen.tourplanner.controller.response.TourLogListResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourLogResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 
 import java.util.List;
@@ -11,29 +8,29 @@ import java.util.UUID;
 
 public class TourLogMapper {
 
-    public static TourLog fromCreateRequest(UUID id, UUID userId, TourLogCreateRequest req) {
+    public static TourLog fromCreateRequest(UUID id, UUID userId, TourLogDto tourLogDto) {
         return new TourLog(
                 id,
-                req.tourId(),
+                tourLogDto.getTourId(),
                 userId,
-                req.dateTime(),
-                req.rating(),
-                req.difficulty(),
-                req.totalTime(),
-                req.comment()
+                tourLogDto.getDateTime(),
+                tourLogDto.getRating(),
+                tourLogDto.getDifficulty(),
+                tourLogDto.getTotalTime(),
+                tourLogDto.getComment()
         );
     }
 
-    public static void updateEntity(TourLogUpdateRequest req, TourLog entity) {
-        entity.setDateTime(req.dateTime());
-        entity.setRating(req.rating());
-        entity.setDifficulty(req.difficulty());
-        entity.setTotalTime(req.totalTime());
-        entity.setComment(req.comment());
+    public static void updateEntity(TourLogDto tourLogDto, TourLog entity) {
+        entity.setDateTime(tourLogDto.getDateTime());
+        entity.setRating(tourLogDto.getRating());
+        entity.setDifficulty(tourLogDto.getDifficulty());
+        entity.setTotalTime(tourLogDto.getTotalTime());
+        entity.setComment(tourLogDto.getComment());
     }
 
-    public static TourLogResponse toResponse(TourLog entity) {
-        return new TourLogResponse(
+    public static TourLogDto toResponse(TourLog entity) {
+        return new TourLogDto(
                 entity.getId(),
                 entity.getTourId(),
                 entity.getDateTime(),
@@ -44,14 +41,14 @@ public class TourLogMapper {
         );
     }
 
-    public static TourLogListResponse toListResponse(TourLog entity) {
-        return new TourLogListResponse(
-                entity.getId().toString(),
+    public static TourLogDto toListResponse(TourLog entity) {
+        return new TourLogDto(
+                entity.getId(),
                 entity.getRating()
         );
     }
 
-    public static List<TourLogListResponse> toListResponseList(List<TourLog> entities) {
+    public static List<TourLogDto> toListResponseList(List<TourLog> entities) {
         return entities.stream().map(TourLogMapper::toListResponse).toList();
     }
 }
