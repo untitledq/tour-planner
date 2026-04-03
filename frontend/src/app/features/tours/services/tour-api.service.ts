@@ -3,7 +3,12 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 
 import { API_BASE_URL, USE_MOCK_AUTH } from '../../../core/config/api.config';
-import { CreateTourRequest, TourListResponse, TourResponse } from '../models/tour.models';
+import {
+  CreateTourRequest,
+  TourListResponse,
+  TourResponse,
+  TourRouteResponse
+} from '../models/tour.models';
 
 @Injectable({ providedIn: 'root' })
 export class TourApiService {
@@ -16,6 +21,10 @@ export class TourApiService {
 
   getById(id: string): Observable<TourResponse> {
     return this.http.get<TourResponse>(`${this.apiUrl}/${id}`);
+  }
+
+  getRouteByTourId(id: string): Observable<TourRouteResponse> {
+    return this.http.get<TourRouteResponse>(`${this.apiUrl}/${id}/route`);
   }
 
   create(payload: CreateTourRequest): Observable<TourResponse> {

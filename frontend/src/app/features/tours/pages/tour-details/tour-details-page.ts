@@ -1,14 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { finalize } from 'rxjs';
+import type * as Leaflet from 'leaflet';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
-import { TourResponse, TourType } from '../../models/tour.models';
+import { TourResponse, TourRouteResponse, TourType } from '../../models/tour.models';
 import { TourApiService } from '../../services/tour-api.service';
 
 @Component({
@@ -18,10 +19,29 @@ import { TourApiService } from '../../services/tour-api.service';
   templateUrl: './tour-details-page.html',
   styleUrl: './tour-details-page.css'
 })
-export class TourDetailsPage {
+export class TourDetailsPage implements OnDestroy {
+  @ViewChild('mapContainer')
+  private set mapContainer(element: ElementRef<HTMLDivElement> | undefined) {
+    this.mapContainerRef = element;
+
+    if (element) {
+      void this.ensureMapIsReady();
+    }
+  }
+
+  private leaflet?: typeof Leaflet;
+  private mapContainerRef?: ElementRef<HTMLDivElement>;
+  private map?: Leaflet.Map;
+  private routeLayer?: Leaflet.Polyline;
+  private startMarker?: Leaflet.CircleMarker;
+  private endMarker?: Leaflet.CircleMarker;
+
   protected readonly isLoadingTour = signal(true);
+  protected readonly isLoadingRoute = signal(true);
   protected readonly tourLoadError = signal('');
+  protected readonly routeLoadError = signal('');
   protected readonly tour = signal<TourResponse | null>(null);
+  protected readonly routeDetails = signal<TourRouteResponse | null>(null);
   protected readonly breadcrumbItems = signal<MenuItem[]>([
     { label: 'Tours', routerLink: '/tours' }
   ]);
@@ -58,6 +78,111 @@ export class TourDetailsPage {
           this.tour.set(null);
         }
       });
+
+    this.tourApi
+      .getRouteByTourId(tourId)
+      .pipe(finalize(() => this.isLoadingRoute.set(false)))
+      .subscribe({
+        next: (route) => {
+          this.routeDetails.set(route);
+          void this.ensureMapIsReady();
+        },
+        error: () => {
+          this.routeLoadError.set('Route details could not be loaded.');
+          this.routeDetails.set(null);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.map?.remove();
+  }
+
+  private async ensureMapIsReady(): Promise<void> {
+    await this.loadLeaflet();
+    this.initializeMap();
+    this.renderRouteOnMap();
+  }
+
+  private async loadLeaflet(): Promise<void> {
+    if (this.leaflet) {
+      return;
+    }
+
+    const leafletModule = await import('leaflet');
+    this.leaflet = leafletModule;
+  }
+
+  private initializeMap(): void {
+    const container = this.mapContainerRef?.nativeElement;
+    const leaflet = this.leaflet;
+
+    if (!container || this.map || !leaflet) {
+      return;
+    }
+
+    this.map = leaflet.map(container, {
+      zoomControl: true
+    });
+
+    leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    this.map.setView([48.2082, 16.3738], 13);
+  }
+
+  private renderRouteOnMap(): void {
+    const route = this.routeDetails();
+    const leaflet = this.leaflet;
+
+    if (!this.map || !leaflet || !route?.coordinates?.length) {
+      return;
+    }
+
+    const latLngs = route.coordinates.map(([lat, lng]) => leaflet.latLng(lat, lng));
+
+    if (this.routeLayer) {
+      this.map.removeLayer(this.routeLayer);
+    }
+
+    if (this.startMarker) {
+      this.map.removeLayer(this.startMarker);
+    }
+
+    if (this.endMarker) {
+      this.map.removeLayer(this.endMarker);
+    }
+
+    this.routeLayer = leaflet.polyline(latLngs, {
+      color: '#2f7d6b',
+      weight: 6
+    }).addTo(this.map);
+
+    this.startMarker = leaflet.circleMarker(latLngs[0], {
+      radius: 9,
+      color: '#2563eb',
+      weight: 3,
+      fillColor: '#60a5fa',
+      fillOpacity: 1
+    })
+      .addTo(this.map)
+      .bindPopup(`From: ${this.tour()?.startName ?? 'Start'}`);
+    this.endMarker = leaflet.circleMarker(latLngs[latLngs.length - 1], {
+      radius: 9,
+      color: '#ea580c',
+      weight: 3,
+      fillColor: '#fb923c',
+      fillOpacity: 1
+    })
+      .addTo(this.map)
+      .bindPopup(`To: ${this.tour()?.endName ?? 'End'}`);
+
+    this.map.fitBounds(this.routeLayer.getBounds(), {
+      padding: [24, 24]
+    });
+
+    this.map.invalidateSize();
   }
 
   protected logout(): void {
@@ -92,5 +217,26 @@ export class TourDetailsPage {
       case 'VACATION':
         return 'Vacation';
     }
+  }
+  
+
+  protected formatDistance(distanceInMeters: number): string {
+    return `${(distanceInMeters / 1000).toFixed(1)} km`;
+  }
+
+  protected formatDuration(durationInSeconds: number): string {
+    const totalMinutes = Math.round(durationInSeconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours === 0) {
+      return `${minutes} min`;
+    }
+
+    if (minutes === 0) {
+      return `${hours} h`;
+    }
+
+    return `${hours} h ${minutes} min`;
   }
 }

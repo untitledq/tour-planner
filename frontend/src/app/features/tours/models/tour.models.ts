@@ -19,6 +19,12 @@ export interface TourResponse {
   endName: string;
 }
 
+export interface TourRouteResponse {
+  distance: number;
+  duration: number;
+  coordinates: number[][];
+}
+
 export interface TourListResponse {
   id: string;
   name: string;

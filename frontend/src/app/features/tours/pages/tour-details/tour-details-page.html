@@ -26,39 +26,101 @@
           <p>{{ tourLoadError() }}</p>
         </section>
       } @else if (tour(); as selectedTour) {
-        <section class="tour-details-card">
-          <div class="tour-details-card__intro">
-            <h2>{{ selectedTour.name }}</h2>
-            <p>{{ selectedTour.description }}</p>
+        <div class="tour-details-sections">
+          <div class="tour-details-map-shell">
+            <div class="tour-details-map" #mapContainer></div>
+          </div>
+          <div class="tour-details-top-row">
+            <section class="tour-details-card tour-details-card--statistics">
+              <div class="tour-details-card__intro">
+                <h2>Tour Route Details</h2>
+                <p>Distance and estimated time assigned to this tour.</p>
+              </div>
+
+              @if (isLoadingRoute()) {
+                <p class="tour-details-route-state">Loading route details...</p>
+              } @else if (routeLoadError()) {
+                <p class="tour-details-route-state">{{ routeLoadError() }}</p>
+              } @else if (routeDetails(); as route) {
+                <div class="tour-details-grid">
+                  <div class="tour-details-item">
+                    <span>Distance</span>
+                    <strong>{{ formatDistance(route.distance) }}</strong>
+                  </div>
+
+                  <div class="tour-details-item">
+                    <span>Est. Time</span>
+                    <strong>{{ formatDuration(route.duration) }}</strong>
+                  </div>
+                </div>
+              }
+            </section>
+
+            <section class="tour-details-card">
+              <div class="tour-details-card__intro">
+                <h2>Statistic Overview</h2>
+              </div>
+
+              <div class="tour-statistics-overview">
+                <div class="tour-statistics-item">
+                  <div class="tour-statistics-icon tour-statistics-icon--orange" aria-hidden="true">
+                    ☆
+                  </div>
+                  <div class="tour-statistics-copy">
+                    <span>Popularity:</span>
+                    <strong>4 Stars</strong>
+                  </div>
+                </div>
+
+                <div class="tour-statistics-divider" aria-hidden="true"></div>
+
+                <div class="tour-statistics-item">
+                  <div class="tour-statistics-icon tour-statistics-icon--green" aria-hidden="true">
+                    ☺
+                  </div>
+                  <div class="tour-statistics-copy">
+                    <span>Child-Friendly:</span>
+                    <strong>Medium</strong>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
 
-          <div class="tour-details-grid">
-            <div class="tour-details-item">
-              <span>Tour ID</span>
-              <strong>{{ selectedTour.id }}</strong>
+          <section class="tour-details-card">
+            <div class="tour-details-card__intro">
+              <h2>{{ selectedTour.name }}</h2>
+              <p>{{ selectedTour.description }}</p>
             </div>
 
-            <div class="tour-details-item">
-              <span>Tour Type</span>
-              <strong>{{ tourTypeLabel(selectedTour.tourType) }}</strong>
-            </div>
+            <div class="tour-details-grid">
+              <div class="tour-details-item">
+                <span>Tour ID</span>
+                <strong>{{ selectedTour.id }}</strong>
+              </div>
 
-            <div class="tour-details-item">
-              <span>From</span>
-              <strong>{{ selectedTour.startName }}</strong>
-            </div>
+              <div class="tour-details-item">
+                <span>Tour Type</span>
+                <strong>{{ tourTypeLabel(selectedTour.tourType) }}</strong>
+              </div>
 
-            <div class="tour-details-item">
-              <span>To</span>
-              <strong>{{ selectedTour.endName }}</strong>
-            </div>
+              <div class="tour-details-item">
+                <span>From</span>
+                <strong>{{ selectedTour.startName }}</strong>
+              </div>
 
-            <div class="tour-details-item tour-details-item--wide">
-              <span>Image Path</span>
-              <strong>{{ selectedTour.imagePath || 'No image uploaded' }}</strong>
+              <div class="tour-details-item">
+                <span>To</span>
+                <strong>{{ selectedTour.endName }}</strong>
+              </div>
+
+              <div class="tour-details-item tour-details-item--wide">
+                <span>Image Path</span>
+                <strong>{{ selectedTour.imagePath || 'No image uploaded' }}</strong>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       }
     </div>
   </section>
