@@ -27,6 +27,30 @@ export class TourApiService {
     return this.http.get<TourRouteResponse>(`${this.apiUrl}/${id}/route`);
   }
 
+  update(id: string, payload: CreateTourRequest): Observable<TourResponse> {
+    if (USE_MOCK_AUTH) {
+      return of({
+        id,
+        name: payload.name,
+        description: payload.description,
+        imagePath: payload.imagePath,
+        tourType: payload.tourType,
+        startName: payload.startName,
+        endName: payload.endName
+      }).pipe(delay(300));
+    }
+
+    return this.http.put<TourResponse>(`${this.apiUrl}/${id}`, payload);
+  }
+
+  deleteById(id: string): Observable<void> {
+    if (USE_MOCK_AUTH) {
+      return of(void 0).pipe(delay(300));
+    }
+
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
   create(payload: CreateTourRequest): Observable<TourResponse> {
     if (USE_MOCK_AUTH) {
       return of({

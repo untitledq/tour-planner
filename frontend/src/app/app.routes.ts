@@ -11,6 +11,7 @@ import { TourLogsPage } from './features/tour-logs/pages/tour-logs/tour-logs-pag
 import { CreateTourDetailsPage } from './features/tours/pages/create-tour/create-tour-details-page';
 import { CreateTourDonePage } from './features/tours/pages/create-tour-done/create-tour-done-page';
 import { CreateTourSummaryPage } from './features/tours/pages/create-tour-summary/create-tour-summary-page';
+import { EditTourPage } from './features/tours/pages/edit-tour/edit-tour-page';
 import { TourDetailsPage } from './features/tours/pages/tour-details/tour-details-page';
 import { ToursPage } from './features/tours/pages/tours/tours-page';
 
@@ -42,6 +43,12 @@ export const routes: Routes = [
     path: 'tours/:id',
     component: TourDetailsPage,
     canActivate: [authGuard]
+  },
+  {
+    path: 'tours/:id/edit',
+    component: EditTourPage,
+    canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard]
   },
   {
     path: 'tours/create/details',

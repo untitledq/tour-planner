@@ -10,6 +10,7 @@ import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 import { TourListResponse } from '../../models/tour.models';
@@ -25,7 +26,8 @@ import { TourApiService } from '../../services/tour-api.service';
     InputIconModule,
     InputTextModule,
     PaginatorModule,
-    AppShellComponent
+    AppShellComponent,
+    ConfirmDialogComponent
   ],
   templateUrl: './tours-page.html',
   styleUrl: './tours-page.css'
@@ -38,6 +40,9 @@ export class ToursPage {
   protected isLoggingOut = false;
   protected readonly isLoadingTours = signal(true);
   protected readonly toursLoadError = signal('');
+  protected readonly showDeleteDialog = signal(false);
+  protected readonly isDeletingTour = signal(false);
+  protected readonly selectedTourForDelete = signal<TourListResponse | null>(null);
 
   protected readonly tours = signal<TourListResponse[]>([]);
 
@@ -97,6 +102,50 @@ export class ToursPage {
 
   protected openTourDetails(tourId: string): void {
     void this.router.navigate(['/tours', tourId]);
+  }
+
+  protected openEditTour(tourId: string): void {
+    void this.router.navigate(['/tours', tourId, 'edit']);
+  }
+
+  protected openDeleteDialog(tour: TourListResponse): void {
+    this.selectedTourForDelete.set(tour);
+    this.showDeleteDialog.set(true);
+  }
+
+  protected closeDeleteDialog(): void {
+    this.showDeleteDialog.set(false);
+    this.selectedTourForDelete.set(null);
+  }
+
+  protected confirmDeleteTour(): void {
+    const selectedTour = this.selectedTourForDelete();
+
+    if (!selectedTour || this.isDeletingTour()) {
+      return;
+    }
+
+    this.isDeletingTour.set(true);
+
+    this.tourApi
+      .deleteById(selectedTour.id)
+      .pipe(finalize(() => this.isDeletingTour.set(false)))
+      .subscribe({
+        next: () => {
+          this.tours.update((tours) => tours.filter((tour) => tour.id !== selectedTour.id));
+
+          const remainingTours = this.filteredTours().length;
+          if (this.first() >= remainingTours && this.first() > 0) {
+            this.first.set(Math.max(0, this.first() - this.rows));
+          }
+
+          this.closeDeleteDialog();
+        },
+        error: () => {
+          this.closeDeleteDialog();
+          this.toursLoadError.set('Tour could not be deleted.');
+        }
+      });
   }
 
   protected trackTour(_: number, tour: TourListResponse): string {
