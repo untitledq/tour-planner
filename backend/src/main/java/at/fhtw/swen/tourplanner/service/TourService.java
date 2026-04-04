@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TourService {
-    TourDto create(UUID userId, TourDto req, UUID id);
+    TourDto create(UUID userId, TourDto tourDto, UUID id);
 
     List<TourListResponse> findAllByUser(UUID userId);
 
@@ -16,7 +16,7 @@ public interface TourService {
 
     TourWithFavoriteDto findByIdAndUserWithFavorite(UUID tourId, UUID userId);
 
-    TourDto update(UUID id, UUID userId, TourDto req);
+    TourDto update(UUID id, UUID userId, TourDto tourDto);
 
     void deleteByUser(UUID id, UUID userId);
 }
