@@ -64,7 +64,8 @@ export class CreateTourDonePage {
   }
 
   protected goToPrimaryDestination(): void {
-    const status = this.result.status;
+    const result = this.result;
+    const status = result.status;
 
     if (status === 'success') {
       this.flowService.resetFlow();
@@ -73,7 +74,7 @@ export class CreateTourDonePage {
     this.draftService.setSaveResult(null);
 
     if (status === 'success') {
-      void this.router.navigateByUrl('/tours');
+      void this.router.navigate(['/tours', result.tourId]);
       return;
     }
 
