@@ -58,5 +58,4 @@ public class Tour {
         this.startName = startName;
         this.endName = endName;
     }
-
 }

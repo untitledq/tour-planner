@@ -132,7 +132,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Vienna Walk UPDATED\",\n  \"description\": \"Updated description\",\n  \"tourType\": \"HIKE\",\n  \"startName\": \"Karlsplatz\",\n  \"endName\": \"Donauinsel\"\n}"
+                  "raw": "{\n  \"name\": \"Vienna Walk UPDATED\",\n  \"description\": \"Updated description\",\n  \"tourType\": \"RUNNING\",\n  \"startName\": \"Karlsplatz\",\n  \"endName\": \"Donauinsel\"\n}"
                 }
               }
             },

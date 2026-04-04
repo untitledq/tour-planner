@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
@@ -75,8 +76,7 @@ public class TourServiceImpl implements TourService {
         Tour tour = repository.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
-        boolean routeRelevantChanged =
-                !Objects.equals(tour.getTourType(), tourDto.getTourType()) ||
+        boolean routeRelevantChanged = !Objects.equals(tour.getTourType(), tourDto.getTourType()) ||
                         !Objects.equals(tour.getStartName(), tourDto.getStartName()) ||
                         !Objects.equals(tour.getEndName(), tourDto.getEndName());
 

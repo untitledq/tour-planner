@@ -26,6 +26,7 @@ public class TourMapper {
     public static void updateEntity(TourDto tourDto, Tour tour) {
         tour.setName(tourDto.getName());
         tour.setDescription(tourDto.getDescription());
+        tour.setTourType(tourDto.getTourType());
         tour.setStartName(tourDto.getStartName());
         tour.setEndName(tourDto.getEndName());
     }
