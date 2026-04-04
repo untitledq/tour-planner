@@ -27,6 +27,7 @@
 │   ├── tourplanner.2026-03-30.0.log
 │   ├── tourplanner.2026-03-31.0.log
 │   ├── tourplanner.2026-04-01.0.log
+│   ├── tourplanner.2026-04-02.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -55,7 +56,8 @@
 │   │   │                   │   ├── response
 │   │   │                   │   │   ├── AuthResponse.java
 │   │   │                   │   │   ├── LoginResponse.java
-│   │   │                   │   │   └── TourListResponse.java
+│   │   │                   │   │   ├── TourListResponse.java
+│   │   │                   │   │   └── TourTypeListResponse.java
 │   │   │                   │   ├── RouteController.java
 │   │   │                   │   ├── TourController.java
 │   │   │                   │   └── TourLogController.java
@@ -136,4 +138,4 @@
 │                               └── UpdateProjectStructure.java
 └── tourplanner.iml
 
-37 directories, 100 files
+37 directories, 102 files
