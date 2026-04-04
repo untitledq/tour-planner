@@ -60,6 +60,23 @@ paths:
           description: User successfully deleted
 
   /api/tours:
+    post:
+      summary: Create a new tour (backend resolves route)
+      security: [ { bearerAuth: [] } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourCreateRequest'
+      responses:
+        '201':
+          description: Newly created tour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tour'
+
     get:
       summary: List all tours of the current user
       security: [ { bearerAuth: [] } ]
@@ -77,23 +94,6 @@ paths:
                         description: List of tours
                         items:
                           $ref: '#/components/schemas/TourListItem'
-
-    post:
-      summary: Create a new tour (backend resolves route)
-      security: [ { bearerAuth: [] } ]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TourCreateRequest'
-      responses:
-        '201':
-          description: Newly created tour
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tour'
 
   /api/tours/favorites:
     get:

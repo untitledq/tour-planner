@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.service;
 
+import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
@@ -12,9 +13,9 @@ public interface TourService {
 
     List<TourListResponse> findAllByUser(UUID userId);
 
-    List<TourListResponse> findAllFavByUser(UUID userId);
+    List<TourTypeListResponse> findAllFavByUser(UUID userId);
 
-    List<TourListResponse> findAllNotFavByUser(UUID userId);
+    List<TourTypeListResponse> findAllNotFavByUser(UUID userId);
 
     TourDto findByIdAndUser(UUID id, UUID userId);
 

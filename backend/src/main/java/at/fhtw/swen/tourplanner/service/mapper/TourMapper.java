@@ -1,5 +1,7 @@
 package at.fhtw.swen.tourplanner.service.mapper;
 
+import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
+import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
@@ -63,7 +65,19 @@ public class TourMapper {
         );
     }
 
-    public static List<TourListResponse> toListResponseList(List<Tour> tours) {
+    public static TourTypeListResponse toTypeListResponse(Tour tour) {
+        return new TourTypeListResponse(
+                tour.getId().toString(),
+                tour.getName(),
+                tour.getTourType()
+        );
+    }
+
+    public static List<TourListResponse> toTourResponseList(List<Tour> tours) {
         return tours.stream().map(TourMapper::toListResponse).toList();
+    }
+
+    public static List<TourTypeListResponse> toTourTypeResponseList(List<Tour> tours) {
+        return tours.stream().map(TourMapper::toTypeListResponse).toList();
     }
 }
