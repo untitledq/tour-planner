@@ -1,4 +1,4 @@
-import { afterNextRender, Component, inject, signal } from '@angular/core';
+import { afterNextRender, Component, ElementRef, ViewChild, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
@@ -21,6 +21,9 @@ import { TourApiService } from '../../services/tour-api.service';
   styleUrl: './edit-tour-page.css'
 })
 export class EditTourPage implements PendingChangesAware {
+  @ViewChild('imageInput')
+  private imageInputRef?: ElementRef<HTMLInputElement>;
+
   protected readonly maxDescriptionLength = 500;
   protected readonly editForm;
   protected isLoggingOut = false;
@@ -166,6 +169,7 @@ export class EditTourPage implements PendingChangesAware {
         next: (tour) => {
           this.loadedTour.set(tour);
           this.selectedImageFile.set(null);
+          this.resetImageInput();
           this.editForm.markAsPristine();
           this.allowRouteChange = true;
           void this.router.navigate(['/tours', tour.id]);
@@ -235,6 +239,12 @@ export class EditTourPage implements PendingChangesAware {
 
     const segments = path.split(/[/\\]/);
     return segments[segments.length - 1] ?? '';
+  }
+
+  private resetImageInput(): void {
+    if (this.imageInputRef) {
+      this.imageInputRef.nativeElement.value = '';
+    }
   }
 
   protected tourTypeLabel(value: TourType): string {

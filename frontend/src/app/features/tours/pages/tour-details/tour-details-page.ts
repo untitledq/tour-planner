@@ -8,6 +8,7 @@ import type * as Leaflet from 'leaflet';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { ImagePreviewDialogComponent } from '../../../../shared/components/image-preview-dialog/image-preview-dialog';
 import { PageBreadcrumbComponent } from '../../../../shared/components/page-breadcrumb/page-breadcrumb';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { TourResponse, TourRouteResponse, TourType } from '../../models/tour.models';
@@ -16,7 +17,13 @@ import { TourApiService } from '../../services/tour-api.service';
 @Component({
   selector: 'app-tour-details-page',
   standalone: true,
-  imports: [ButtonModule, AppShellComponent, ConfirmDialogComponent, PageBreadcrumbComponent],
+  imports: [
+    ButtonModule,
+    AppShellComponent,
+    ConfirmDialogComponent,
+    ImagePreviewDialogComponent,
+    PageBreadcrumbComponent
+  ],
   templateUrl: './tour-details-page.html',
   styleUrl: './tour-details-page.css'
 })
@@ -36,6 +43,7 @@ export class TourDetailsPage implements OnDestroy {
   private routeLayer?: Leaflet.Polyline;
   private startMarker?: Leaflet.CircleMarker;
   private endMarker?: Leaflet.CircleMarker;
+  private previewImageObjectUrl: string | null = null;
 
   protected readonly isLoadingTour = signal(true);
   protected readonly isLoadingRoute = signal(true);
@@ -46,6 +54,9 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly showDeleteDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
   protected readonly isDownloadingImage = signal(false);
+  protected readonly isLoadingImagePreview = signal(false);
+  protected readonly showImagePreviewDialog = signal(false);
+  protected readonly previewImageUrl = signal<string | null>(null);
   protected readonly canShowTourActions = computed(() => {
     return !this.isLoadingTour() && !this.tourLoadError() && this.tour() !== null;
   });
@@ -103,6 +114,7 @@ export class TourDetailsPage implements OnDestroy {
 
   ngOnDestroy(): void {
     this.map?.remove();
+    this.clearPreviewImage();
   }
 
   private async ensureMapIsReady(): Promise<void> {
@@ -231,6 +243,36 @@ export class TourDetailsPage implements OnDestroy {
     return segments[segments.length - 1] ?? path;
   }
 
+  protected openImagePreview(): void {
+    const selectedTour = this.tour();
+
+    if (!selectedTour?.imagePath || this.isLoadingImagePreview()) {
+      return;
+    }
+
+    this.isLoadingImagePreview.set(true);
+
+    this.tourApi
+      .downloadImage(selectedTour.id)
+      .pipe(finalize(() => this.isLoadingImagePreview.set(false)))
+      .subscribe({
+        next: (imageBlob) => {
+          this.clearPreviewImage();
+
+          const previewUrl = URL.createObjectURL(imageBlob);
+          this.previewImageObjectUrl = previewUrl;
+          this.previewImageUrl.set(previewUrl);
+          this.showImagePreviewDialog.set(true);
+        },
+        error: () => {}
+      });
+  }
+
+  protected closeImagePreview(): void {
+    this.showImagePreviewDialog.set(false);
+    this.clearPreviewImage();
+  }
+
   protected downloadImage(): void {
     const selectedTour = this.tour();
 
@@ -256,6 +298,15 @@ export class TourDetailsPage implements OnDestroy {
         },
         error: () => {}
       });
+  }
+
+  private clearPreviewImage(): void {
+    if (this.previewImageObjectUrl) {
+      URL.revokeObjectURL(this.previewImageObjectUrl);
+      this.previewImageObjectUrl = null;
+    }
+
+    this.previewImageUrl.set(null);
   }
 
   protected openDeleteDialog(): void {

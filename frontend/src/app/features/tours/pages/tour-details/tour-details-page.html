@@ -151,9 +151,21 @@
                       <button
                         type="button"
                         class="tour-details-image-view"
-                        aria-label="View uploaded image"
+                        [disabled]="isLoadingImagePreview()"
+                        [attr.aria-label]="
+                          isLoadingImagePreview()
+                            ? 'Opening image preview'
+                            : 'View uploaded image'
+                        "
+                        (click)="openImagePreview()"
                       >
-                        <span class="pi pi-eye" aria-hidden="true"></span>
+                        <span
+                          class="pi"
+                          [class.pi-eye]="!isLoadingImagePreview()"
+                          [class.pi-spin]="isLoadingImagePreview()"
+                          [class.pi-spinner]="isLoadingImagePreview()"
+                          aria-hidden="true"
+                        ></span>
                       </button>
 
                       <button
@@ -194,5 +206,13 @@
     cancelLabel="Cancel"
     (confirm)="confirmDeleteTour()"
     (cancel)="closeDeleteDialog()"
+  />
+
+  <app-image-preview-dialog
+    [visible]="showImagePreviewDialog()"
+    [title]="tour()?.name ? tour()!.name + ' Image' : 'Tour Image'"
+    [imageUrl]="previewImageUrl()"
+    [imageAlt]="tour()?.name ? 'Uploaded image for ' + tour()!.name : 'Uploaded tour image'"
+    (close)="closeImagePreview()"
   />
 </app-shell>

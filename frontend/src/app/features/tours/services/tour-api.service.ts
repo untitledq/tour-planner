@@ -51,4 +51,5 @@ export class TourApiService {
   create(payload: CreateTourRequest): Observable<TourResponse> {
     return this.http.post<TourResponse>(this.apiUrl, payload);
   }
+
 }
