@@ -260,6 +260,26 @@
               }
             },
             {
+              "name": "Get Favorite Tours (created by me)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": "http://localhost:8080/api/tours/favorites"
+              }
+            },
+            {
+              "name": "Get Not Favorite Tours (created by me)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": "http://localhost:8080/api/tours/not-favorites"
+              }
+            },
+            {
               "name": "Favorites",
               "item": [
                 {
@@ -287,6 +307,26 @@
                       }
                     }
                   ]
+                },
+                {
+                  "name": "Get Favorite Tours (created by me)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                    ],
+                    "url": "http://localhost:8080/api/tours/favorites"
+                  }
+                },
+                {
+                  "name": "Get Not Favorite Tours (created by me)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                    ],
+                    "url": "http://localhost:8080/api/tours/not-favorites"
+                  }
                 },
                 {
                   "name": "Get Tour By ID with favorite status",

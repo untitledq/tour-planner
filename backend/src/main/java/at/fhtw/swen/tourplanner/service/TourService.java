@@ -12,6 +12,10 @@ public interface TourService {
 
     List<TourListResponse> findAllByUser(UUID userId);
 
+    List<TourListResponse> findAllFavByUser(UUID userId);
+
+    List<TourListResponse> findAllNotFavByUser(UUID userId);
+
     TourDto findByIdAndUser(UUID id, UUID userId);
 
     TourWithFavoriteDto findByIdAndUserWithFavorite(UUID tourId, UUID userId);

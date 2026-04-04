@@ -45,6 +45,20 @@ public class TourController {
         return service.findAllByUser(userId);
     }
 
+    @GetMapping("/favorites")
+    public List<TourListResponse> allFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get All favorite Tours called by user: {}", userId);
+        return service.findAllFavByUser(userId);
+    }
+
+    @GetMapping("/not-favorites")
+    public List<TourListResponse> allNotFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get All not favorite Tours called by user: {}", userId);
+        return service.findAllNotFavByUser(userId);
+    }
+
     @GetMapping("/{id}")
     public Object getById(
             @PathVariable UUID id,

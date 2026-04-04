@@ -1,6 +1,5 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
@@ -50,6 +49,18 @@ public class TourServiceImpl implements TourService {
     @Override
     public List<TourListResponse> findAllByUser(UUID userId) {
         List<Tour> tours = repository.findAllByCreatedBy(userId);
+        return TourMapper.toListResponseList(tours);
+    }
+
+    @Override
+    public List<TourListResponse> findAllFavByUser(UUID userId) {
+        List<Tour> tours = repository.findAllCreatedAndFavoritesBy(userId);
+        return TourMapper.toListResponseList(tours);
+    }
+
+    @Override
+    public List<TourListResponse> findAllNotFavByUser(UUID userId) {
+        List<Tour> tours = repository.findAllCreatedButNotFavoritesBy(userId);
         return TourMapper.toListResponseList(tours);
     }
 
