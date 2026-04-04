@@ -68,6 +68,9 @@
                     <p-button
                       label="Delete"
                       styleClass="tour-card__action tour-card__action--delete"
+                      [loading]="isDeletingTour() && selectedTourForDelete()?.id === tour.id"
+                      [disabled]="isDeletingTour()"
+                      (onClick)="openDeleteDialog(tour)"
                     />
                   </div>
                 </div>
@@ -93,4 +96,14 @@
       }
     </div>
   </section>
+
+  <app-confirm-dialog
+    [visible]="showDeleteDialog()"
+    title="Delete tour"
+    [message]="'Do you really want to delete ' + (selectedTourForDelete()?.name || 'this tour') + '? This action cannot be undone.'"
+    confirmLabel="Delete"
+    cancelLabel="Cancel"
+    (confirm)="confirmDeleteTour()"
+    (cancel)="closeDeleteDialog()"
+  />
 </app-shell>

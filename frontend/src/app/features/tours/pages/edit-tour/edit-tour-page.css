@@ -1,0 +1,79 @@
+:host {
+  display: block;
+  background: #ffffff;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.edit-tour-content {
+  padding: 2rem;
+  background: #ffffff;
+}
+
+.edit-tour-shell {
+  width: 100%;
+  max-width: 1100px;
+  padding-left: 2rem;
+}
+
+.edit-tour-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.edit-tour-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.edit-tour-back-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111827;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.edit-tour-back-icon:hover {
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #ea580c;
+}
+
+.edit-tour-back-icon .pi {
+  font-size: 1rem;
+}
+
+h1 {
+  margin: 0 0 0.7rem;
+  color: #111827;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+h2 {
+  margin: 0;
+  color: #374151;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .edit-tour-content {
+    padding: 1.25rem;
+  }
+
+  .edit-tour-shell {
+    padding-left: 0;
+  }
+}

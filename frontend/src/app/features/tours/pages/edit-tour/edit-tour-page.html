@@ -1,0 +1,32 @@
+<app-shell title="[Placeholder]" (logoutClick)="logout()">
+  <section class="edit-tour-content">
+    <div class="edit-tour-shell">
+      <div class="edit-tour-header">
+        <div>
+          <div class="edit-tour-title-row">
+            <button
+              type="button"
+              class="edit-tour-back-icon"
+              aria-label="Back to tour details"
+              (click)="goBack()"
+            >
+              <span class="pi pi-arrow-left" aria-hidden="true"></span>
+            </button>
+            <h1>Edit Tour</h1>
+          </div>
+          <h2>This page is reserved for the upcoming edit-tour flow.</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+</app-shell>
+
+<app-confirm-dialog
+  [visible]="showLeaveDialog"
+  title="Leave edit tour?"
+  message="Do you really want to leave this page? Your current edit-tour progress will be lost."
+  confirmLabel="Leave page"
+  cancelLabel="Stay here"
+  (confirm)="confirmLeave()"
+  (cancel)="stayOnPage()"
+/>

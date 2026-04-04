@@ -3,6 +3,10 @@
   background: #ffffff;
   color: #111827;
   font-family: Arial, Helvetica, sans-serif;
+  --tp-gray: #8b8b8b;
+  --tp-gray-hover: #767676;
+  --tp-red: #dc2626;
+  --tp-red-hover: #b91c1c;
 }
 
 .tour-details-content {
@@ -34,6 +38,36 @@
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 1.75rem;
+}
+
+.tour-details-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.tour-details-back-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111827;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tour-details-back-icon:hover {
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #ea580c;
+}
+
+.tour-details-back-icon .pi {
+  font-size: 1rem;
 }
 
 h1 {
@@ -92,6 +126,44 @@ h1 {
 
 :host ::ng-deep .tour-details-back-button.p-button:hover {
   background: #767676;
+  color: #ffffff;
+}
+
+.tour-details-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .tour-details-edit-button.p-button {
+  border: 1px solid var(--tp-gray);
+  border-radius: 0.55rem;
+  background: var(--tp-gray);
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+:host ::ng-deep .tour-details-edit-button.p-button:hover {
+  background: var(--tp-gray-hover);
+  border-color: var(--tp-gray-hover);
+  color: #ffffff;
+}
+
+:host ::ng-deep .tour-details-delete-button.p-button {
+  border: 1px solid var(--tp-red);
+  border-radius: 0.55rem;
+  background: var(--tp-red);
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+:host ::ng-deep .tour-details-delete-button.p-button:hover {
+  background: var(--tp-red-hover);
+  border-color: var(--tp-red-hover);
   color: #ffffff;
 }
 
@@ -265,6 +337,12 @@ h1 {
 
   .tour-details-header {
     flex-direction: column;
+  }
+
+  .tour-details-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .tour-details-top-row {

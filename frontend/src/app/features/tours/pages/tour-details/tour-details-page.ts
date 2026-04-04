@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -8,6 +8,7 @@ import type * as Leaflet from 'leaflet';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { TourResponse, TourRouteResponse, TourType } from '../../models/tour.models';
 import { TourApiService } from '../../services/tour-api.service';
@@ -15,7 +16,7 @@ import { TourApiService } from '../../services/tour-api.service';
 @Component({
   selector: 'app-tour-details-page',
   standalone: true,
-  imports: [ButtonModule, BreadcrumbModule, AppShellComponent],
+  imports: [ButtonModule, BreadcrumbModule, AppShellComponent, ConfirmDialogComponent],
   templateUrl: './tour-details-page.html',
   styleUrl: './tour-details-page.css'
 })
@@ -42,6 +43,11 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly routeLoadError = signal('');
   protected readonly tour = signal<TourResponse | null>(null);
   protected readonly routeDetails = signal<TourRouteResponse | null>(null);
+  protected readonly showDeleteDialog = signal(false);
+  protected readonly isDeletingTour = signal(false);
+  protected readonly canShowTourActions = computed(() => {
+    return !this.isLoadingTour() && !this.tourLoadError() && this.tour() !== null;
+  });
   protected readonly breadcrumbItems = signal<MenuItem[]>([
     { label: 'Tours', routerLink: '/tours' }
   ]);
@@ -156,7 +162,10 @@ export class TourDetailsPage implements OnDestroy {
 
     this.routeLayer = leaflet.polyline(latLngs, {
       color: '#2f7d6b',
-      weight: 6
+      weight: 6,
+      smoothFactor: 1.5,
+    lineCap: 'round',
+    lineJoin: 'round'
     }).addTo(this.map);
 
     this.startMarker = leaflet.circleMarker(latLngs[0], {
@@ -204,6 +213,47 @@ export class TourDetailsPage implements OnDestroy {
 
   protected goBack(): void {
     void this.router.navigateByUrl('/tours');
+  }
+
+  protected openEditTour(): void {
+    const selectedTour = this.tour();
+
+    if (!selectedTour) {
+      return;
+    }
+
+    void this.router.navigate(['/tours', selectedTour.id, 'edit']);
+  }
+
+  protected openDeleteDialog(): void {
+    this.showDeleteDialog.set(true);
+  }
+
+  protected closeDeleteDialog(): void {
+    this.showDeleteDialog.set(false);
+  }
+
+  protected confirmDeleteTour(): void {
+    const selectedTour = this.tour();
+
+    if (!selectedTour || this.isDeletingTour()) {
+      return;
+    }
+
+    this.isDeletingTour.set(true);
+
+    this.tourApi
+      .deleteById(selectedTour.id)
+      .pipe(finalize(() => this.isDeletingTour.set(false)))
+      .subscribe({
+        next: () => {
+          this.showDeleteDialog.set(false);
+          void this.router.navigateByUrl('/tours');
+        },
+        error: () => {
+          this.showDeleteDialog.set(false);
+        }
+      });
   }
 
   protected tourTypeLabel(value: TourType): string {
