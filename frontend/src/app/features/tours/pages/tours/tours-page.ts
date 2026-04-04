@@ -104,6 +104,10 @@ export class ToursPage {
     void this.router.navigate(['/tours', tourId]);
   }
 
+  protected openEditTour(tourId: string): void {
+    void this.router.navigate(['/tours', tourId, 'edit']);
+  }
+
   protected openDeleteDialog(tour: TourListResponse): void {
     this.selectedTourForDelete.set(tour);
     this.showDeleteDialog.set(true);

@@ -2,13 +2,13 @@ import { Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal }
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { finalize } from 'rxjs';
 import type * as Leaflet from 'leaflet';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { PageBreadcrumbComponent } from '../../../../shared/components/page-breadcrumb/page-breadcrumb';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { TourResponse, TourRouteResponse, TourType } from '../../models/tour.models';
 import { TourApiService } from '../../services/tour-api.service';
@@ -16,7 +16,7 @@ import { TourApiService } from '../../services/tour-api.service';
 @Component({
   selector: 'app-tour-details-page',
   standalone: true,
-  imports: [ButtonModule, BreadcrumbModule, AppShellComponent, ConfirmDialogComponent],
+  imports: [ButtonModule, AppShellComponent, ConfirmDialogComponent, PageBreadcrumbComponent],
   templateUrl: './tour-details-page.html',
   styleUrl: './tour-details-page.css'
 })

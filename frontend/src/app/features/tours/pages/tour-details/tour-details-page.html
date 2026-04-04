@@ -15,7 +15,7 @@
             <h1>Tour Details</h1>
           </div>
           <p class="tour-details-description">Inspect the complete information of your selected tour.</p>
-          <p-breadcrumb styleClass="tour-details-breadcrumb" [model]="breadcrumbItems()" />
+          <app-page-breadcrumb [items]="breadcrumbItems()" />
         </div>
 
         @if (canShowTourActions()) {

@@ -34,7 +34,7 @@
 
 .tour-details-header {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 1.75rem;
@@ -84,36 +84,6 @@ h1 {
   line-height: 1.5;
 }
 
-:host ::ng-deep .tour-details-breadcrumb.p-breadcrumb {
-  margin-top: 1rem;
-  border: 0;
-  background: transparent;
-  padding: 0;
-}
-
-:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-list {
-  gap: 0.45rem;
-}
-
-:host ::ng-deep .tour-details-breadcrumb .p-menuitem-link,
-:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-item-link {
-  color: #ff8a33;
-  font-size: 0.98rem;
-  text-decoration: none;
-}
-
-:host ::ng-deep .tour-details-breadcrumb .p-menuitem-link:hover,
-:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-item-link:hover,
-:host ::ng-deep .tour-details-breadcrumb .p-menuitem-link:hover span,
-:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-item-link:hover span {
-  color: #111827;
-}
-
-:host ::ng-deep .tour-details-breadcrumb .p-breadcrumb-separator {
-  color: #6b7280;
-  font-size: 0.95rem;
-}
-
 :host ::ng-deep .tour-details-back-button.p-button {
   border: 0;
   border-radius: 0.55rem;
@@ -136,13 +106,14 @@ h1 {
 }
 
 :host ::ng-deep .tour-details-edit-button.p-button {
+  min-width: 9.5rem;
   border: 1px solid var(--tp-gray);
-  border-radius: 0.55rem;
+  border-radius: 0.4rem;
   background: var(--tp-gray);
   color: #ffffff;
-  padding: 0.8rem 1.5rem;
+  padding: 0.9rem 1.35rem;
   font-family: Arial, Helvetica, sans-serif;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 :host ::ng-deep .tour-details-edit-button.p-button:hover {
@@ -152,13 +123,14 @@ h1 {
 }
 
 :host ::ng-deep .tour-details-delete-button.p-button {
+  min-width: 9.5rem;
   border: 1px solid var(--tp-red);
-  border-radius: 0.55rem;
+  border-radius: 0.4rem;
   background: var(--tp-red);
   color: #ffffff;
-  padding: 0.8rem 1.5rem;
+  padding: 0.9rem 1.35rem;
   font-family: Arial, Helvetica, sans-serif;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 :host ::ng-deep .tour-details-delete-button.p-button:hover {
