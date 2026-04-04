@@ -45,6 +45,7 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly routeDetails = signal<TourRouteResponse | null>(null);
   protected readonly showDeleteDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
+  protected readonly isDownloadingImage = signal(false);
   protected readonly canShowTourActions = computed(() => {
     return !this.isLoadingTour() && !this.tourLoadError() && this.tour() !== null;
   });
@@ -223,6 +224,38 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     void this.router.navigate(['/tours', selectedTour.id, 'edit']);
+  }
+
+  protected uploadedImageName(path: string): string {
+    const segments = path.split(/[/\\]/);
+    return segments[segments.length - 1] ?? path;
+  }
+
+  protected downloadImage(): void {
+    const selectedTour = this.tour();
+
+    if (!selectedTour?.imagePath || this.isDownloadingImage()) {
+      return;
+    }
+
+    this.isDownloadingImage.set(true);
+
+    this.tourApi
+      .downloadImage(selectedTour.id)
+      .pipe(finalize(() => this.isDownloadingImage.set(false)))
+      .subscribe({
+        next: (imageBlob) => {
+          const downloadUrl = URL.createObjectURL(imageBlob);
+          const link = document.createElement('a');
+
+          link.href = downloadUrl;
+          link.download = this.uploadedImageName(selectedTour.imagePath);
+          link.click();
+
+          URL.revokeObjectURL(downloadUrl);
+        },
+        error: () => {}
+      });
   }
 
   protected openDeleteDialog(): void {

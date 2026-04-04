@@ -210,6 +210,67 @@ h1 {
   word-break: break-word;
 }
 
+.tour-details-image-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tour-details-image-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-left: auto;
+}
+
+.tour-details-image-view,
+.tour-details-image-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tour-details-image-view {
+  border: 1px solid #5b7ee5;
+  background: #5b7ee5;
+  color: #ffffff;
+}
+
+.tour-details-image-view:hover {
+  background: #4b6dd0;
+  border-color: #4b6dd0;
+  color: #ffffff;
+}
+
+.tour-details-image-download {
+  border: 1px solid #ff8a33;
+  background: #ff8a33;
+  color: #ffffff;
+}
+
+.tour-details-image-download:hover:not(:disabled) {
+  background: #f27316;
+  border-color: #f27316;
+  color: #ffffff;
+}
+
+.tour-details-image-download:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.tour-details-image-view .pi,
+.tour-details-image-download .pi {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
 .tour-details-route-state {
   margin: 0;
   color: #6b7280;

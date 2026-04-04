@@ -136,8 +136,48 @@
               </div>
 
               <div class="tour-details-item tour-details-item--wide">
-                <span>Image Path</span>
-                <strong>{{ selectedTour.imagePath || 'No image uploaded' }}</strong>
+                <span>Uploaded Image</span>
+                <div class="tour-details-image-row">
+                  <strong>
+                    {{
+                      selectedTour.imagePath
+                        ? uploadedImageName(selectedTour.imagePath)
+                        : 'No image uploaded'
+                    }}
+                  </strong>
+
+                  @if (selectedTour.imagePath) {
+                    <div class="tour-details-image-actions">
+                      <button
+                        type="button"
+                        class="tour-details-image-view"
+                        aria-label="View uploaded image"
+                      >
+                        <span class="pi pi-eye" aria-hidden="true"></span>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="tour-details-image-download"
+                        [disabled]="isDownloadingImage()"
+                        [attr.aria-label]="
+                          isDownloadingImage()
+                            ? 'Downloading uploaded image'
+                            : 'Download uploaded image'
+                        "
+                        (click)="downloadImage()"
+                      >
+                        <span
+                          class="pi"
+                          [class.pi-download]="!isDownloadingImage()"
+                          [class.pi-spin]="isDownloadingImage()"
+                          [class.pi-spinner]="isDownloadingImage()"
+                          aria-hidden="true"
+                        ></span>
+                      </button>
+                    </div>
+                  }
+                </div>
               </div>
             </div>
           </section>

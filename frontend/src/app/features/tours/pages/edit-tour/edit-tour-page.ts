@@ -2,7 +2,7 @@ import { afterNextRender, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
-import { finalize } from 'rxjs';
+import { catchError, finalize, of, switchMap, throwError } from 'rxjs';
 
 import { PendingChangesAware } from '../../../../core/guards/pending-changes.guard';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
@@ -30,6 +30,7 @@ export class EditTourPage implements PendingChangesAware {
   protected readonly loadError = signal('');
   protected readonly saveError = signal('');
   protected readonly loadedTour = signal<TourResponse | null>(null);
+  protected readonly selectedImageFile = signal<File | null>(null);
   protected readonly breadcrumbItems = signal<MenuItem[]>([
     { label: 'Tours', routerLink: '/tours' },
     { label: 'Tour' },
@@ -143,16 +144,36 @@ export class EditTourPage implements PendingChangesAware {
         startName: this.editForm.controls.from.value,
         endName: this.editForm.controls.to.value
       })
-      .pipe(finalize(() => (this.isSaving = false)))
+      .pipe(
+        switchMap((tour) => {
+          this.loadedTour.set(tour);
+
+          const selectedImage = this.selectedImageFile();
+          if (!selectedImage) {
+            return of(tour);
+          }
+
+          return this.tourApi.uploadImage(tour.id, selectedImage).pipe(
+            catchError(() => {
+              this.saveError.set('Tour details were saved, but the image upload failed.');
+              return throwError(() => new Error('Image upload failed'));
+            })
+          );
+        }),
+        finalize(() => (this.isSaving = false))
+      )
       .subscribe({
         next: (tour) => {
           this.loadedTour.set(tour);
+          this.selectedImageFile.set(null);
           this.editForm.markAsPristine();
           this.allowRouteChange = true;
           void this.router.navigate(['/tours', tour.id]);
         },
         error: () => {
-          this.saveError.set('Tour could not be updated.');
+          if (!this.saveError()) {
+            this.saveError.set('Tour could not be updated.');
+          }
         }
       });
   }
@@ -165,12 +186,55 @@ export class EditTourPage implements PendingChangesAware {
     return this.descriptionLength > this.maxDescriptionLength;
   }
 
+  protected get canShowEditActions(): boolean {
+    return !this.isLoadingTour() && !this.loadError();
+  }
+
+  protected get selectedImageName(): string {
+    return this.selectedImageFile()?.name ?? '';
+  }
+
+  protected get currentImageName(): string {
+    return this.fileNameFromPath(this.loadedTour()?.imagePath);
+  }
+
+  protected get hasPendingImageSelection(): boolean {
+    return this.selectedImageFile() !== null;
+  }
+
   protected showRequiredError(
     controlName: 'name' | 'tourType' | 'from' | 'to' | 'description'
   ): boolean {
     const control = this.editForm.controls[controlName];
 
     return control.touched && control.hasError('required');
+  }
+
+  protected onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+
+    this.selectedImageFile.set(file);
+    this.editForm.markAsDirty();
+  }
+
+  protected clearSelectedImage(input: HTMLInputElement): void {
+    if (!this.selectedImageFile()) {
+      return;
+    }
+
+    this.selectedImageFile.set(null);
+    input.value = '';
+    this.editForm.markAsDirty();
+  }
+
+  private fileNameFromPath(path: string | null | undefined): string {
+    if (!path) {
+      return '';
+    }
+
+    const segments = path.split(/[/\\]/);
+    return segments[segments.length - 1] ?? '';
   }
 
   protected tourTypeLabel(value: TourType): string {

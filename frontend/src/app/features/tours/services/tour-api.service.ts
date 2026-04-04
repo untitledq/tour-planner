@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, delay, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { API_BASE_URL, USE_MOCK_AUTH } from '../../../core/config/api.config';
+import { API_BASE_URL } from '../../../core/config/api.config';
 import {
   CreateTourRequest,
   TourListResponse,
@@ -27,43 +27,28 @@ export class TourApiService {
     return this.http.get<TourRouteResponse>(`${this.apiUrl}/${id}/route`);
   }
 
-  update(id: string, payload: CreateTourRequest): Observable<TourResponse> {
-    if (USE_MOCK_AUTH) {
-      return of({
-        id,
-        name: payload.name,
-        description: payload.description,
-        imagePath: payload.imagePath,
-        tourType: payload.tourType,
-        startName: payload.startName,
-        endName: payload.endName
-      }).pipe(delay(300));
-    }
+  uploadImage(id: string, file: File): Observable<TourResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
 
+    return this.http.post<TourResponse>(`${this.apiUrl}/${id}/image`, formData);
+  }
+
+  downloadImage(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${id}/image`, {
+      responseType: 'blob'
+    });
+  }
+
+  update(id: string, payload: CreateTourRequest): Observable<TourResponse> {
     return this.http.put<TourResponse>(`${this.apiUrl}/${id}`, payload);
   }
 
   deleteById(id: string): Observable<void> {
-    if (USE_MOCK_AUTH) {
-      return of(void 0).pipe(delay(300));
-    }
-
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   create(payload: CreateTourRequest): Observable<TourResponse> {
-    if (USE_MOCK_AUTH) {
-      return of({
-        id: 'mock-tour-id',
-        name: payload.name,
-        description: payload.description,
-        imagePath: payload.imagePath,
-        tourType: payload.tourType,
-        startName: payload.startName,
-        endName: payload.endName
-      }).pipe(delay(300));
-    }
-
     return this.http.post<TourResponse>(this.apiUrl, payload);
   }
 }

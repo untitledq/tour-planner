@@ -18,23 +18,25 @@
           <app-page-breadcrumb [items]="breadcrumbItems()" />
         </div>
 
-        <div class="edit-tour-actions edit-tour-actions--header">
-          <button
-            type="button"
-            class="edit-tour-actions__button edit-tour-actions__button--secondary"
-            (click)="goBack()"
-          >
-            Cancel
-          </button>
+        @if (canShowEditActions) {
+          <div class="edit-tour-actions edit-tour-actions--header">
+            <button
+              type="button"
+              class="edit-tour-actions__button edit-tour-actions__button--secondary"
+              (click)="goBack()"
+            >
+              Cancel
+            </button>
 
-          <button
-            type="button"
-            class="edit-tour-actions__button edit-tour-actions__button--primary"
-            (click)="saveTour()"
-          >
-            {{ isSaving ? 'Saving...' : 'Save changes' }}
-          </button>
-        </div>
+            <button
+              type="button"
+              class="edit-tour-actions__button edit-tour-actions__button--primary"
+              (click)="saveTour()"
+            >
+              {{ isSaving ? 'Saving...' : 'Save changes' }}
+            </button>
+          </div>
+        }
       </header>
 
       @if (isLoadingTour()) {
@@ -148,6 +150,53 @@
                 {{ descriptionLength }}/{{ maxDescriptionLength }}
               </small>
             </label>
+
+            <div class="edit-tour-field edit-tour-field--upload">
+              <span>Image</span>
+              <div class="edit-tour-upload">
+                <input
+                  #imageInput
+                  type="file"
+                  accept="image/*"
+                  class="edit-tour-upload__input"
+                  (change)="onImageSelected($event)"
+                />
+
+                <button
+                  type="button"
+                  class="edit-tour-upload__button"
+                  (click)="imageInput.click()"
+                >
+                  {{ currentImageName ? 'Replace image' : 'Choose image' }}
+                </button>
+
+                <small class="edit-tour-upload__hint">
+                  The selected file is uploaded when you save the tour.
+                </small>
+
+                @if (hasPendingImageSelection) {
+                  <div class="edit-tour-upload__file">
+                    <span class="edit-tour-upload__file-name">{{ selectedImageName }}</span>
+                    <span class="edit-tour-upload__badge">Selected</span>
+                    <button
+                      type="button"
+                      class="edit-tour-upload__remove"
+                      aria-label="Remove selected image"
+                      (click)="clearSelectedImage(imageInput)"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                } @else if (currentImageName) {
+                  <div class="edit-tour-upload__file">
+                    <span class="edit-tour-upload__file-name">{{ currentImageName }}</span>
+                    <span class="edit-tour-upload__badge edit-tour-upload__badge--saved">
+                      Uploaded
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
           </form>
         </section>
       }
