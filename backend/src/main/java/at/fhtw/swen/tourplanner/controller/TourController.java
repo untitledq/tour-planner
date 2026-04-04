@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.controller;
 
+import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
@@ -46,14 +47,14 @@ public class TourController {
     }
 
     @GetMapping("/favorites")
-    public List<TourListResponse> allFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+    public List<TourTypeListResponse> allFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
         UUID userId = userDetails.getUserId();
         logger.info("Get All favorite Tours called by user: {}", userId);
         return service.findAllFavByUser(userId);
     }
 
     @GetMapping("/not-favorites")
-    public List<TourListResponse> allNotFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+    public List<TourTypeListResponse> allNotFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
         UUID userId = userDetails.getUserId();
         logger.info("Get All not favorite Tours called by user: {}", userId);
         return service.findAllNotFavByUser(userId);
