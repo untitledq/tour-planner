@@ -8,10 +8,16 @@ import type * as Leaflet from 'leaflet';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { FavoriteToggleComponent } from '../../../../shared/components/favorite-toggle/favorite-toggle';
 import { ImagePreviewDialogComponent } from '../../../../shared/components/image-preview-dialog/image-preview-dialog';
 import { PageBreadcrumbComponent } from '../../../../shared/components/page-breadcrumb/page-breadcrumb';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
-import { TourResponse, TourRouteResponse, TourType } from '../../models/tour.models';
+import {
+  TourResponse,
+  TourRouteResponse,
+  TourType,
+  TourWithFavoriteResponse
+} from '../../models/tour.models';
 import { TourApiService } from '../../services/tour-api.service';
 
 @Component({
@@ -21,6 +27,7 @@ import { TourApiService } from '../../services/tour-api.service';
     ButtonModule,
     AppShellComponent,
     ConfirmDialogComponent,
+    FavoriteToggleComponent,
     ImagePreviewDialogComponent,
     PageBreadcrumbComponent
   ],
@@ -53,10 +60,12 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly routeDetails = signal<TourRouteResponse | null>(null);
   protected readonly showDeleteDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
+  protected readonly isTogglingFavorite = signal(false);
   protected readonly isDownloadingImage = signal(false);
   protected readonly isLoadingImagePreview = signal(false);
   protected readonly showImagePreviewDialog = signal(false);
   protected readonly previewImageUrl = signal<string | null>(null);
+  protected readonly isFavorite = signal(false);
   protected readonly canShowTourActions = computed(() => {
     return !this.isLoadingTour() && !this.tourLoadError() && this.tour() !== null;
   });
@@ -81,11 +90,12 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     this.tourApi
-      .getById(tourId)
+      .getByIdWithFavorite(tourId)
       .pipe(finalize(() => this.isLoadingTour.set(false)))
       .subscribe({
         next: (tour) => {
           this.tour.set(tour);
+          this.isFavorite.set(tour.favorite);
           this.breadcrumbItems.set([
             { label: 'Tours', routerLink: '/tours' },
             { label: tour.name || tour.id }
@@ -236,6 +246,29 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     void this.router.navigate(['/tours', selectedTour.id, 'edit']);
+  }
+
+  protected toggleFavorite(): void {
+    const selectedTour = this.tour();
+
+    if (!selectedTour || this.isTogglingFavorite()) {
+      return;
+    }
+
+    this.isTogglingFavorite.set(true);
+
+    const favoriteRequest = this.isFavorite()
+      ? this.tourApi.removeFavorite(selectedTour.id)
+      : this.tourApi.addFavorite(selectedTour.id);
+
+    favoriteRequest
+      .pipe(finalize(() => this.isTogglingFavorite.set(false)))
+      .subscribe({
+        next: () => {
+          this.isFavorite.update((value) => !value);
+        },
+        error: () => {}
+      });
   }
 
   protected uploadedImageName(path: string): string {

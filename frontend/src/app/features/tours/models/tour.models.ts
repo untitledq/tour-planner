@@ -19,6 +19,10 @@ export interface TourResponse {
   endName: string;
 }
 
+export interface TourWithFavoriteResponse extends TourResponse {
+  favorite: boolean;
+}
+
 export interface TourRouteResponse {
   distance: number;
   duration: number;
@@ -28,6 +32,19 @@ export interface TourRouteResponse {
 export interface TourListResponse {
   id: string;
   name: string;
+}
+
+export interface TourFilteredListResponse {
+  id: string;
+  name: string;
+  tourType: TourType;
+}
+
+export interface TourListItem {
+  id: string;
+  name: string;
+  tourType?: TourType;
+  isFavorite: boolean;
 }
 
 export interface CreateTourSaveResult {

@@ -20,6 +20,11 @@
 
         @if (canShowTourActions()) {
           <div class="tour-details-actions">
+            <app-favorite-toggle
+              [active]="isFavorite()"
+              [loading]="isTogglingFavorite()"
+              (toggle)="toggleFavorite()"
+            />
             <p-button
               label="Edit"
               styleClass="tour-details-edit-button"

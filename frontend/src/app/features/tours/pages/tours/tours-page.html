@@ -24,6 +24,16 @@
             [formControl]="searchControl"
           />
         </p-iconfield>
+
+        <label class="tours-filter-select">
+          <span class="tours-filter-select__wrap">
+            <select [formControl]="filterControl">
+              <option value="all">All</option>
+              <option value="favorites">Favorite</option>
+              <option value="not-favorites">Not Favorite</option>
+            </select>
+          </span>
+        </label>
       </section>
 
       @if (isLoadingTours()) {
@@ -43,6 +53,11 @@
                 <div class="tour-card__details">
                   <div class="tour-card__intro">
                     <h2>{{ tour.name }}</h2>
+                    <app-favorite-toggle
+                      [active]="tour.isFavorite"
+                      [loading]="isFavoriteBusy(tour.id)"
+                      (toggle)="toggleFavorite(tour)"
+                    />
                   </div>
 
                   <div class="tour-card__meta-grid tour-card__meta-grid--compact">
@@ -50,6 +65,13 @@
                       <span>Tour ID</span>
                       <strong>{{ tour.id }}</strong>
                     </div>
+
+                    @if (tour.tourType) {
+                      <div class="tour-card__meta-item">
+                        <span>Tour Type</span>
+                        <strong>{{ tourTypeLabel(tour.tourType) }}</strong>
+                      </div>
+                    }
                   </div>
 
                   <div class="tour-card__actions">
@@ -62,12 +84,14 @@
 
                     <p-button
                       label="Edit"
+                      icon="pi pi-pencil"
                       styleClass="tour-card__action tour-card__action--edit"
                       (onClick)="openEditTour(tour.id)"
                     />
 
                     <p-button
                       label="Delete"
+                      icon="pi pi-trash"
                       styleClass="tour-card__action tour-card__action--delete"
                       [loading]="isDeletingTour() && selectedTourForDelete()?.id === tour.id"
                       [disabled]="isDeletingTour()"
@@ -92,7 +116,14 @@
       } @else {
         <section class="tours-empty-state">
           <h2>No tours found</h2>
-          <p>Create your first tour or adjust the search to find an existing one.</p>
+          <p>
+            Create your first tour or adjust the search
+            @if (currentFilterLabel()) {
+              to find an existing {{ currentFilterLabel() }} tour.
+            } @else {
+              to find an existing one.
+            }
+          </p>
         </section>
       }
     </div>

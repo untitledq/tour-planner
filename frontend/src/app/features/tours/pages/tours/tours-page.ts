@@ -6,15 +6,18 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { FavoriteToggleComponent } from '../../../../shared/components/favorite-toggle/favorite-toggle';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
-import { TourListResponse } from '../../models/tour.models';
+import { TourListItem, TourType } from '../../models/tour.models';
 import { TourApiService } from '../../services/tour-api.service';
+
+type TourListFilter = 'all' | 'favorites' | 'not-favorites';
 
 @Component({
   selector: 'app-tours-page',
@@ -27,7 +30,8 @@ import { TourApiService } from '../../services/tour-api.service';
     InputTextModule,
     PaginatorModule,
     AppShellComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    FavoriteToggleComponent
   ],
   templateUrl: './tours-page.html',
   styleUrl: './tours-page.css'
@@ -35,16 +39,19 @@ import { TourApiService } from '../../services/tour-api.service';
 export class ToursPage {
   protected readonly rows = 5;
   protected readonly searchControl = new FormControl('', { nonNullable: true });
+  protected readonly filterControl = new FormControl<TourListFilter>('all', { nonNullable: true });
   protected readonly searchTerm = signal('');
+  protected readonly activeFilter = signal<TourListFilter>('all');
   protected readonly first = signal(0);
   protected isLoggingOut = false;
   protected readonly isLoadingTours = signal(true);
   protected readonly toursLoadError = signal('');
   protected readonly showDeleteDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
-  protected readonly selectedTourForDelete = signal<TourListResponse | null>(null);
+  protected readonly favoriteTourId = signal<string | null>(null);
+  protected readonly selectedTourForDelete = signal<TourListItem | null>(null);
 
-  protected readonly tours = signal<TourListResponse[]>([]);
+  protected readonly tours = signal<TourListItem[]>([]);
 
   protected readonly filteredTours = computed(() => {
     const normalizedSearch = this.searchTerm().trim().toLowerCase();
@@ -69,6 +76,12 @@ export class ToursPage {
     this.searchControl.valueChanges.subscribe((value) => {
       this.searchTerm.set(value);
       this.first.set(0);
+    });
+
+    this.filterControl.valueChanges.subscribe((value) => {
+      this.activeFilter.set(value);
+      this.first.set(0);
+      this.loadTours();
     });
 
     this.loadTours();
@@ -108,9 +121,33 @@ export class ToursPage {
     void this.router.navigate(['/tours', tourId, 'edit']);
   }
 
-  protected openDeleteDialog(tour: TourListResponse): void {
+  protected openDeleteDialog(tour: TourListItem): void {
     this.selectedTourForDelete.set(tour);
     this.showDeleteDialog.set(true);
+  }
+
+  protected toggleFavorite(tour: TourListItem): void {
+    if (this.favoriteTourId()) {
+      return;
+    }
+
+    this.favoriteTourId.set(tour.id);
+    this.toursLoadError.set('');
+
+    const favoriteRequest = tour.isFavorite
+      ? this.tourApi.removeFavorite(tour.id)
+      : this.tourApi.addFavorite(tour.id);
+
+    favoriteRequest
+      .pipe(finalize(() => this.favoriteTourId.set(null)))
+      .subscribe({
+        next: () => {
+          this.loadTours();
+        },
+        error: () => {
+          this.toursLoadError.set('Favorite status could not be updated.');
+        }
+      });
   }
 
   protected closeDeleteDialog(): void {
@@ -148,20 +185,81 @@ export class ToursPage {
       });
   }
 
-  protected trackTour(_: number, tour: TourListResponse): string {
+  protected trackTour(_: number, tour: TourListItem): string {
     return tour.id;
+  }
+
+  protected currentFilterLabel(): string {
+    switch (this.activeFilter()) {
+      case 'favorites':
+        return 'favorite';
+      case 'not-favorites':
+        return 'not favorite';
+      default:
+        return '';
+    }
+  }
+
+  protected tourTypeLabel(value: TourType): string {
+    switch (value) {
+      case 'BIKE':
+        return 'Bike';
+      case 'HIKE':
+        return 'Hike';
+      case 'RUNNING':
+        return 'Running';
+      case 'VACATION':
+        return 'Vacation';
+    }
+  }
+
+  protected isFavoriteBusy(tourId: string): boolean {
+    return this.favoriteTourId() === tourId;
   }
 
   private loadTours(): void {
     this.isLoadingTours.set(true);
     this.toursLoadError.set('');
 
-    this.tourApi
-      .list()
+    if (this.activeFilter() === 'all') {
+      forkJoin({
+        tours: this.tourApi.list(),
+        favorites: this.tourApi.listFavorites()
+      })
+        .pipe(finalize(() => this.isLoadingTours.set(false)))
+        .subscribe({
+          next: ({ tours, favorites }) => {
+            const favoriteIds = new Set(favorites.map((tour) => tour.id));
+            this.tours.set(
+              tours.map((tour) => ({
+                ...this.tourApi.toListItem(tour),
+                isFavorite: favoriteIds.has(tour.id)
+              }))
+            );
+          },
+          error: () => {
+            this.toursLoadError.set('Tours could not be loaded.');
+            this.tours.set([]);
+          }
+        });
+      return;
+    }
+
+    const toursRequest =
+      this.activeFilter() === 'favorites'
+        ? this.tourApi.listFavorites()
+        : this.tourApi.listNotFavorites();
+
+    toursRequest
       .pipe(finalize(() => this.isLoadingTours.set(false)))
       .subscribe({
         next: (tours) => {
-          this.tours.set(tours);
+          this.tours.set(
+            tours.map((tour) => ({
+              ...this.tourApi.toListItem(tour),
+              isFavorite: this.activeFilter() === 'favorites'
+            }))
+          );
         },
         error: () => {
           this.toursLoadError.set('Tours could not be loaded.');
