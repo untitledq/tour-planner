@@ -6,6 +6,7 @@
 │   ├── db.puml
 │   ├── db-recreate.txt
 │   ├── project_structure.txt
+│   ├── TourPlannerBackend.odt
 │   └── tourplanner-openapi.yaml
 ├── .env
 ├── .gitattributes
@@ -138,4 +139,4 @@
 │                               └── UpdateProjectStructure.java
 └── tourplanner.iml
 
-37 directories, 102 files
+37 directories, 103 files
