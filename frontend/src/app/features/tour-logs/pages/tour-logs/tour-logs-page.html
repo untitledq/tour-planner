@@ -12,6 +12,72 @@
           styleClass="tour-logs-new-button"
         />
       </div>
+
+      @if (isLoadingLogs()) {
+        <div class="tour-logs-empty-state">
+          <strong>Loading tour logs...</strong>
+          <p>Your activity history is currently being fetched.</p>
+        </div>
+      } @else if (logLoadError()) {
+        <div class="tour-logs-empty-state">
+          <strong>Could not load tour logs.</strong>
+          <p>{{ logLoadError() }}</p>
+        </div>
+      } @else if (!hasLogs()) {
+        <div class="tour-logs-empty-state">
+          <strong>No tour logs yet.</strong>
+          <p>Create your first log to start building your history.</p>
+        </div>
+      } @else {
+        <div class="tour-logs-table-shell">
+          <table class="tour-logs-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Rating</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (log of visibleLogs(); track log.id) {
+                <tr>
+                  <td class="tour-logs-id-cell">{{ log.id }}</td>
+                  <td>{{ log.rating }}</td>
+                  <td>
+                    <div class="tour-logs-actions">
+                      <button
+                        type="button"
+                        class="tour-logs-action tour-logs-action--view"
+                        aria-label="View tour log"
+                        (click)="handleLogActionPlaceholder()"
+                      >
+                        <span class="pi pi-eye" aria-hidden="true"></span>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="tour-logs-action tour-logs-action--edit"
+                        aria-label="Edit tour log"
+                        (click)="handleLogActionPlaceholder()"
+                      >
+                        <span class="pi pi-pencil" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <app-pagination
+          [first]="first()"
+          [rows]="rows"
+          [totalRecords]="tourLogs().length"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}"
+          (pageChange)="onPageChange($event)"
+        />
+      }
     </div>
   </section>
 </app-shell>

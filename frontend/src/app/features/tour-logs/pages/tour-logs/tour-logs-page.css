@@ -21,6 +21,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 h1 {
@@ -49,6 +50,128 @@ h2 {
 :host ::ng-deep .tour-logs-new-button.p-button:hover {
   background: #3c5ec3;
   color: #ffffff;
+}
+
+.tour-logs-empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.75rem;
+  background: #f9fafb;
+  padding: 1.15rem;
+}
+
+.tour-logs-empty-state strong {
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tour-logs-empty-state p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.tour-logs-table-shell {
+  overflow-x: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 1rem;
+}
+
+.tour-logs-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.tour-logs-table th,
+.tour-logs-table td {
+  padding: 1.1rem 1rem;
+  border-right: 1px solid #cbd5e1;
+  border-bottom: 1px solid #1f2937;
+  text-align: center;
+  color: #374151;
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.tour-logs-table th:last-child,
+.tour-logs-table td:last-child {
+  border-right: 0;
+}
+
+.tour-logs-table thead th {
+  background: #fff0d6;
+  color: #3f3f46;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.tour-logs-table thead th:first-child {
+  border-top-left-radius: 1rem;
+}
+
+.tour-logs-table thead th:last-child {
+  border-top-right-radius: 1rem;
+}
+
+.tour-logs-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tour-logs-id-cell {
+  text-align: left;
+  word-break: break-word;
+  font-weight: 600;
+}
+
+.tour-logs-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.tour-logs-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.9rem;
+  height: 2.35rem;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tour-logs-action .pi {
+  font-size: 1rem;
+}
+
+.tour-logs-action--view {
+  border: 1px solid #5b7ee5;
+  background: #5b7ee5;
+  color: #ffffff;
+}
+
+.tour-logs-action--view:hover {
+  border-color: #3c5ec3;
+  background: #3c5ec3;
+}
+
+.tour-logs-action--edit {
+  border: 1px solid #8b8b8b;
+  background: #8b8b8b;
+  color: #ffffff;
+}
+
+.tour-logs-action--edit:hover {
+  border-color: #767676;
+  background: #767676;
 }
 
 @media (max-width: 900px) {

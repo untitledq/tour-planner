@@ -5,13 +5,13 @@ import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { PaginatorModule } from 'primeng/paginator';
 import { finalize, forkJoin } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { FavoriteToggleComponent } from '../../../../shared/components/favorite-toggle/favorite-toggle';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
 import { TourListItem, TourType } from '../../models/tour.models';
@@ -28,10 +28,10 @@ type TourListFilter = 'all' | 'favorites' | 'not-favorites';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    PaginatorModule,
     AppShellComponent,
     ConfirmDialogComponent,
-    FavoriteToggleComponent
+    FavoriteToggleComponent,
+    PaginationComponent
   ],
   templateUrl: './tours-page.html',
   styleUrl: './tours-page.css'

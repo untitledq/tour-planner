@@ -271,54 +271,6 @@ h1 {
   color: #ffffff;
 }
 
-:host ::ng-deep .tours-paginator.p-paginator {
-  margin-top: 1rem;
-  border: 0;
-  background: transparent;
-  padding-inline: 0;
-}
-
-:host ::ng-deep .tours-paginator .p-paginator-page,
-:host ::ng-deep .tours-paginator .p-paginator-next,
-:host ::ng-deep .tours-paginator .p-paginator-prev,
-:host ::ng-deep .tours-paginator .p-paginator-first,
-:host ::ng-deep .tours-paginator .p-paginator-last {
-  color: #111827;
-}
-
-:host ::ng-deep .tours-paginator .p-paginator-page:hover,
-:host ::ng-deep .tours-paginator .p-paginator-next:hover,
-:host ::ng-deep .tours-paginator .p-paginator-prev:hover,
-:host ::ng-deep .tours-paginator .p-paginator-first:hover,
-:host ::ng-deep .tours-paginator .p-paginator-last:hover {
-  background: #111827;
-  color: #ffffff;
-}
-
-:host ::ng-deep .tours-paginator .p-paginator-page.p-paginator-page-selected {
-  background: #ff8a33;
-  border: 2px solid #ff8a33;
-  color: #ffffff;
-}
-
-:host ::ng-deep .tours-paginator .p-paginator-current {
-  color: #111827;
-}
-
-:host ::ng-deep .tours-paginator .p-paginator-page:focus-visible,
-:host ::ng-deep .tours-paginator .p-paginator-next:focus-visible,
-:host ::ng-deep .tours-paginator .p-paginator-prev:focus-visible,
-:host ::ng-deep .tours-paginator .p-paginator-first:focus-visible,
-:host ::ng-deep .tours-paginator .p-paginator-last:focus-visible {
-  outline: 2px solid rgba(255, 138, 51, 0.35);
-  outline-offset: 0;
-  box-shadow: none;
-}
-
-:host ::ng-deep .tours-paginator .p-paginator-page:not(.p-paginator-page-selected):hover {
-  border-radius: 999px;
-}
-
 .tours-empty-state {
   border: 1px dashed #d1d5db;
   border-radius: 1rem;

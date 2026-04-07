@@ -104,14 +104,12 @@
           }
         </section>
 
-        <p-paginator
-          styleClass="tours-paginator"
+        <app-pagination
           [first]="first()"
           [rows]="rows"
           [totalRecords]="filteredTours().length"
-          [showCurrentPageReport]="true"
           currentPageReportTemplate="{first} - {last} of {totalRecords}"
-          (onPageChange)="onPageChange($event)"
+          (pageChange)="onPageChange($event)"
         />
       } @else {
         <section class="tours-empty-state">
