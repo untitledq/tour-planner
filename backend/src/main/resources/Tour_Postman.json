@@ -233,20 +233,6 @@
               }
             },
             {
-              "name": "Get all Tour Logs by tour-ID",
-              "request": {
-                "method": "GET",
-                "header": [
-                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
-                ],
-                "url": {
-                  "raw": "http://localhost:8080/api/tour-logs/tour/{{tour_id}}",
-                  "host": ["http://localhost:8080"],
-                  "path": ["api", "tour-logs", "tour", "{{tour_id}}"]
-                }
-              }
-            },
-            {
               "name": "Update Tour Log",
               "request": {
                 "method": "PUT",
@@ -262,6 +248,20 @@
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"rating\": 4,\n  \"difficulty\": 2,\n  \"totalDistance\": 17,\n  \"totalTime\": 88,\n  \"comment\": \"Still great, small update\"\n}"
+                }
+              }
+            },
+            {
+              "name": "Get all Tour Logs by tour-ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tour-logs/tour/{{tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tour-logs", "tour", "{{tour_id}}"]
                 }
               }
             },
