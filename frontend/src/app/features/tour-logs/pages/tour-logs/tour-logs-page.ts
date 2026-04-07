@@ -71,5 +71,9 @@ export class TourLogsPage {
     this.first.set(event.first ?? 0);
   }
 
+  protected openSelectTour(): void {
+    void this.router.navigateByUrl('/tour-logs/select-tour');
+  }
+
   protected handleLogActionPlaceholder(): void {}
 }

@@ -68,6 +68,7 @@ export class CreateLogPage implements PendingChangesAware {
       rating: ['', [Validators.required]],
       difficulty: ['', [Validators.required]],
       totalTime: ['', [Validators.required]],
+      totalDistance: ['', [Validators.required]],
       comment: ['', [Validators.required, Validators.maxLength(this.maxCommentLength)]]
     });
 
@@ -133,7 +134,7 @@ export class CreateLogPage implements PendingChangesAware {
   }
 
   protected showRequiredError(
-    controlName: 'dateTime' | 'rating' | 'difficulty' | 'totalTime' | 'comment'
+    controlName: 'dateTime' | 'rating' | 'difficulty' | 'totalTime' | 'totalDistance' | 'comment'
   ): boolean {
     const control = this.createLogForm.controls[controlName];
     return control.touched && control.hasError('required');
@@ -167,6 +168,7 @@ export class CreateLogPage implements PendingChangesAware {
         rating: Number(this.createLogForm.controls.rating.value),
         difficulty: Number(this.createLogForm.controls.difficulty.value),
         totalTime: Number(this.createLogForm.controls.totalTime.value),
+        totalDistance: Number(this.createLogForm.controls.totalDistance.value),
         comment: this.createLogForm.controls.comment.value.trim()
       })
       .pipe(finalize(() => (this.isSaving = false)))

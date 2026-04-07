@@ -4,6 +4,7 @@ export interface CreateTourLogRequest {
   rating: number;
   difficulty: number;
   totalTime: number;
+  totalDistance: number;
   comment: string;
 }
 
@@ -15,6 +16,7 @@ export interface TourLogResponse {
   rating: number;
   difficulty: number;
   totalTime: number;
+  totalDistance: number;
   comment: string;
 }
 

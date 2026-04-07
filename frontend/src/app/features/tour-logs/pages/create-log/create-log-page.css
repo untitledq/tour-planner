@@ -109,7 +109,7 @@ h2 {
 
 .create-log-form__row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
@@ -228,6 +228,10 @@ h2 {
   .create-log-header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .create-log-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
