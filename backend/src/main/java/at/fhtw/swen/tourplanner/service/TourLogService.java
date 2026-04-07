@@ -11,6 +11,8 @@ public interface TourLogService {
 
     TourLogDto findByIdAndUser(UUID id, UUID userId);
 
+    List<TourLogDto> findAllByTourAndUser(UUID tourId, UUID userId);
+
     TourLogDto create(TourLogDto req, UUID userId);
 
     TourLogDto update(UUID id, TourLogDto req, UUID userId);

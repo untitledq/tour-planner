@@ -24,6 +24,8 @@ public class TourLogController {
         this.logger = new LoggerService().getInstance().getLogger(getClass());
     }
 
+
+
     // Get all tour logs for authenticated user
     @GetMapping
     public ResponseEntity<List<TourLogDto>> all(
@@ -45,6 +47,18 @@ public class TourLogController {
         logger.info("Get Tour Log {} called by user {}", id, userId);
 
         return ResponseEntity.ok(service.findByIdAndUser(id, userId));
+    }
+
+    // Get all logs for a specific tour of the authenticated user
+    @GetMapping("/tour/{tourId}")
+    public ResponseEntity<List<TourLogDto>> getByTourId(
+            @PathVariable UUID tourId,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get Tour Logs for tour {} called by user {}", tourId, userId);
+
+        return ResponseEntity.ok(service.findAllByTourAndUser(tourId, userId));
     }
 
     // Create new tour log
