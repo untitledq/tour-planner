@@ -38,11 +38,17 @@
             <p>{{ loadError() }}</p>
           } @else {
             <h3>Create Tour Log</h3>
-            <p>Fill out the form structure. This page currently does not submit any data.</p>
+            <p>Fill out the form and save the new tour log for this tour.</p>
           }
         </div>
 
         @if (!isLoadingTour() && !loadError()) {
+          @if (saveError()) {
+            <div class="create-log-form-error">
+              {{ saveError() }}
+            </div>
+          }
+
           <form [formGroup]="createLogForm" class="create-log-form">
             <div class="create-log-form__row">
               <label
@@ -162,6 +168,8 @@
               <p-button
                 label="Save Log"
                 styleClass="create-log-action create-log-action--primary"
+                [loading]="isSaving"
+                [disabled]="isSaving"
                 (onClick)="saveLog()"
               />
             </div>

@@ -11,6 +11,7 @@ import { AppShellComponent } from '../../../../shared/components/app-shell/app-s
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { PageBreadcrumbComponent } from '../../../../shared/components/page-breadcrumb/page-breadcrumb';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { TourLogApiService } from '../../services/tour-log-api.service';
 import { TourResponse } from '../../../tours/models/tour.models';
 import { TourApiService } from '../../../tours/services/tour-api.service';
 
@@ -40,7 +41,9 @@ export class CreateLogPage implements PendingChangesAware {
     { label: 'Tour' },
     { label: 'Create Tour Log' }
   ]);
+  protected readonly saveError = signal('');
   protected isLoggingOut = false;
+  protected isSaving = false;
   protected showLeaveDialog = false;
 
   private readonly formBuilder = inject(FormBuilder);
@@ -48,6 +51,7 @@ export class CreateLogPage implements PendingChangesAware {
   private readonly authSession = inject(AuthSessionService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly tourLogApi = inject(TourLogApiService);
   private readonly tourApi = inject(TourApiService);
   private pendingLeaveResolver: ((value: boolean) => void) | null = null;
   private allowRouteChange = false;
@@ -81,6 +85,7 @@ export class CreateLogPage implements PendingChangesAware {
       .subscribe({
         next: (tour) => {
           this.loadedTour.set(tour);
+          this.saveError.set('');
           this.breadcrumbItems.set([
             { label: 'Tours', routerLink: '/tours' },
             { label: tour.name || tour.id, routerLink: ['/tours', tour.id] },
@@ -112,8 +117,6 @@ export class CreateLogPage implements PendingChangesAware {
   }
 
   protected goBack(): void {
-    this.allowRouteChange = true;
-
     const tourId = this.route.snapshot.paramMap.get('id');
 
     if (!tourId) {
@@ -146,11 +149,37 @@ export class CreateLogPage implements PendingChangesAware {
   }
 
   protected saveLog(): void {
-    this.createLogForm.markAllAsTouched();
+    const tourId = this.route.snapshot.paramMap.get('id');
 
-    if (this.createLogForm.invalid) {
+    this.createLogForm.markAllAsTouched();
+    this.saveError.set('');
+
+    if (!tourId || this.createLogForm.invalid || this.isSaving) {
       return;
     }
+
+    this.isSaving = true;
+
+    this.tourLogApi
+      .create({
+        tourId,
+        dateTime: new Date(this.createLogForm.controls.dateTime.value).toISOString(),
+        rating: Number(this.createLogForm.controls.rating.value),
+        difficulty: Number(this.createLogForm.controls.difficulty.value),
+        totalTime: Number(this.createLogForm.controls.totalTime.value),
+        comment: this.createLogForm.controls.comment.value.trim()
+      })
+      .pipe(finalize(() => (this.isSaving = false)))
+      .subscribe({
+        next: () => {
+          this.createLogForm.markAsPristine();
+          this.allowRouteChange = true;
+          void this.router.navigate(['/tours', tourId]);
+        },
+        error: () => {
+          this.saveError.set('Tour log could not be created.');
+        }
+      });
   }
 
   protected confirmLeave(): void {

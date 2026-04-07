@@ -90,6 +90,17 @@ h2 {
   font-size: 14.4px;
 }
 
+.create-log-form-error {
+  margin-bottom: 1rem;
+  border: 1px solid #fecaca;
+  border-radius: 0.6rem;
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 0.85rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
 .create-log-form {
   display: flex;
   flex-direction: column;
