@@ -1,7 +1,6 @@
 package at.fhtw.swen.tourplanner.service.mapper;
 
 import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
-import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
