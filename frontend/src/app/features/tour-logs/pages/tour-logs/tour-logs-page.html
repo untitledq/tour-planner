@@ -63,6 +63,15 @@
                       >
                         <span class="pi pi-pencil" aria-hidden="true"></span>
                       </button>
+
+                      <button
+                        type="button"
+                        class="tour-logs-action tour-logs-action--delete"
+                        aria-label="Delete tour log"
+                        (click)="openDeleteDialog(log)"
+                      >
+                        <span class="pi pi-trash" aria-hidden="true"></span>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -82,3 +91,13 @@
     </div>
   </section>
 </app-shell>
+
+<app-confirm-dialog
+  [visible]="showDeleteDialog()"
+  title="Delete tour log"
+  [message]="'Do you really want to delete log ' + (selectedLogForDelete()?.id || '') + '? This action cannot be undone.'"
+  confirmLabel="Delete"
+  cancelLabel="Cancel"
+  (confirm)="confirmDeleteLog()"
+  (cancel)="closeDeleteDialog()"
+/>

@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { TourLogListResponse } from '../../models/tour-log.models';
@@ -13,7 +14,7 @@ import { TourLogApiService } from '../../services/tour-log-api.service';
 @Component({
   selector: 'app-tour-logs-page',
   standalone: true,
-  imports: [ButtonModule, AppShellComponent, PaginationComponent],
+  imports: [ButtonModule, AppShellComponent, ConfirmDialogComponent, PaginationComponent],
   templateUrl: './tour-logs-page.html',
   styleUrl: './tour-logs-page.css'
 })
@@ -24,6 +25,9 @@ export class TourLogsPage {
   protected readonly isLoadingLogs = signal(true);
   protected readonly logLoadError = signal('');
   protected readonly tourLogs = signal<TourLogListResponse[]>([]);
+  protected readonly showDeleteDialog = signal(false);
+  protected readonly isDeletingLog = signal(false);
+  protected readonly selectedLogForDelete = signal<TourLogListResponse | null>(null);
   protected readonly hasLogs = computed(() => this.tourLogs().length > 0);
   protected readonly visibleLogs = computed(() => {
     const first = this.first();
@@ -77,6 +81,40 @@ export class TourLogsPage {
 
   protected openLogDetails(logId: string): void {
     void this.router.navigate(['/tour-logs', logId]);
+  }
+
+  protected openDeleteDialog(log: TourLogListResponse): void {
+    this.selectedLogForDelete.set(log);
+    this.showDeleteDialog.set(true);
+  }
+
+  protected closeDeleteDialog(): void {
+    this.showDeleteDialog.set(false);
+    this.selectedLogForDelete.set(null);
+  }
+
+  protected confirmDeleteLog(): void {
+    const selectedLog = this.selectedLogForDelete();
+
+    if (!selectedLog || this.isDeletingLog()) {
+      return;
+    }
+
+    this.isDeletingLog.set(true);
+
+    this.tourLogApi
+      .deleteById(selectedLog.id)
+      .pipe(finalize(() => this.isDeletingLog.set(false)))
+      .subscribe({
+        next: () => {
+          this.tourLogs.update((logs) => logs.filter((log) => log.id !== selectedLog.id));
+          this.closeDeleteDialog();
+        },
+        error: () => {
+          this.closeDeleteDialog();
+          this.logLoadError.set('Tour log could not be deleted.');
+        }
+      });
   }
 
   protected handleLogActionPlaceholder(): void {}

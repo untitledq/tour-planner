@@ -25,4 +25,8 @@ export class TourLogApiService {
   create(payload: CreateTourLogRequest): Observable<TourLogResponse> {
     return this.http.post<TourLogResponse>(this.apiUrl, payload);
   }
+
+  deleteById(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
