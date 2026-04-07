@@ -54,6 +54,7 @@ public class TourLogServiceImpl implements TourLogService {
     }
 
     @Override
+    @Transactional
     public TourLogDto update(UUID id, TourLogDto req, UUID userId) {
         TourLog entity = repository.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour Log not found or access denied"));
