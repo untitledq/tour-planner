@@ -19,6 +19,7 @@ public class TourLogDto {
     private Instant dateTime;
     private Integer rating;
     private Integer difficulty;
+    private Integer totalDistance;
     private Integer totalTime;
     private String comment;
 

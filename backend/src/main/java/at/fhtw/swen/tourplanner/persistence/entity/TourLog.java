@@ -36,6 +36,10 @@ public class TourLog {
 
     @Setter
     @Column
+    private Integer totalDistance;
+
+    @Setter
+    @Column
     private Integer totalTime;
 
     @Setter
@@ -52,6 +56,7 @@ public class TourLog {
                    Instant dateTime,
                    Integer rating,
                    Integer difficulty,
+                   Integer totalDistance,
                    Integer totalTime,
                    String comment) {
         this.id = id;
@@ -60,6 +65,7 @@ public class TourLog {
         this.dateTime = dateTime;
         this.rating = rating;
         this.difficulty = difficulty;
+        this.totalDistance = totalDistance;
         this.totalTime = totalTime;
         this.comment = comment;
     }

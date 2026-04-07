@@ -60,6 +60,7 @@ entity tour_logs {
   date_time : TIMESTAMP
   rating : INTEGER
   difficulty : INTEGER
+  total_distance : INTEGER
   total_time : INTEGER
   comment : TEXT
 }
