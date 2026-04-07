@@ -238,6 +238,16 @@ export class TourDetailsPage implements OnDestroy {
     void this.router.navigateByUrl('/tours');
   }
 
+  protected openCreateLog(): void {
+    const selectedTour = this.tour();
+
+    if (!selectedTour) {
+      return;
+    }
+
+    void this.router.navigate(['/tours', selectedTour.id, 'logs', 'create']);
+  }
+
   protected openEditTour(): void {
     const selectedTour = this.tour();
 

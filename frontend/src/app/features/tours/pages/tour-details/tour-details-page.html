@@ -198,6 +198,26 @@
               </div>
             </div>
           </section>
+
+          <section class="tour-details-card">
+            <div class="tour-details-card__intro tour-details-card__intro--with-action">
+              <div>
+                <h2>Tour Log</h2>
+                <p>Logs connected to this tour will appear in this section.</p>
+              </div>
+
+              <p-button
+                label="+ New Tour Log"
+                styleClass="tour-details-edit-button"
+                (onClick)="openCreateLog()"
+              />
+            </div>
+
+            <div class="tour-details-log-placeholder">
+              <strong>No tour logs yet.</strong>
+              <p>Create and manage tour log entries here later.</p>
+            </div>
+          </section>
         </div>
       }
     </div>

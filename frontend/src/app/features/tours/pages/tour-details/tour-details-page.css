@@ -163,6 +163,13 @@ h1 {
   margin-bottom: 1.4rem;
 }
 
+.tour-details-card__intro--with-action {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .tour-details-card__intro h2 {
   margin: 0 0 0.45rem;
   color: #111827;
@@ -277,6 +284,28 @@ h1 {
   line-height: 1.5;
 }
 
+.tour-details-log-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.75rem;
+  background: #f9fafb;
+  padding: 1.15rem;
+}
+
+.tour-details-log-placeholder strong {
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tour-details-log-placeholder p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
 .tour-details-card--statistics {
   min-width: 0;
   display: flex;
@@ -380,6 +409,10 @@ h1 {
 
   .tour-details-top-row {
     grid-template-columns: 1fr;
+  }
+
+  .tour-details-card__intro--with-action {
+    flex-direction: column;
   }
 }
 
