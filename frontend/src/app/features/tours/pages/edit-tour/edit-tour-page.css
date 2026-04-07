@@ -310,12 +310,8 @@ h2 {
 .edit-tour-actions {
   display: flex;
   gap: 1rem;
-  margin-left: auto;
-}
-
-.edit-tour-actions--header {
-  align-self: flex-end;
-  margin-left: 0;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
 }
 
 .edit-tour-actions__button {

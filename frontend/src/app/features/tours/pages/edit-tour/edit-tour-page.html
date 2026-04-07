@@ -17,26 +17,6 @@
           <h2>Update the existing tour details and save your changes.</h2>
           <app-page-breadcrumb [items]="breadcrumbItems()" />
         </div>
-
-        @if (canShowEditActions) {
-          <div class="edit-tour-actions edit-tour-actions--header">
-            <button
-              type="button"
-              class="edit-tour-actions__button edit-tour-actions__button--secondary"
-              (click)="goBack()"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="button"
-              class="edit-tour-actions__button edit-tour-actions__button--primary"
-              (click)="saveTour()"
-            >
-              {{ isSaving ? 'Saving...' : 'Save changes' }}
-            </button>
-          </div>
-        }
       </header>
 
       @if (isLoadingTour()) {
@@ -198,6 +178,26 @@
               </div>
             </div>
           </form>
+
+          @if (canShowEditActions) {
+            <div class="edit-tour-actions">
+              <button
+                type="button"
+                class="edit-tour-actions__button edit-tour-actions__button--secondary"
+                (click)="goBack()"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                class="edit-tour-actions__button edit-tour-actions__button--primary"
+                (click)="saveTour()"
+              >
+                {{ isSaving ? 'Saving...' : 'Save changes' }}
+              </button>
+            </div>
+          }
         </section>
       }
     </div>
