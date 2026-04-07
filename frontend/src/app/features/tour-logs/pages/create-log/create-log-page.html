@@ -127,6 +127,8 @@
                 />
                 @if (showRequiredError('rating')) {
                   <small class="create-log-field__error">Rating is required.</small>
+                } @else if (showRangeError('rating')) {
+                  <small class="create-log-field__error">Rating must be between 1 and 5.</small>
                 }
               </label>
 
@@ -145,6 +147,8 @@
                 />
                 @if (showRequiredError('difficulty')) {
                   <small class="create-log-field__error">Difficulty is required.</small>
+                } @else if (showRangeError('difficulty')) {
+                  <small class="create-log-field__error">Difficulty must be between 1 and 5.</small>
                 }
               </label>
             </div>

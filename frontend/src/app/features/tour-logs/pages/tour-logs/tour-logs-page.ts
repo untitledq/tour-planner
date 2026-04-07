@@ -75,5 +75,9 @@ export class TourLogsPage {
     void this.router.navigateByUrl('/tour-logs/select-tour');
   }
 
+  protected openLogDetails(logId: string): void {
+    void this.router.navigate(['/tour-logs', logId]);
+  }
+
   protected handleLogActionPlaceholder(): void {}
 }

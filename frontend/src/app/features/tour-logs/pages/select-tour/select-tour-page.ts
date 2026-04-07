@@ -101,6 +101,6 @@ export class SelectTourLogPage {
   }
 
   protected selectTourForLog(tourId: string): void {
-    void this.router.navigate(['/tours', tourId, 'logs', 'create']);
+    void this.router.navigate(['/tour-logs/create', tourId]);
   }
 }

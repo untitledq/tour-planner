@@ -1,0 +1,26 @@
+<app-shell title="[Placeholder]" (logoutClick)="logout()">
+  <section class="log-details-content">
+    <div class="log-details-shell">
+      <header class="log-details-header">
+        <div class="log-details-title-row">
+          <button
+            type="button"
+            class="log-details-back-icon"
+            aria-label="Back to tour logs"
+            (click)="goBack()"
+          >
+            <span class="pi pi-arrow-left" aria-hidden="true"></span>
+          </button>
+          <h1>Log Details</h1>
+        </div>
+        <p class="log-details-description">
+          This page is reserved for the tour log detail view.
+        </p>
+      </header>
+
+      <section class="log-details-card">
+        <strong>Log details will be shown here later.</strong>
+      </section>
+    </div>
+  </section>
+</app-shell>

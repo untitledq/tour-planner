@@ -65,8 +65,8 @@ export class CreateLogPage implements PendingChangesAware {
           Validators.pattern(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)
         ]
       ],
-      rating: ['', [Validators.required]],
-      difficulty: ['', [Validators.required]],
+      rating: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+      difficulty: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
       totalTime: ['', [Validators.required]],
       totalDistance: ['', [Validators.required]],
       comment: ['', [Validators.required, Validators.maxLength(this.maxCommentLength)]]
@@ -138,6 +138,11 @@ export class CreateLogPage implements PendingChangesAware {
   ): boolean {
     const control = this.createLogForm.controls[controlName];
     return control.touched && control.hasError('required');
+  }
+
+  protected showRangeError(controlName: 'rating' | 'difficulty'): boolean {
+    const control = this.createLogForm.controls[controlName];
+    return control.touched && (control.hasError('min') || control.hasError('max'));
   }
 
   protected get commentLength(): number {
