@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS tour_logs (
 
     rating INTEGER CHECK (rating >= 0 AND rating <= 5),
     difficulty INTEGER CHECK (difficulty >= 1 AND difficulty <= 5),
+    total_distance INTEGER,
     total_time INTEGER,
     comment TEXT,
 

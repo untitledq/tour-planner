@@ -16,6 +16,7 @@ public class TourLogMapper {
                 tourLogDto.getDateTime(),
                 tourLogDto.getRating(),
                 tourLogDto.getDifficulty(),
+                tourLogDto.getTotalDistance(),
                 tourLogDto.getTotalTime(),
                 tourLogDto.getComment()
         );
@@ -25,6 +26,7 @@ public class TourLogMapper {
         entity.setDateTime(tourLogDto.getDateTime());
         entity.setRating(tourLogDto.getRating());
         entity.setDifficulty(tourLogDto.getDifficulty());
+        entity.setTotalDistance(tourLogDto.getTotalDistance());
         entity.setTotalTime(tourLogDto.getTotalTime());
         entity.setComment(tourLogDto.getComment());
     }
@@ -36,6 +38,7 @@ public class TourLogMapper {
                 entity.getDateTime(),
                 entity.getRating(),
                 entity.getDifficulty(),
+                entity.getTotalDistance(),
                 entity.getTotalTime(),
                 entity.getComment()
         );

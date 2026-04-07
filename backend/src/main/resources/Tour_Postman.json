@@ -159,7 +159,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"tourId\": \"{{tour_id}}\",\n  \"dateTime\": \"2026-03-29T15:00:00Z\",\n  \"rating\": 5,\n  \"difficulty\": 3,\n  \"totalTime\": 95,\n  \"comment\": \"Amazing tour!\"\n}"
+                  "raw": "{\n  \"tourId\": \"{{tour_id}}\",\n  \"dateTime\": \"2026-03-29T15:00:00Z\",\n  \"rating\": 5,\n  \"difficulty\": 3,\n  \"totalDistance\": 12,\n  \"totalTime\": 95,\n  \"comment\": \"Amazing tour!\"\n}"
                 }
               },
               "event": [
@@ -217,7 +217,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"rating\": 4,\n  \"difficulty\": 2,\n  \"totalTime\": 88,\n  \"comment\": \"Still great, small update\"\n}"
+                  "raw": "{\n  \"rating\": 4,\n  \"difficulty\": 2,\n  \"totalDistance\": 17,\n  \"totalTime\": 88,\n  \"comment\": \"Still great, small update\"\n}"
                 }
               }
             },

@@ -545,6 +545,9 @@ components:
         difficulty:
           type: integer
           description: Difficulty of the tour
+        totalDistance:
+          type: integer
+          description: Total distance in kilometers
         totalTime:
           type: integer
           description: Total time in minutes
@@ -579,6 +582,15 @@ components:
         rating:
           type: integer
           description: Rating of the tour
+        difficulty:
+          type: integer
+          description: Difficulty of the tour
+        totalDistance:
+          type: integer
+          description: Total distance in kilometers
+        totalTime:
+          type: integer
+          description: Total time in minutes
         comment:
           type: string
           description: Comment or notes about the tour
