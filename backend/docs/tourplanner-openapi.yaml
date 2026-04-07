@@ -173,81 +173,10 @@ paths:
         '204':
           description: Tour successfully deleted
 
-  /api/tours/{tourId}/logs:
-    get:
-      summary: List all tour logs
-      security: [ { bearerAuth: [] } ]
-      parameters:
-        - $ref: '#/components/parameters/TourId'
-      responses:
-        '200':
-          description: A paginated list of tour logs
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ListResponse'
-                  - properties:
-                      data:
-                        type: array
-                        description: List of tour logs
-                        items:
-                          $ref: '#/components/schemas/TourLog'
-
-    post:
-      summary: Add a log entry
-      security: [ { bearerAuth: [] } ]
-      parameters:
-        - $ref: '#/components/parameters/TourId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TourLogCreateRequest'
-      responses:
-        '201':
-          description: Newly created tour log
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TourLog'
-
-  /api/tours/{tourId}/logs/{logId}:
-    put:
-      summary: Update a log entry
-      security: [ { bearerAuth: [] } ]
-      parameters:
-        - $ref: '#/components/parameters/TourId'
-        - $ref: '#/components/parameters/LogId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TourLogUpdateRequest'
-      responses:
-        '200':
-          description: Updated tour log
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TourLog'
-
-    delete:
-      summary: Delete a log entry
-      security: [ { bearerAuth: [] } ]
-      parameters:
-        - $ref: '#/components/parameters/TourId'
-        - $ref: '#/components/parameters/LogId'
-      responses:
-        '204':
-          description: Tour log successfully deleted
-
   /api/tours/{tourId}/route:
     get:
       summary: Get computed route for a tour
-      security: [ { bearerAuth: [] } ]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - $ref: '#/components/parameters/TourId'
       responses:
@@ -262,7 +191,7 @@ paths:
     post:
       summary: Upload or replace the image of a tour
       description: Stores the image on the filesystem and links it to the tour
-      security: [ { bearerAuth: [] } ]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - $ref: '#/components/parameters/TourId'
       requestBody:
@@ -293,7 +222,7 @@ paths:
     get:
       summary: Get the image of a tour
       description: Returns the stored image file for display in the UI
-      security: [ { bearerAuth: [] } ]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - $ref: '#/components/parameters/TourId'
       responses:
@@ -312,6 +241,95 @@ paths:
                 description: PNG image file
         '404':
           description: Image not found
+
+  /api/tour-logs:
+    post:
+      summary: Create a tour log
+      security: [ { bearerAuth: [] } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourLogCreateRequest'
+      responses:
+        '201':
+          description: Newly created tour log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TourLog'
+
+    get:
+      summary: Get all tour logs of the current user
+      security: [ { bearerAuth: [] } ]
+      responses:
+        '200':
+          description: List of tour logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TourLog'
+
+  /api/tour-logs/{logId}:
+    get:
+      summary: Get a tour log by ID
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - $ref: '#/components/parameters/LogId'
+      responses:
+        '200':
+          description: Tour log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TourLog'
+
+    put:
+      summary: Update a tour log
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - $ref: '#/components/parameters/LogId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourLogUpdateRequest'
+      responses:
+        '200':
+          description: Updated tour log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TourLog'
+
+    delete:
+      summary: Delete a tour log
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - $ref: '#/components/parameters/LogId'
+      responses:
+        '204':
+          description: Tour log deleted
+
+  /api/tour-logs/tour/{tourId}:
+    get:
+      summary: Get all logs for a specific tour
+      security: [ { bearerAuth: [ ] } ]
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: List of logs for this tour
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TourLog'
 
   /api/users/me/favorites/{tourId}:
     post:

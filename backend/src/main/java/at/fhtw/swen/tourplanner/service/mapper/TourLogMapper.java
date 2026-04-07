@@ -47,7 +47,13 @@ public class TourLogMapper {
     public static TourLogDto toListResponse(TourLog entity) {
         return new TourLogDto(
                 entity.getId(),
-                entity.getRating()
+                entity.getTourId(),
+                entity.getDateTime(),
+                entity.getRating(),
+                entity.getDifficulty(),
+                entity.getTotalDistance(),
+                entity.getTotalTime(),
+                entity.getComment()
         );
     }
 
