@@ -97,7 +97,7 @@ paths:
 
   /api/tours/favorites:
     get:
-      summary: List all tours created by the current user that are marked as favorite
+      summary: List all tours with type created by the current user that are marked as favorite
       security: [ { bearerAuth: [] } ]
       responses:
         '200':
@@ -111,11 +111,11 @@ paths:
                       data:
                         type: array
                         items:
-                          $ref: '#/components/schemas/TourListItem'
+                          $ref: '#/components/schemas/TourTypeListItem'
 
   /api/tours/not-favorites:
     get:
-      summary: List all tours created by the current user that are NOT marked as favorite
+      summary: List all tours with type created by the current user that are NOT marked as favorite
       security: [ { bearerAuth: [] } ]
       responses:
         '200':
@@ -129,7 +129,7 @@ paths:
                       data:
                         type: array
                         items:
-                          $ref: '#/components/schemas/TourListItem'
+                          $ref: '#/components/schemas/TourTypeListItem'
 
   /api/tours/{tourId}:
     get:
@@ -511,18 +511,21 @@ components:
         name:
           type: string
           description: Name of the tour
-        startName:
+
+    TourTypeListItem:
+      type: object
+      description: Tour list item for summaries
+      properties:
+        id:
           type: string
-          description: Name of the start location
-        endName:
+          format: uuid
+          description: Unique ID of the tour
+        name:
           type: string
-          description: Name of the end location
+          description: Name of the tour
         tourType:
           type: string
           description: Type of transport used for the tour
-        hasImage:
-          type: boolean
-          description: Indicates if a tour image exists
 
     TourLog:
       type: object
@@ -542,6 +545,9 @@ components:
         difficulty:
           type: integer
           description: Difficulty of the tour
+        totalDistance:
+          type: integer
+          description: Total distance in kilometers
         totalTime:
           type: integer
           description: Total time in minutes
@@ -576,6 +582,15 @@ components:
         rating:
           type: integer
           description: Rating of the tour
+        difficulty:
+          type: integer
+          description: Difficulty of the tour
+        totalDistance:
+          type: integer
+          description: Total distance in kilometers
+        totalTime:
+          type: integer
+          description: Total time in minutes
         comment:
           type: string
           description: Comment or notes about the tour
