@@ -83,6 +83,10 @@ export class TourLogsPage {
     void this.router.navigate(['/tour-logs', logId]);
   }
 
+  protected openEditLog(logId: string): void {
+    void this.router.navigate(['/tour-logs', logId, 'edit']);
+  }
+
   protected openDeleteDialog(log: TourLogListResponse): void {
     this.selectedLogForDelete.set(log);
     this.showDeleteDialog.set(true);
@@ -116,6 +120,4 @@ export class TourLogsPage {
         }
       });
   }
-
-  protected handleLogActionPlaceholder(): void {}
 }

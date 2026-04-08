@@ -85,6 +85,16 @@ export class LogDetailsPage {
     void this.router.navigateByUrl('/tour-logs');
   }
 
+  protected openEditLog(): void {
+    const selectedLog = this.log();
+
+    if (!selectedLog) {
+      return;
+    }
+
+    void this.router.navigate(['/tour-logs', selectedLog.id, 'edit']);
+  }
+
   protected openDeleteDialog(): void {
     this.showDeleteDialog.set(true);
   }
@@ -133,7 +143,7 @@ export class LogDetailsPage {
   }
 
   protected formatDistance(distanceInKm: number): string {
-    return `${distanceInKm.toFixed(1)} km`;
+    return `${distanceInKm} km`;
   }
 
   protected formatDuration(totalMinutes: number): string {

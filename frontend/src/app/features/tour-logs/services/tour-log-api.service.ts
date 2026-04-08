@@ -6,7 +6,8 @@ import { API_BASE_URL } from '../../../core/config/api.config';
 import {
   CreateTourLogRequest,
   TourLogListResponse,
-  TourLogResponse
+  TourLogResponse,
+  UpdateTourLogRequest
 } from '../models/tour-log.models';
 
 @Injectable({ providedIn: 'root' })
@@ -24,6 +25,10 @@ export class TourLogApiService {
 
   create(payload: CreateTourLogRequest): Observable<TourLogResponse> {
     return this.http.post<TourLogResponse>(this.apiUrl, payload);
+  }
+
+  update(id: string, payload: UpdateTourLogRequest): Observable<TourLogResponse> {
+    return this.http.put<TourLogResponse>(`${this.apiUrl}/${id}`, payload);
   }
 
   deleteById(id: string): Observable<void> {

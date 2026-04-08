@@ -12,6 +12,7 @@ import { CreateLogPage } from './features/tour-logs/pages/create-log/create-log-
 import { SelectTourLogPage } from './features/tour-logs/pages/select-tour/select-tour-page';
 import { LogDetailsPage } from './features/tour-logs/pages/log-details/log-details-page';
 import { CreateLogFromLogsPage } from './features/tour-logs/pages/create-log-from-logs/create-log-from-logs-page';
+import { EditLogPage } from './features/tour-logs/pages/edit-log/edit-log-page';
 import { CreateTourDetailsPage } from './features/tours/pages/create-tour/create-tour-details-page';
 import { CreateTourDonePage } from './features/tours/pages/create-tour-done/create-tour-done-page';
 import { CreateTourSummaryPage } from './features/tours/pages/create-tour-summary/create-tour-summary-page';
@@ -91,6 +92,12 @@ export const routes: Routes = [
     path: 'tour-logs/:id',
     component: LogDetailsPage,
     canActivate: [authGuard]
+  },
+  {
+    path: 'tour-logs/:id/edit',
+    component: EditLogPage,
+    canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard]
   },
   {
     path: 'tours/:id/logs/create',

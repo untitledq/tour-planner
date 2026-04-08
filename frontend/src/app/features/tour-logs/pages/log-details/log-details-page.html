@@ -23,7 +23,12 @@
         @if (log()) {
           <div class="log-details-actions">
             <p-button
-              label="Delete Log"
+              label="Edit"
+              styleClass="log-details-edit-button"
+              (onClick)="openEditLog()"
+            />
+            <p-button
+              label="Delete"
               styleClass="log-details-delete-button"
               [loading]="isDeletingLog()"
               [disabled]="isDeletingLog()"

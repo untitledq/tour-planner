@@ -93,6 +93,22 @@ h1 {
   color: #ffffff;
 }
 
+:host ::ng-deep .log-details-edit-button.p-button {
+  min-width: 9rem;
+  border: 1px solid #8b8b8b;
+  border-radius: 0.5rem;
+  background: #8b8b8b;
+  color: #ffffff;
+  padding: 0.8rem 1.2rem;
+  font-weight: 600;
+}
+
+:host ::ng-deep .log-details-edit-button.p-button:hover {
+  border-color: #767676;
+  background: #767676;
+  color: #ffffff;
+}
+
 .log-details-card__intro {
   margin-bottom: 1.2rem;
 }
