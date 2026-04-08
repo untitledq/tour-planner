@@ -241,11 +241,29 @@
                       <div class="tour-details-log-actions">
                         <button
                           type="button"
+                          class="tour-details-log-action tour-details-log-action--view"
+                          aria-label="View tour log"
+                          (click)="openLogDetails(log.id)"
+                        >
+                          <span class="pi pi-eye" aria-hidden="true"></span>
+                        </button>
+
+                        <button
+                          type="button"
                           class="tour-details-log-action tour-details-log-action--edit"
                           aria-label="Edit tour log"
                           (click)="openEditLog(log.id)"
                         >
                           <span class="pi pi-pencil" aria-hidden="true"></span>
+                        </button>
+
+                        <button
+                          type="button"
+                          class="tour-details-log-action tour-details-log-action--delete"
+                          aria-label="Delete tour log"
+                          (click)="openDeleteLogDialog(log)"
+                        >
+                          <span class="pi pi-trash" aria-hidden="true"></span>
                         </button>
                       </div>
                     </div>
@@ -284,6 +302,16 @@
     cancelLabel="Cancel"
     (confirm)="confirmDeleteTour()"
     (cancel)="closeDeleteDialog()"
+  />
+
+  <app-confirm-dialog
+    [visible]="showDeleteLogDialog()"
+    title="Delete tour log"
+    [message]="'Do you really want to delete log ' + (selectedLogForDelete()?.id || '') + '? This action cannot be undone.'"
+    confirmLabel="Delete"
+    cancelLabel="Cancel"
+    (confirm)="confirmDeleteLog()"
+    (cancel)="closeDeleteLogDialog()"
   />
 
   <app-image-preview-dialog

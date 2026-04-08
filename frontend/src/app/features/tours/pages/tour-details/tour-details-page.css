@@ -364,10 +364,37 @@ h1 {
   font-size: 1rem;
 }
 
+.tour-details-log-action--view {
+  border: 1px solid #5b7ee5;
+  background: #5b7ee5;
+  color: #ffffff;
+}
+
+.tour-details-log-action--view:hover {
+  border-color: #3c5ec3;
+  background: #3c5ec3;
+}
+
 .tour-details-log-action--edit {
   border: 1px solid var(--tp-gray);
   background: var(--tp-gray);
   color: #ffffff;
+}
+
+.tour-details-log-action--edit:hover {
+  border-color: var(--tp-gray-hover);
+  background: var(--tp-gray-hover);
+}
+
+.tour-details-log-action--delete {
+  border: 1px solid var(--tp-red);
+  background: var(--tp-red);
+  color: #ffffff;
+}
+
+.tour-details-log-action--delete:hover {
+  border-color: var(--tp-red-hover);
+  background: var(--tp-red-hover);
 }
 
 :host ::ng-deep .tour-details-new-log-button.p-button {

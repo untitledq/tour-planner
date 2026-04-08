@@ -64,7 +64,10 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly routeDetails = signal<TourRouteResponse | null>(null);
   protected readonly tourLogs = signal<TourLogResponse[]>([]);
   protected readonly showDeleteDialog = signal(false);
+  protected readonly showDeleteLogDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
+  protected readonly isDeletingLog = signal(false);
+  protected readonly selectedLogForDelete = signal<TourLogResponse | null>(null);
   protected readonly isTogglingFavorite = signal(false);
   protected readonly isDownloadingImage = signal(false);
   protected readonly isLoadingImagePreview = signal(false);
@@ -286,6 +289,15 @@ export class TourDetailsPage implements OnDestroy {
     void this.router.navigate(['/tour-logs', logId, 'edit']);
   }
 
+  protected openLogDetails(logId: string): void {
+    void this.router.navigate(['/tour-logs', logId]);
+  }
+
+  protected openDeleteLogDialog(log: TourLogResponse): void {
+    this.selectedLogForDelete.set(log);
+    this.showDeleteLogDialog.set(true);
+  }
+
   protected toggleFavorite(): void {
     const selectedTour = this.tour();
 
@@ -388,6 +400,11 @@ export class TourDetailsPage implements OnDestroy {
     this.showDeleteDialog.set(false);
   }
 
+  protected closeDeleteLogDialog(): void {
+    this.showDeleteLogDialog.set(false);
+    this.selectedLogForDelete.set(null);
+  }
+
   protected confirmDeleteTour(): void {
     const selectedTour = this.tour();
 
@@ -407,6 +424,29 @@ export class TourDetailsPage implements OnDestroy {
         },
         error: () => {
           this.showDeleteDialog.set(false);
+        }
+      });
+  }
+
+  protected confirmDeleteLog(): void {
+    const selectedLog = this.selectedLogForDelete();
+
+    if (!selectedLog || this.isDeletingLog()) {
+      return;
+    }
+
+    this.isDeletingLog.set(true);
+
+    this.tourLogApi
+      .deleteById(selectedLog.id)
+      .pipe(finalize(() => this.isDeletingLog.set(false)))
+      .subscribe({
+        next: () => {
+          this.tourLogs.update((logs) => logs.filter((log) => log.id !== selectedLog.id));
+          this.closeDeleteLogDialog();
+        },
+        error: () => {
+          this.closeDeleteLogDialog();
         }
       });
   }
