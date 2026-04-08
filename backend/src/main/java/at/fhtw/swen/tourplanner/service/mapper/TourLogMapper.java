@@ -22,13 +22,25 @@ public class TourLogMapper {
         );
     }
 
-    public static void updateEntity(TourLogDto tourLogDto, TourLog entity) {
-        entity.setDateTime(tourLogDto.getDateTime());
-        entity.setRating(tourLogDto.getRating());
-        entity.setDifficulty(tourLogDto.getDifficulty());
-        entity.setTotalDistance(tourLogDto.getTotalDistance());
-        entity.setTotalTime(tourLogDto.getTotalTime());
-        entity.setComment(tourLogDto.getComment());
+    public static void updateEntity(TourLogDto dto, TourLog entity) {
+        if (dto.getDateTime() != null) {
+            entity.setDateTime(dto.getDateTime());
+        }
+        if (dto.getRating() != null) {
+            entity.setRating(dto.getRating());
+        }
+        if (dto.getDifficulty() != null) {
+            entity.setDifficulty(dto.getDifficulty());
+        }
+        if (dto.getTotalDistance() != null) {
+            entity.setTotalDistance(dto.getTotalDistance());
+        }
+        if (dto.getTotalTime() != null) {
+            entity.setTotalTime(dto.getTotalTime());
+        }
+        if (dto.getComment() != null) {
+            entity.setComment(dto.getComment());
+        }
     }
 
     public static TourLogDto toResponse(TourLog entity) {
@@ -47,7 +59,13 @@ public class TourLogMapper {
     public static TourLogDto toListResponse(TourLog entity) {
         return new TourLogDto(
                 entity.getId(),
-                entity.getRating()
+                entity.getTourId(),
+                entity.getDateTime(),
+                entity.getRating(),
+                entity.getDifficulty(),
+                entity.getTotalDistance(),
+                entity.getTotalTime(),
+                entity.getComment()
         );
     }
 

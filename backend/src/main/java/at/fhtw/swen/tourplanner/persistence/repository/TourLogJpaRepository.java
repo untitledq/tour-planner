@@ -18,6 +18,9 @@ public interface TourLogJpaRepository extends JpaRepository<TourLog, UUID> {
     // Find a specific tour log by ID and user (for access control)
     Optional<TourLog> findByIdAndCreatedBy(UUID id, UUID userId);
 
+    // Find all tour logs for a given tour created by a given user
+    List<TourLog> findAllByTourIdAndCreatedBy(UUID tourId, UUID createdBy);
+
     // Delete a specific tour log by ID and user
     void deleteByIdAndCreatedBy(UUID id, UUID userId);
 }

@@ -22,9 +22,4 @@ public class TourLogDto {
     private Integer totalDistance;
     private Integer totalTime;
     private String comment;
-
-    public TourLogDto(UUID id, Integer rating) {
-        this.id = id;
-        this.rating = rating;
-    }
 }
