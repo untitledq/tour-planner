@@ -180,14 +180,14 @@ h1 {
 }
 
 :host ::ng-deep .tour-log-tour-card__action--view.p-button {
-  border: 1px solid var(--tp-blue);
-  background: var(--tp-blue);
+  border: 1px solid #ff8a33;
+  background: #ff8a33;
   color: #ffffff;
 }
 
 :host ::ng-deep .tour-log-tour-card__action--view.p-button:hover {
-  border-color: var(--tp-blue-hover);
-  background: var(--tp-blue-hover);
+  border-color: #f27316;
+  background: #f27316;
   color: #ffffff;
 }
 
