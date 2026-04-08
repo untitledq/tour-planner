@@ -202,23 +202,74 @@
           <section class="tour-details-card">
             <div class="tour-details-card__intro tour-details-card__intro--with-action">
               <div>
-                <h2>Tour Log</h2>
-                <p>Not implemented yet.</p>
+                <h2>Tour Logs</h2>
+                <p>All recorded log entries that belong to this tour.</p>
               </div>
 
               <p-button
                 label="+ New Tour Log"
-                styleClass="tour-details-edit-button"
+                styleClass="tour-details-new-log-button"
                 (onClick)="openCreateLog()"
               />
             </div>
 
-            <div class="tour-details-log-placeholder">
-              <strong>Tour log list currently unavailable.</strong>
-              <p>
-                Not implemented yet.
-              </p>
-            </div>
+            @if (isLoadingLogs()) {
+              <div class="tour-details-log-placeholder">
+                <strong>Loading tour logs...</strong>
+                <p>The logs for this tour are currently being fetched.</p>
+              </div>
+            } @else if (logLoadError()) {
+              <div class="tour-details-log-placeholder">
+                <strong>Could not load tour logs.</strong>
+                <p>{{ logLoadError() }}</p>
+              </div>
+            } @else if (!tourLogs().length) {
+              <div class="tour-details-log-placeholder">
+                <strong>No logs for this tour yet.</strong>
+                <p>Create the first tour log to start tracking this specific route.</p>
+              </div>
+            } @else {
+              <div class="tour-details-log-list">
+                @for (log of tourLogs(); track log.id) {
+                  <article class="tour-details-log-card">
+                    <div class="tour-details-log-card__top">
+                      <div>
+                        <span class="tour-details-log-card__label">Log ID</span>
+                        <strong>{{ log.id }}</strong>
+                      </div>
+
+                      <div class="tour-details-log-actions">
+                        <button
+                          type="button"
+                          class="tour-details-log-action tour-details-log-action--edit"
+                          aria-label="Edit tour log"
+                          (click)="openEditLog(log.id)"
+                        >
+                          <span class="pi pi-pencil" aria-hidden="true"></span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="tour-details-log-grid">
+                      <div class="tour-details-log-item">
+                        <span>Date</span>
+                        <strong>{{ formatLogDate(log.dateTime) }}</strong>
+                      </div>
+
+                      <div class="tour-details-log-item">
+                        <span>Rating</span>
+                        <strong>{{ log.rating }}/5</strong>
+                      </div>
+
+                      <div class="tour-details-log-item">
+                        <span>Difficulty</span>
+                        <strong>{{ log.difficulty }}/5</strong>
+                      </div>
+                    </div>
+                  </article>
+                }
+              </div>
+            }
           </section>
         </div>
       }

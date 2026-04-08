@@ -12,6 +12,8 @@ import { FavoriteToggleComponent } from '../../../../shared/components/favorite-
 import { ImagePreviewDialogComponent } from '../../../../shared/components/image-preview-dialog/image-preview-dialog';
 import { PageBreadcrumbComponent } from '../../../../shared/components/page-breadcrumb/page-breadcrumb';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { TourLogResponse } from '../../../tour-logs/models/tour-log.models';
+import { TourLogApiService } from '../../../tour-logs/services/tour-log-api.service';
 import {
   TourResponse,
   TourRouteResponse,
@@ -54,10 +56,13 @@ export class TourDetailsPage implements OnDestroy {
 
   protected readonly isLoadingTour = signal(true);
   protected readonly isLoadingRoute = signal(true);
+  protected readonly isLoadingLogs = signal(true);
   protected readonly tourLoadError = signal('');
   protected readonly routeLoadError = signal('');
+  protected readonly logLoadError = signal('');
   protected readonly tour = signal<TourResponse | null>(null);
   protected readonly routeDetails = signal<TourRouteResponse | null>(null);
+  protected readonly tourLogs = signal<TourLogResponse[]>([]);
   protected readonly showDeleteDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
   protected readonly isTogglingFavorite = signal(false);
@@ -79,6 +84,7 @@ export class TourDetailsPage implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly tourApi = inject(TourApiService);
+  private readonly tourLogApi = inject(TourLogApiService);
 
   constructor() {
     const tourId = this.route.snapshot.paramMap.get('id');
@@ -118,6 +124,24 @@ export class TourDetailsPage implements OnDestroy {
         error: () => {
           this.routeLoadError.set('Route details could not be loaded.');
           this.routeDetails.set(null);
+        }
+      });
+
+    this.tourLogApi
+      .listByTourId(tourId)
+      .pipe(finalize(() => this.isLoadingLogs.set(false)))
+      .subscribe({
+        next: (logs) => {
+          this.tourLogs.set(
+            [...logs].sort((left, right) => {
+              return new Date(right.dateTime).getTime() - new Date(left.dateTime).getTime();
+            })
+          );
+          this.logLoadError.set('');
+        },
+        error: () => {
+          this.logLoadError.set('Tour logs could not be loaded for this tour.');
+          this.tourLogs.set([]);
         }
       });
   }
@@ -256,6 +280,10 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     void this.router.navigate(['/tours', selectedTour.id, 'edit']);
+  }
+
+  protected openEditLog(logId: string): void {
+    void this.router.navigate(['/tour-logs', logId, 'edit']);
   }
 
   protected toggleFavorite(): void {
@@ -403,6 +431,41 @@ export class TourDetailsPage implements OnDestroy {
 
   protected formatDuration(durationInSeconds: number): string {
     const totalMinutes = Math.round(durationInSeconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours === 0) {
+      return `${minutes} min`;
+    }
+
+    if (minutes === 0) {
+      return `${hours} h`;
+    }
+
+    return `${hours} h ${minutes} min`;
+  }
+
+  protected formatLogDate(value: string): string {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return new Intl.DateTimeFormat('de-AT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  }
+
+  protected formatLogDistance(distanceInKm: number): string {
+    return `${distanceInKm} km`;
+  }
+
+  protected formatLogDuration(totalMinutes: number): string {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
 

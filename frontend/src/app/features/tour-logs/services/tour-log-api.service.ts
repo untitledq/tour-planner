@@ -19,6 +19,10 @@ export class TourLogApiService {
     return this.http.get<TourLogListResponse[]>(this.apiUrl);
   }
 
+  listByTourId(tourId: string): Observable<TourLogResponse[]> {
+    return this.http.get<TourLogResponse[]>(`${this.apiUrl}/tour/${tourId}`);
+  }
+
   getById(id: string): Observable<TourLogResponse> {
     return this.http.get<TourLogResponse>(`${this.apiUrl}/${id}`);
   }
