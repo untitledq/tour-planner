@@ -5,12 +5,13 @@ import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
-import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar';
+import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
+import { CreateTourFlowService } from '../../../tours/services/create-tour-flow.service';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [ButtonModule, SidebarComponent],
+  imports: [ButtonModule, AppShellComponent],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css'
 })
@@ -19,6 +20,7 @@ export class DashboardPage {
   private readonly authApi = inject(AuthApiService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly createTourFlow = inject(CreateTourFlowService);
 
   protected logout(): void {
     this.isLoggingOut = true;
@@ -35,5 +37,10 @@ export class DashboardPage {
           void this.router.navigateByUrl('/login');
         }
       });
+  }
+
+  protected openNewTour(): void {
+    this.createTourFlow.startFlow();
+    void this.router.navigateByUrl('/tours/create/details');
   }
 }

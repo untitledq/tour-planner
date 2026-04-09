@@ -1,14 +1,17 @@
 package at.fhtw.swen.tourplanner.persistence.entity;
 
-import at.fhtw.swen.tourplanner.util.CoordinatesJsonConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "routes")
@@ -21,18 +24,17 @@ public class Route {
     private UUID tourId;
 
     @Column(name = "distance")
-    private Integer distance;   // meters
+    private Integer distance;
 
     @Column(name = "duration")
-    private Integer duration;   // seconds
+    private Integer duration;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "coordinates", columnDefinition = "jsonb")
-    @Convert(converter = CoordinatesJsonConverter.class)
     private List<List<Double>> coordinates;
 
     public Route(UUID id,
                  UUID tourId,
-                 String transportType,
                  Integer distance,
                  Integer duration,
                  List<List<Double>> coordinates) {

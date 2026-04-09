@@ -1,21 +1,27 @@
 package at.fhtw.swen.tourplanner.service;
 
-import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
-import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
+import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface TourService {
-    TourResponse create(UUID userId, TourCreateRequest req, UUID id);
+    TourDto create(UUID userId, TourDto tourDto, UUID id);
 
     List<TourListResponse> findAllByUser(UUID userId);
 
-    TourResponse findByIdAndUser(UUID id, UUID userId);
+    List<TourTypeListResponse> findAllFavByUser(UUID userId);
 
-    TourResponse update(UUID id, UUID userId, TourUpdateRequest req);
+    List<TourTypeListResponse> findAllNotFavByUser(UUID userId);
+
+    TourDto findByIdAndUser(UUID id, UUID userId);
+
+    TourWithFavoriteDto findByIdAndUserWithFavorite(UUID tourId, UUID userId);
+
+    TourDto update(UUID id, UUID userId, TourDto tourDto);
 
     void deleteByUser(UUID id, UUID userId);
 }

@@ -1,11 +1,8 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.controller.request.TourLogCreateRequest;
-import at.fhtw.swen.tourplanner.controller.request.TourLogUpdateRequest;
-import at.fhtw.swen.tourplanner.controller.response.TourLogListResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourLogResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
-import at.fhtw.swen.tourplanner.service.impl.TourLogServiceImpl;
+import at.fhtw.swen.tourplanner.service.TourLogService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +16,19 @@ import java.util.UUID;
 @RequestMapping("/api/tour-logs")
 public class TourLogController {
 
-    private final TourLogServiceImpl service;
+    private final TourLogService service;
     private final Logger logger;
 
-    public TourLogController(TourLogServiceImpl service) {
+    public TourLogController(TourLogService service) {
         this.service = service;
         this.logger = new LoggerService().getInstance().getLogger(getClass());
     }
 
+
+
     // Get all tour logs for authenticated user
     @GetMapping
-    public ResponseEntity<List<TourLogListResponse>> all(
+    public ResponseEntity<List<TourLogDto>> all(
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
@@ -40,7 +39,7 @@ public class TourLogController {
 
     // Get a single tour log by ID
     @GetMapping("/{id}")
-    public ResponseEntity<TourLogResponse> getById(
+    public ResponseEntity<TourLogDto> getById(
             @PathVariable UUID id,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
@@ -50,10 +49,22 @@ public class TourLogController {
         return ResponseEntity.ok(service.findByIdAndUser(id, userId));
     }
 
+    // Get all logs for a specific tour of the authenticated user
+    @GetMapping("/tour/{tourId}")
+    public ResponseEntity<List<TourLogDto>> getByTourId(
+            @PathVariable UUID tourId,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get Tour Logs for tour {} called by user {}", tourId, userId);
+
+        return ResponseEntity.ok(service.findAllByTourAndUser(tourId, userId));
+    }
+
     // Create new tour log
     @PostMapping
-    public ResponseEntity<TourLogResponse> create(
-            @RequestBody TourLogCreateRequest req,
+    public ResponseEntity<TourLogDto> create(
+            @RequestBody TourLogDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
@@ -64,9 +75,9 @@ public class TourLogController {
 
     // Update tour log
     @PutMapping("/{id}")
-    public ResponseEntity<TourLogResponse> update(
+    public ResponseEntity<TourLogDto> update(
             @PathVariable UUID id,
-            @RequestBody TourLogUpdateRequest req,
+            @RequestBody TourLogDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();

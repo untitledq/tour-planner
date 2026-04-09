@@ -1,11 +1,10 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.controller.request.TourCreateRequest;
-import at.fhtw.swen.tourplanner.controller.request.TourUpdateRequest;
+import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourResponse;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
-import at.fhtw.swen.tourplanner.service.impl.TourServiceImpl;
+import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.slf4j.Logger;
@@ -19,18 +18,18 @@ import java.util.UUID;
 @RequestMapping("/api/tours")
 public class TourController {
 
-    private final TourServiceImpl service;
+    private final TourService service;
     private final Logger logger;
 
-    public TourController(TourServiceImpl service) {
+    public TourController(TourService service) {
         this.service = service;
         LoggerService logService = new LoggerService();
         this.logger = logService.getInstance().getLogger(getClass());
     }
 
     @PostMapping
-    public TourResponse create(
-            @RequestBody TourCreateRequest req,
+    public TourDto create(
+            @RequestBody TourDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
@@ -39,7 +38,7 @@ public class TourController {
         logger.info("Create Tour called by user: {}", userId);
         return service.create(userId, req, id);
     }
-    
+
     @GetMapping
     public List<TourListResponse> all(@AuthenticationPrincipal JwtUserDetails userDetails) {
         UUID userId = userDetails.getUserId();
@@ -47,20 +46,40 @@ public class TourController {
         return service.findAllByUser(userId);
     }
 
+    @GetMapping("/favorites")
+    public List<TourTypeListResponse> allFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get All favorite Tours called by user: {}", userId);
+        return service.findAllFavByUser(userId);
+    }
+
+    @GetMapping("/not-favorites")
+    public List<TourTypeListResponse> allNotFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        UUID userId = userDetails.getUserId();
+        logger.info("Get All not favorite Tours called by user: {}", userId);
+        return service.findAllNotFavByUser(userId);
+    }
+
     @GetMapping("/{id}")
-    public TourResponse getById(
+    public Object getById(
             @PathVariable UUID id,
+            @RequestParam(name = "withFavorite", defaultValue = "false") boolean withFavorite,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
-        logger.info("Get Tour {} called by user {}", id, userId);
-        return service.findByIdAndUser(id, userId);
+        logger.info("Get Tour {} called by user {}, withFavorite={}", id, userId, withFavorite);
+
+        if (withFavorite) {
+            return service.findByIdAndUserWithFavorite(id, userId);
+        } else {
+            return service.findByIdAndUser(id, userId);
+        }
     }
 
     @PutMapping("/{id}")
-    public TourResponse update(
+    public TourDto update(
             @PathVariable UUID id,
-            @RequestBody TourUpdateRequest req,
+            @RequestBody TourDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();

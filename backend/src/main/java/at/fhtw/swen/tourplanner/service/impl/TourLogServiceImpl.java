@@ -1,9 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.controller.request.TourLogCreateRequest;
-import at.fhtw.swen.tourplanner.controller.request.TourLogUpdateRequest;
-import at.fhtw.swen.tourplanner.controller.response.TourLogListResponse;
-import at.fhtw.swen.tourplanner.controller.response.TourLogResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.service.mapper.TourLogMapper;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 import at.fhtw.swen.tourplanner.persistence.repository.TourLogJpaRepository;
@@ -25,13 +22,13 @@ public class TourLogServiceImpl implements TourLogService {
     }
 
     @Override
-    public List<TourLogListResponse> findAllByUser(UUID userId) {
+    public List<TourLogDto> findAllByUser(UUID userId) {
         List<TourLog> logs = repository.findAllByCreatedBy(userId);
         return TourLogMapper.toListResponseList(logs);
     }
 
     @Override
-    public TourLogResponse findByIdAndUser(UUID id, UUID userId) {
+    public TourLogDto findByIdAndUser(UUID id, UUID userId) {
         TourLog entity = repository.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour Log not found or access denied"));
 
@@ -39,7 +36,13 @@ public class TourLogServiceImpl implements TourLogService {
     }
 
     @Override
-    public TourLogResponse create(TourLogCreateRequest req, UUID userId) {
+    public List<TourLogDto> findAllByTourAndUser(UUID tourId, UUID userId) {
+        List<TourLog> logs = repository.findAllByTourIdAndCreatedBy(tourId, userId);
+        return TourLogMapper.toListResponseList(logs);
+    }
+
+    @Override
+    public TourLogDto create(TourLogDto req, UUID userId) {
         TourLog entity = TourLogMapper.fromCreateRequest(
                 UUIDv7.randomUUID(),
                 userId,
@@ -51,7 +54,8 @@ public class TourLogServiceImpl implements TourLogService {
     }
 
     @Override
-    public TourLogResponse update(UUID id, TourLogUpdateRequest req, UUID userId) {
+    @Transactional
+    public TourLogDto update(UUID id, TourLogDto req, UUID userId) {
         TourLog entity = repository.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour Log not found or access denied"));
 

@@ -37,7 +37,8 @@ entity tours {
   created_by : UUID <<FK>>
   name : TEXT
   description : TEXT
-  transport_type : TEXT
+  image_path : TEXT
+  tour_type : TEXT
   start_name : TEXT
   end_name : TEXT
 }
@@ -58,6 +59,9 @@ entity tour_logs {
   created_by : UUID <<FK>>
   date_time : TIMESTAMP
   rating : INTEGER
+  difficulty : INTEGER
+  total_distance : INTEGER
+  total_time : INTEGER
   comment : TEXT
 }
 
