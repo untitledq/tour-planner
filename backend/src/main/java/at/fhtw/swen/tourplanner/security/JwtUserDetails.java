@@ -9,13 +9,20 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class JwtUserDetails implements UserDetails {
+
     @Getter
     private final UUID userId;
+
+    @Getter
     private final String username;
 
-    public JwtUserDetails(UUID userId, String username) {
+    @Getter
+    private final String token;
+
+    public JwtUserDetails(UUID userId, String username, String token) {
         this.userId = userId;
         this.username = username;
+        this.token = token;
     }
 
     @Override
@@ -24,13 +31,36 @@ public class JwtUserDetails implements UserDetails {
     }
 
     @Override
-    public String getPassword() { return ""; }
+    public String getPassword() {
+        return "";
+    }
 
     @Override
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
-    @Override public boolean isAccountNonExpired() { return true; }
-    @Override public boolean isAccountNonLocked() { return true; }
-    @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled() { return true; }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public String getToken() {
+        return token;
+    }
 }

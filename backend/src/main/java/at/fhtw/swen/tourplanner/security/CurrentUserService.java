@@ -5,4 +5,5 @@ import java.util.UUID;
 public interface CurrentUserService {
     UUID getUserId();
     String getUsername();
+    String getToken(); // ADD THIS
 }

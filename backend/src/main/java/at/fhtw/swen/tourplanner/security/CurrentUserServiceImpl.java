@@ -26,4 +26,9 @@ public class CurrentUserServiceImpl implements CurrentUserService {
                         .getAuthentication())
                 .getPrincipal();
     }
+
+    @Override
+    public String getToken() {
+        return getPrincipal().getToken();
+    }
 }

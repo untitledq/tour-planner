@@ -5,10 +5,10 @@ top to bottom direction
 skinparam linetype ortho
 
 class AuthController {
-  + AuthController(UserService, AuthService):
+  + AuthController(UserService, AuthService, CurrentUserService):
   + login(LoginRequest): LoginResponse
-  + logout(HttpServletRequest): void
-  + deleteUser(HttpServletRequest): void
+  + deleteUser(): void
+  + logout(): void
   + register(RegisterRequest): AuthResponse
 }
 entity AuthResponse << record >> {
@@ -24,10 +24,10 @@ interface AuthService << interface >> {
   + logout(String): void
 }
 class AuthServiceImpl {
-  + AuthServiceImpl(UserRepository, PasswordHasher, TokenService, SessionRepository, long):
-  + logout(String): void
+  + AuthServiceImpl(PasswordHasher, TokenService, SessionRepository, UserRepository, long):
   + parseToken(String): TokenPayload
   + login(String, String): LoginResponse
+  + logout(String): void
 }
 class BCryptPasswordHasher {
   + BCryptPasswordHasher():
@@ -53,8 +53,8 @@ class FavoriteServiceImpl {
   + removeFavorite(UUID, UUID): void
 }
 class ImageDownloadController {
-  + ImageDownloadController(ImageService, UserRepository):
-  + downloadTourImage(UUID, Principal): ResponseEntity<Resource>
+  + ImageDownloadController(ImageService, CurrentUserService):
+  + downloadTourImage(UUID): ResponseEntity<Resource>
 }
 interface ImageService << interface >> {
   + downloadTourImage(UUID, UUID): Resource
@@ -62,11 +62,11 @@ interface ImageService << interface >> {
 }
 class ImageServiceImpl {
   + ImageServiceImpl(ImageStorageProperties, TourJpaRepository):
-  + uploadTourImage(UUID, UUID, String, MultipartFile): TourDto
-  + downloadTourImage(UUID, UUID): Resource
   - getExtension(String): String
-  - storeFile(UUID, String, MultipartFile): String
+  + downloadTourImage(UUID, UUID): Resource
   - sanitizeUsername(String): String
+  + uploadTourImage(UUID, UUID, String, MultipartFile): TourDto
+  - storeFile(UUID, String, MultipartFile): String
 }
 class ImageStorageProperties {
   + ImageStorageProperties():
@@ -74,7 +74,7 @@ class ImageStorageProperties {
    baseDir: String
 }
 class ImageUploadController {
-  + ImageUploadController(ImageService, UserRepository):
+  + ImageUploadController(ImageService, CurrentUserService):
   + uploadTourImage(UUID, MultipartFile, Principal): ResponseEntity<TourDto>
 }
 class JpaSessionRepositoryAdapter {
@@ -107,10 +107,12 @@ class JwtTokenService {
   + parseAndValidate(String): TokenPayload
 }
 class JwtUserDetails {
-  + JwtUserDetails(UUID, String):
-  - userId: UUID
+  + JwtUserDetails(UUID, String, String):
   - username: String
+  - token: String
+  - userId: UUID
    password: String?
+   token: String
    enabled: boolean
    accountNonLocked: boolean
    userId: UUID
@@ -555,19 +557,17 @@ interface UserRepository << interface >> {
 }
 interface UserService << interface >> {
   + register(String, String, String): UserDto
-  + login(String, String): String
   + validateCredentials(String, String): void
   + deleteUser(UUID): void
 }
 class UserServiceImpl {
   + UserServiceImpl(UserRepository, PasswordHasher):
-  + login(String, String): String
-  + register(String, String, String): UserDto
   + deleteUser(UUID): void
+  + register(String, String, String): UserDto
 }
 
-AuthController                 "1" *-[#595959,plain]-> "authServiceImpl\n1" AuthService
-AuthController                 "1" *-[#595959,plain]-> "userServiceImpl\n1" UserService
+AuthController                 "1" *-[#595959,plain]-> "authService\n1" AuthService
+AuthController                 "1" *-[#595959,plain]-> "userService\n1" UserService
 AuthServiceImpl                 -[#008200,dashed]-^  AuthService
 AuthServiceImpl                "1" *-[#595959,plain]-> "passwordHasher\n1" PasswordHasher
 AuthServiceImpl                "1" *-[#595959,plain]-> "sessionRepository\n1" SessionRepository
@@ -579,11 +579,9 @@ FavoriteServiceImpl             -[#008200,dashed]-^  FavoriteService
 FavoriteServiceImpl            "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
 FavoriteServiceImpl            "1" *-[#595959,plain]-> "favoriteRepository\n1" UserFavoriteTourJpaRepository
 ImageDownloadController        "1" *-[#595959,plain]-> "imageService\n1" ImageService
-ImageDownloadController        "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
 ImageServiceImpl                -[#008200,dashed]-^  ImageService
 ImageServiceImpl               "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
 ImageUploadController          "1" *-[#595959,plain]-> "imageService\n1" ImageService
-ImageUploadController          "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
 JpaSessionRepositoryAdapter     -[#008200,dashed]-^  SessionRepository
 JpaSessionRepositoryAdapter    "1" *-[#595959,plain]-> "repository\n1" SpringDataSessionJpaRepository
 JpaUserRepositoryAdapter       "1" *-[#595959,plain]-> "repository\n1" SpringDataUserJpaRepository

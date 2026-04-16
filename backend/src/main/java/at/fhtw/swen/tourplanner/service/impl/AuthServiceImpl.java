@@ -1,13 +1,14 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
 import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
 import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
 import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
 import at.fhtw.swen.tourplanner.persistence.port.TokenService;
 import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
+import at.fhtw.swen.tourplanner.service.AuthService;
 import at.fhtw.swen.tourplanner.service.dto.SessionDto;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
+import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
-public class AuthServiceImpl implements at.fhtw.swen.tourplanner.service.AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private final PasswordHasher passwordHasher;
     private final TokenService tokenService;
@@ -42,10 +43,15 @@ public class AuthServiceImpl implements at.fhtw.swen.tourplanner.service.AuthSer
     @Override
     public LoginResponse login(String username, String rawPassword) {
 
-        UserDto userDto = userRepository.findByUsername(username)
+        if (username == null || username.isBlank() ||
+                rawPassword == null || rawPassword.isBlank()) {
+            throw new SecurityException("Invalid credentials");
+        }
+
+        UserDto user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new SecurityException("Invalid credentials"));
 
-        if (passwordHasher.invalid(rawPassword, userDto.passwordHash())) {
+        if (passwordHasher.invalid(rawPassword, user.passwordHash())) {
             throw new SecurityException("Invalid credentials");
         }
 
@@ -53,22 +59,22 @@ public class AuthServiceImpl implements at.fhtw.swen.tourplanner.service.AuthSer
         Instant expiresAt = Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES);
 
         String token = tokenService.createToken(
-                userDto.id(),
-                userDto.username(),
+                user.id(),
+                user.username(),
                 sessionId,
                 expiresAt
         );
 
-        SessionDto sessionDto = new SessionDto(
+        SessionDto session = new SessionDto(
                 sessionId,
-                userDto.id(),
+                user.id(),
                 token,
                 Instant.now(),
                 expiresAt,
                 false
         );
 
-        sessionRepository.save(sessionDto);
+        sessionRepository.save(session);
 
         return new LoginResponse(token, expiresAt, sessionId);
     }
