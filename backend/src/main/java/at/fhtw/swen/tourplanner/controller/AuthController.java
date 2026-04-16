@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.controller;
 
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
-import at.fhtw.swen.tourplanner.service.impl.AuthServiceImpl;
-import at.fhtw.swen.tourplanner.service.impl.UserServiceImpl;
+import at.fhtw.swen.tourplanner.service.AuthService;
+import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
 import at.fhtw.swen.tourplanner.controller.request.LoginRequest;
 import at.fhtw.swen.tourplanner.controller.request.RegisterRequest;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final UserServiceImpl userServiceImpl;
-    private final AuthServiceImpl authServiceImpl;
+    private final UserService userServiceImpl;
+    private final AuthService authServiceImpl;
 
 
-    public AuthController(UserServiceImpl userServiceImpl, AuthServiceImpl authServiceImpl) {
+    public AuthController(UserService userServiceImpl, AuthService authServiceImpl) {
         this.userServiceImpl = userServiceImpl;
         this.authServiceImpl = authServiceImpl;
     }

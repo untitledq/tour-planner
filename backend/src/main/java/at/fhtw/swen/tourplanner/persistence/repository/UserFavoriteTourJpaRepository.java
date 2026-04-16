@@ -1,6 +1,7 @@
 package at.fhtw.swen.tourplanner.persistence.repository;
 
 import at.fhtw.swen.tourplanner.persistence.entity.UserFavoriteTour;
+import at.fhtw.swen.tourplanner.persistence.entity.UserFavoriteTourId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface UserFavoriteTourJpaRepository
-        extends JpaRepository<UserFavoriteTour, Long> {
+        extends JpaRepository<UserFavoriteTour, UserFavoriteTourId> {
 
     boolean existsByUserIdAndTourId(UUID userId, UUID tourId);
 
