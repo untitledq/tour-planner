@@ -75,11 +75,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            UserDetails userDetails = new JwtUserDetails(
-                    tokenPayload.uuid(),
-                    tokenPayload.username(),
-                    token
-            );
+            UserDetails userDetails =
+                    new JwtUserDetails(
+                            tokenPayload.uuid(),
+                            tokenPayload.username()
+                    );
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(

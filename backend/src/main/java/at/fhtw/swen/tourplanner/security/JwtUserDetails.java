@@ -12,17 +12,11 @@ public class JwtUserDetails implements UserDetails {
 
     @Getter
     private final UUID userId;
-
-    @Getter
     private final String username;
 
-    @Getter
-    private final String token;
-
-    public JwtUserDetails(UUID userId, String username, String token) {
+    public JwtUserDetails(UUID userId, String username) {
         this.userId = userId;
         this.username = username;
-        this.token = token;
     }
 
     @Override
@@ -40,27 +34,4 @@ public class JwtUserDetails implements UserDetails {
         return username;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public String getToken() {
-        return token;
-    }
 }

@@ -1,9 +1,10 @@
 package at.fhtw.swen.tourplanner.security;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -11,8 +12,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
 
     @Override
     public UUID getUserId() {
-        JwtUserDetails user = getPrincipal();
-        return user.getUserId();
+        return getPrincipal().getUserId();
     }
 
     @Override
@@ -21,14 +21,12 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     }
 
     private JwtUserDetails getPrincipal() {
-        return (JwtUserDetails) Objects.requireNonNull(SecurityContextHolder
-                        .getContext()
-                        .getAuthentication())
-                .getPrincipal();
-    }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    @Override
-    public String getToken() {
-        return getPrincipal().getToken();
+        if (auth == null || !(auth.getPrincipal() instanceof JwtUserDetails user)) {
+            throw new AccessDeniedException("Not authenticated");
+        }
+
+        return user;
     }
 }

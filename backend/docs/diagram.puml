@@ -6,10 +6,10 @@ skinparam linetype ortho
 
 class AuthController {
   + AuthController(UserService, AuthService, CurrentUserService):
+  + logout(String): void
+  + register(RegisterRequest): AuthResponse
   + login(LoginRequest): LoginResponse
   + deleteUser(): void
-  + logout(): void
-  + register(RegisterRequest): AuthResponse
 }
 entity AuthResponse << record >> {
   + AuthResponse(UUID, String, Instant, String):
@@ -25,8 +25,8 @@ interface AuthService << interface >> {
 }
 class AuthServiceImpl {
   + AuthServiceImpl(PasswordHasher, TokenService, SessionRepository, UserRepository, long):
-  + parseToken(String): TokenPayload
   + login(String, String): LoginResponse
+  + parseToken(String): TokenPayload
   + logout(String): void
 }
 class BCryptPasswordHasher {
@@ -107,12 +107,10 @@ class JwtTokenService {
   + parseAndValidate(String): TokenPayload
 }
 class JwtUserDetails {
-  + JwtUserDetails(UUID, String, String):
+  + JwtUserDetails(UUID, String):
   - username: String
-  - token: String
   - userId: UUID
    password: String?
-   token: String
    enabled: boolean
    accountNonLocked: boolean
    userId: UUID

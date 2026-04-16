@@ -62,8 +62,14 @@ public class AuthController {
 
     @PostMapping("/user/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout() {
-        authService.logout(currentUserService.getToken());
+    public void logout(@RequestHeader("Authorization") String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new SecurityException("Missing token");
+        }
+
+        String token = authHeader.substring(7);
+        authService.logout(token);
     }
 
     @DeleteMapping("/user")
