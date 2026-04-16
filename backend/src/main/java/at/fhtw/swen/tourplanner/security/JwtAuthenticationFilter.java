@@ -46,6 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("Authorization header: {}", header);
 
         if (header == null || !header.startsWith("Bearer ")) {
+            SecurityContextHolder.clearContext();
             filterChain.doFilter(request, response);
             return;
         }
@@ -59,6 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     sessionRepository.findByJti(tokenPayload.sessionId());
 
             if (optionalSession.isEmpty()) {
+                SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -71,6 +73,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             && session.token().equals(token);
 
             if (!valid) {
+                SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -93,6 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.info("User {} authenticated successfully", tokenPayload.username());
 
         } catch (Exception e) {
+            SecurityContextHolder.clearContext();
             logger.warn("JWT authentication failed: {}", e.getMessage());
         }
 
