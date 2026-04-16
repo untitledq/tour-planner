@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class JwtUserDetails implements UserDetails {
+
     @Getter
     private final UUID userId;
     private final String username;
@@ -24,13 +25,13 @@ public class JwtUserDetails implements UserDetails {
     }
 
     @Override
-    public String getPassword() { return ""; }
+    public String getPassword() {
+        return "";
+    }
 
     @Override
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
-    @Override public boolean isAccountNonExpired() { return true; }
-    @Override public boolean isAccountNonLocked() { return true; }
-    @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled() { return true; }
 }
