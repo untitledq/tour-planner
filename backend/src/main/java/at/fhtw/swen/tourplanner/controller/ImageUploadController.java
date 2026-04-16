@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
+import at.fhtw.swen.tourplanner.security.CurrentUserService;
 import at.fhtw.swen.tourplanner.service.ImageService;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import org.springframework.http.MediaType;
@@ -15,12 +15,12 @@ import java.util.UUID;
 public class ImageUploadController {
 
     private final ImageService imageService;
-    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
     public ImageUploadController(ImageService imageService,
-                                 UserRepository userRepository) {
+                                 CurrentUserService currentUserService) {
         this.imageService = imageService;
-        this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
 
     @PostMapping(value = "/api/tours/{tourId}/image",
@@ -31,9 +31,7 @@ public class ImageUploadController {
             @RequestPart("file") MultipartFile file,
             Principal principal
     ) {
-        UUID userId = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"))
-                .getId();
+        UUID userId = currentUserService.getUserId();
 
         TourDto dto = imageService.uploadTourImage(
                 tourId,

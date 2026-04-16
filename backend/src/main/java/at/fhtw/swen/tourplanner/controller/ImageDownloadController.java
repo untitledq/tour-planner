@@ -1,36 +1,32 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
+import at.fhtw.swen.tourplanner.security.CurrentUserService;
 import at.fhtw.swen.tourplanner.service.ImageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.UUID;
 
 @RestController
 public class ImageDownloadController {
 
     private final ImageService imageService;
-    private final UserRepository userRepository;
+    private final CurrentUserService currentUserService;
 
     public ImageDownloadController(ImageService imageService,
-                                   UserRepository userRepository) {
+                                   CurrentUserService currentUserService) {
         this.imageService = imageService;
-        this.userRepository = userRepository;
+        this.currentUserService = currentUserService;
     }
 
     @GetMapping("/api/tours/{tourId}/image")
     public ResponseEntity<Resource> downloadTourImage(
-            @PathVariable UUID tourId,
-            Principal principal
+            @PathVariable UUID tourId
     ) {
 
-        UUID userId = userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"))
-                .getId();
+        UUID userId = currentUserService.getUserId();
 
         Resource resource = imageService.downloadTourImage(tourId, userId);
 

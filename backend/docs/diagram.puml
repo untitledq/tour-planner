@@ -5,52 +5,68 @@ top to bottom direction
 skinparam linetype ortho
 
 class AuthController {
-  + AuthController(UserServiceImpl, AuthServiceImpl):
-  + register(RegisterRequest): AuthResponse
+  + AuthController(UserService, AuthService):
   + login(LoginRequest): LoginResponse
   + logout(HttpServletRequest): void
   + deleteUser(HttpServletRequest): void
+  + register(RegisterRequest): AuthResponse
 }
 entity AuthResponse << record >> {
   + AuthResponse(UUID, String, Instant, String):
-  + createdAt(): Instant
   + userId(): UUID
-  + username(): String
+  + createdAt(): Instant
   + token(): String
+  + username(): String
 }
 interface AuthService << interface >> {
-  + parseToken(String): TokenPayload
   + login(String, String): LoginResponse
+  + parseToken(String): TokenPayload
   + logout(String): void
 }
 class AuthServiceImpl {
   + AuthServiceImpl(UserRepository, PasswordHasher, TokenService, SessionRepository, long):
+  + logout(String): void
   + parseToken(String): TokenPayload
   + login(String, String): LoginResponse
-  + logout(String): void
 }
 class BCryptPasswordHasher {
   + BCryptPasswordHasher():
   + invalid(String, String): boolean
   + hash(String): String
 }
+class BackendApplicationTests {
+  ~ BackendApplicationTests():
+  ~ contextLoads(): void
+}
 class FavoriteController {
-  + FavoriteController(UserFavoriteTourJpaRepository, TourJpaRepository):
-  + removeFavorite(UUID, JwtUserDetails): ResponseEntity<Void>
+  + FavoriteController(FavoriteService):
   + addFavorite(UUID, JwtUserDetails): ResponseEntity<Void>
+  + removeFavorite(UUID, JwtUserDetails): ResponseEntity<Void>
+}
+interface FavoriteService << interface >> {
+  + addFavorite(UUID, UUID): void
+  + removeFavorite(UUID, UUID): void
+}
+class FavoriteServiceImpl {
+  + FavoriteServiceImpl(UserFavoriteTourJpaRepository, TourJpaRepository):
+  + addFavorite(UUID, UUID): void
+  + removeFavorite(UUID, UUID): void
 }
 class ImageDownloadController {
-  + ImageDownloadController(TourJpaRepository, UserRepository):
+  + ImageDownloadController(ImageService, UserRepository):
   + downloadTourImage(UUID, Principal): ResponseEntity<Resource>
 }
 interface ImageService << interface >> {
-  + getExtension(String): String
-  + sanitizeUsername(String): String
-  + saveTourImage(UUID, MultipartFile, String): String
+  + downloadTourImage(UUID, UUID): Resource
+  + uploadTourImage(UUID, UUID, String, MultipartFile): TourDto
 }
 class ImageServiceImpl {
-  + ImageServiceImpl(ImageStorageProperties):
-  + saveTourImage(UUID, MultipartFile, String): String
+  + ImageServiceImpl(ImageStorageProperties, TourJpaRepository):
+  + uploadTourImage(UUID, UUID, String, MultipartFile): TourDto
+  + downloadTourImage(UUID, UUID): Resource
+  - getExtension(String): String
+  - storeFile(UUID, String, MultipartFile): String
+  - sanitizeUsername(String): String
 }
 class ImageStorageProperties {
   + ImageStorageProperties():
@@ -58,28 +74,28 @@ class ImageStorageProperties {
    baseDir: String
 }
 class ImageUploadController {
-  + ImageUploadController(ImageService, TourJpaRepository, UserRepository):
+  + ImageUploadController(ImageService, UserRepository):
   + uploadTourImage(UUID, MultipartFile, Principal): ResponseEntity<TourDto>
 }
 class JpaSessionRepositoryAdapter {
   + JpaSessionRepositoryAdapter(SpringDataSessionJpaRepository):
+  + findByJti(UUID): Optional<SessionDto>
+  - toDomain(Session): SessionDto
   + save(SessionDto): void
-  + deleteRevokedOrExpired(Instant): void
   - revoke(Session): Session
+  + deleteRevokedOrExpired(Instant): void
   + revokeByJti(UUID): void
   - toEntity(SessionDto): Session
-  - toDomain(Session): SessionDto
-  + findByJti(UUID): Optional<SessionDto>
 }
 class JpaUserRepositoryAdapter {
   + JpaUserRepositoryAdapter(SpringDataUserJpaRepository):
-  + existsById(UUID): boolean
+  + save(UserDto): UserDto
+  + findByUsername(String): Optional<UserDto>
+  + existsByUsername(String): boolean
   + deleteById(UUID): void
+  + existsById(UUID): boolean
   - toEntity(UserDto): User
   - toDomain(User): UserDto
-  + existsByUsername(String): boolean
-  + findByUsername(String): Optional<UserDto>
-  + save(UserDto): UserDto
 }
 class JwtAuthenticationFilter {
   + JwtAuthenticationFilter(TokenService, SessionRepository):
@@ -87,8 +103,8 @@ class JwtAuthenticationFilter {
 }
 class JwtTokenService {
   + JwtTokenService(String):
-  + parseAndValidate(String): TokenPayload
   + createToken(UUID, String, UUID, Instant): String
+  + parseAndValidate(String): TokenPayload
 }
 class JwtUserDetails {
   + JwtUserDetails(UUID, String):
@@ -111,27 +127,27 @@ class LoggerService {
 }
 entity LoginRequest << record >> {
   + LoginRequest(String, String):
-  + password(): String
   + username(): String
+  + password(): String
 }
 entity LoginResponse << record >> {
   + LoginResponse(String, Instant, UUID):
+  + token(): String
   + sessionId(): UUID
   + expiresAt(): Instant
-  + token(): String
 }
 class OrsProfileMapper {
   - OrsProfileMapper():
   + toOrsProfile(TourType): String
 }
 interface PasswordHasher << interface >> {
-  + hash(String): String
   + invalid(String, String): boolean
+  + hash(String): String
 }
 entity RegisterRequest << record >> {
   + RegisterRequest(String, String, String):
-  + email(): String
   + password(): String
+  + email(): String
   + username(): String
 }
 class Route {
@@ -149,18 +165,21 @@ class Route {
    distance: Integer
 }
 class RouteController {
-  + RouteController(RouteJpaRepository, TourJpaRepository):
+  + RouteController(RouteService):
   + getRouteForTour(UUID, JwtUserDetails): ResponseEntity<RouteDto>
 }
 entity RouteDto << record >> {
   + RouteDto(int, int, List<List<Double>>):
-  + distance(): int
   + duration(): int
+  + distance(): int
   + coordinates(): List<List<Double>>
 }
 interface RouteJpaRepository << interface >> {
   + findByTourId(UUID): Optional<Route>
   + deleteByTourId(UUID): void
+}
+interface RouteService << interface >> {
+  + getRouteForTour(UUID, UUID): RouteDto
 }
 interface RouteServiceClient << interface >> {
   + calculateRoute(String, String, String): RouteDto
@@ -169,18 +188,22 @@ class RouteServiceClientImpl {
   + RouteServiceClientImpl():
   + calculateRoute(String, String, String): RouteDto
 }
+class RouteServiceImpl {
+  + RouteServiceImpl(RouteJpaRepository, TourJpaRepository, RouteServiceClient):
+  + getRouteForTour(UUID, UUID): RouteDto
+}
 class SecurityConfig {
   + SecurityConfig(JwtAuthenticationFilter):
-  + corsConfigurationSource(): CorsConfigurationSource
   + securityFilterChain(HttpSecurity): SecurityFilterChain
+  + corsConfigurationSource(): CorsConfigurationSource
 }
 class Session {
   + Session(UUID, UUID, String, Instant, Instant, boolean):
   # Session():
+  - token: String
   - revoked: boolean
   - jti: UUID
   - userId: UUID
-  - token: String
   - issuedAt: Instant
   - expiresAt: Instant
    expiresAt: Instant
@@ -199,52 +222,52 @@ class SessionCleanupServiceImpl {
 }
 entity SessionDto << record >> {
   + SessionDto(UUID, UUID, String, Instant, Instant, boolean):
-  + issuedAt(): Instant
-  + expiresAt(): Instant
-  + userId(): UUID
   + token(): String
+  + issuedAt(): Instant
+  + userId(): UUID
+  + expiresAt(): Instant
   + jti(): UUID
   + revoked(): boolean
 }
 interface SessionRepository << interface >> {
-  + save(SessionDto): void
   + revokeByJti(UUID): void
   + findByJti(UUID): Optional<SessionDto>
+  + save(SessionDto): void
   + deleteRevokedOrExpired(Instant): void
 }
 interface SpringDataSessionJpaRepository << interface >> {
-  + deleteByRevokedTrueOrExpiresAtBefore(Instant): void
   + findByToken(String): Optional<Session>
   + findByJti(UUID): Optional<Session>
   + deleteByExpiresAtBefore(Instant): void
+  + deleteByRevokedTrueOrExpiresAtBefore(Instant): void
 }
 interface SpringDataUserJpaRepository << interface >> {
-  + existsByUsername(String): boolean
   + findByUsername(String): Optional<User>
+  + existsByUsername(String): boolean
 }
 entity TokenPayload << record >> {
   + TokenPayload(UUID, String, UUID, Instant):
   + userId(): UUID
-  + sessionId(): UUID
   + expiresAt(): Instant
-  + uuid(): UUID
   + username(): String
+  + uuid(): UUID
+  + sessionId(): UUID
 }
 interface TokenService << interface >> {
-  + parseAndValidate(String): TokenPayload
   + createToken(UUID, String, UUID, Instant): String
+  + parseAndValidate(String): TokenPayload
 }
 class Tour {
-  + Tour(UUID, UUID, String, String, String, TourType, String, String):
   # Tour():
+  + Tour(UUID, UUID, String, String, String, TourType, String, String):
   - imagePath: String
-  - createdBy: UUID
-  - id: UUID
   - tourType: TourType
-  - startName: String
   - description: String
-  - endName: String
   - name: String
+  - id: UUID
+  - startName: String
+  - endName: String
+  - createdBy: UUID
    endName: String
    name: String
    description: String
@@ -256,31 +279,31 @@ class Tour {
 }
 class TourController {
   + TourController(TourService):
+  + getById(UUID, boolean, JwtUserDetails): Object
+  + update(UUID, TourDto, JwtUserDetails): TourDto
+  + allNotFav(JwtUserDetails): List<TourTypeListResponse>
   + delete(UUID, JwtUserDetails): void
   + create(TourDto, JwtUserDetails): TourDto
-  + getById(UUID, boolean, JwtUserDetails): Object
-  + allNotFav(JwtUserDetails): List<TourTypeListResponse>
-  + update(UUID, TourDto, JwtUserDetails): TourDto
-  + all(JwtUserDetails): List<TourListResponse>
   + allFav(JwtUserDetails): List<TourTypeListResponse>
+  + all(JwtUserDetails): List<TourListResponse>
 }
 class TourDto {
-  + TourDto(UUID, UUID, String, String, String, TourType, String, String):
-  + TourDto():
   + TourDto(String, String, String, String, TourType, String, String):
+  + TourDto():
+  + TourDto(UUID, UUID, String, String, String, TourType, String, String):
+  - createdBy: UUID
+  - description: String
   - startName: String
   - endName: String
-  - id: UUID
+  - imagePath: String
   - name: String
   - tourType: TourType
-  - description: String
-  - createdBy: UUID
-  - imagePath: String
-  + builder(): TourDtoBuilder
-  + hashCode(): int
-  + toString(): String
-  # canEqual(Object): boolean
+  - id: UUID
   + equals(Object): boolean
+  # canEqual(Object): boolean
+  + hashCode(): int
+  + builder(): TourDtoBuilder
+  + toString(): String
    endName: String
    name: String
    description: String
@@ -292,23 +315,23 @@ class TourDto {
 }
 class TourDtoBuilder {
   ~ TourDtoBuilder():
-  + id(UUID): TourDtoBuilder
   + createdBy(UUID): TourDtoBuilder
-  + name(String): TourDtoBuilder
   + description(String): TourDtoBuilder
-  + imagePath(String): TourDtoBuilder
-  + tourType(TourType): TourDtoBuilder
-  + startName(String): TourDtoBuilder
-  + endName(String): TourDtoBuilder
-  + build(): TourDto
+  + name(String): TourDtoBuilder
   + toString(): String
+  + startName(String): TourDtoBuilder
+  + imagePath(String): TourDtoBuilder
+  + endName(String): TourDtoBuilder
+  + id(UUID): TourDtoBuilder
+  + build(): TourDto
+  + tourType(TourType): TourDtoBuilder
 }
 interface TourJpaRepository << interface >> {
+  + findByIdAndCreatedBy(UUID, UUID): Optional<Tour>
   + findAllCreatedAndFavoritesBy(UUID): List<Tour>
   + findAllByCreatedBy(UUID): List<Tour>
-  + deleteByIdAndCreatedBy(UUID, UUID): void
-  + findByIdAndCreatedBy(UUID, UUID): Optional<Tour>
   + findAllCreatedButNotFavoritesBy(UUID): List<Tour>
+  + deleteByIdAndCreatedBy(UUID, UUID): void
 }
 entity TourListResponse << record >> {
   + TourListResponse(String, String):
@@ -318,14 +341,14 @@ entity TourListResponse << record >> {
 class TourLog {
   + TourLog(UUID, UUID, UUID, Instant, Integer, Integer, Integer, Integer, String):
   # TourLog():
-  - tourId: UUID
   - dateTime: Instant
-  - rating: Integer
   - createdBy: UUID
-  - totalTime: Integer
-  - difficulty: Integer
-  - comment: String
   - id: UUID
+  - rating: Integer
+  - totalTime: Integer
+  - comment: String
+  - tourId: UUID
+  - difficulty: Integer
   - totalDistance: Integer
    comment: String
    difficulty: Integer
@@ -340,28 +363,28 @@ class TourLog {
 class TourLogController {
   + TourLogController(TourLogService):
   + create(TourLogDto, JwtUserDetails): ResponseEntity<TourLogDto>
+  + update(UUID, TourLogDto, JwtUserDetails): ResponseEntity<TourLogDto>
   + getByTourId(UUID, JwtUserDetails): ResponseEntity<List<TourLogDto>>
   + all(JwtUserDetails): ResponseEntity<List<TourLogDto>>
-  + delete(UUID, JwtUserDetails): ResponseEntity<Void>
-  + update(UUID, TourLogDto, JwtUserDetails): ResponseEntity<TourLogDto>
   + getById(UUID, JwtUserDetails): ResponseEntity<TourLogDto>
+  + delete(UUID, JwtUserDetails): ResponseEntity<Void>
 }
 class TourLogDto {
-  + TourLogDto():
   + TourLogDto(UUID, UUID, Instant, Integer, Integer, Integer, Integer, String):
-  - tourId: UUID
-  - rating: Integer
+  + TourLogDto():
+  - totalDistance: Integer
   - totalTime: Integer
+  - comment: String
   - id: UUID
   - dateTime: Instant
-  - totalDistance: Integer
+  - rating: Integer
   - difficulty: Integer
-  - comment: String
-  + builder(): TourLogDtoBuilder
-  + toString(): String
-  + equals(Object): boolean
+  - tourId: UUID
   + hashCode(): int
+  + builder(): TourLogDtoBuilder
   # canEqual(Object): boolean
+  + equals(Object): boolean
+  + toString(): String
    comment: String
    difficulty: Integer
    tourId: UUID
@@ -374,57 +397,57 @@ class TourLogDto {
 class TourLogDtoBuilder {
   ~ TourLogDtoBuilder():
   + id(UUID): TourLogDtoBuilder
-  + tourId(UUID): TourLogDtoBuilder
-  + dateTime(Instant): TourLogDtoBuilder
-  + rating(Integer): TourLogDtoBuilder
   + difficulty(Integer): TourLogDtoBuilder
   + totalDistance(Integer): TourLogDtoBuilder
-  + totalTime(Integer): TourLogDtoBuilder
-  + comment(String): TourLogDtoBuilder
   + build(): TourLogDto
   + toString(): String
+  + tourId(UUID): TourLogDtoBuilder
+  + rating(Integer): TourLogDtoBuilder
+  + totalTime(Integer): TourLogDtoBuilder
+  + dateTime(Instant): TourLogDtoBuilder
+  + comment(String): TourLogDtoBuilder
 }
 interface TourLogJpaRepository << interface >> {
   + findByTourId(UUID): List<TourLog>
   + deleteByIdAndCreatedBy(UUID, UUID): void
-  + findByIdAndCreatedBy(UUID, UUID): Optional<TourLog>
   + findAllByCreatedBy(UUID): List<TourLog>
+  + findByIdAndCreatedBy(UUID, UUID): Optional<TourLog>
   + findAllByTourIdAndCreatedBy(UUID, UUID): List<TourLog>
 }
 class TourLogMapper {
   + TourLogMapper():
-  + toListResponseList(List<TourLog>): List<TourLogDto>
-  + updateEntity(TourLogDto, TourLog): void
-  + fromCreateRequest(UUID, UUID, TourLogDto): TourLog
   + toResponse(TourLog): TourLogDto
+  + updateEntity(TourLogDto, TourLog): void
   + toListResponse(TourLog): TourLogDto
+  + toListResponseList(List<TourLog>): List<TourLogDto>
+  + fromCreateRequest(UUID, UUID, TourLogDto): TourLog
 }
 interface TourLogService << interface >> {
-  + findByIdAndUser(UUID, UUID): TourLogDto
-  + deleteByUser(UUID, UUID): void
+  + create(TourLogDto, UUID): TourLogDto
   + update(UUID, TourLogDto, UUID): TourLogDto
   + findAllByUser(UUID): List<TourLogDto>
+  + findByIdAndUser(UUID, UUID): TourLogDto
+  + deleteByUser(UUID, UUID): void
   + findAllByTourAndUser(UUID, UUID): List<TourLogDto>
-  + create(TourLogDto, UUID): TourLogDto
 }
 class TourLogServiceImpl {
   + TourLogServiceImpl(TourLogJpaRepository):
-  + findByIdAndUser(UUID, UUID): TourLogDto
-  + findAllByTourAndUser(UUID, UUID): List<TourLogDto>
-  + create(TourLogDto, UUID): TourLogDto
-  + deleteByUser(UUID, UUID): void
   + update(UUID, TourLogDto, UUID): TourLogDto
+  + findAllByTourAndUser(UUID, UUID): List<TourLogDto>
+  + deleteByUser(UUID, UUID): void
+  + create(TourLogDto, UUID): TourLogDto
   + findAllByUser(UUID): List<TourLogDto>
+  + findByIdAndUser(UUID, UUID): TourLogDto
 }
 class TourMapper {
   + TourMapper():
-  + toTypeListResponse(Tour): TourTypeListResponse
-  + fromCreateRequest(UUID, UUID, TourDto): Tour
-  + toResponse(Tour): TourDto
   + updateEntity(TourDto, Tour): void
   + toTourTypeResponseList(List<Tour>): List<TourTypeListResponse>
-  + toListResponse(Tour): TourListResponse
+  + fromCreateRequest(UUID, UUID, TourDto): Tour
   + toWithFavoriteResponse(Tour, boolean): TourWithFavoriteDto
+  + toResponse(Tour): TourDto
+  + toListResponse(Tour): TourListResponse
+  + toTypeListResponse(Tour): TourTypeListResponse
   + toTourResponseList(List<Tour>): List<TourListResponse>
 }
 class TourPlannerApplication {
@@ -433,37 +456,37 @@ class TourPlannerApplication {
   ~ main(String[]): void
 }
 interface TourService << interface >> {
-  + findAllNotFavByUser(UUID): List<TourTypeListResponse>
   + update(UUID, UUID, TourDto): TourDto
-  + findAllByUser(UUID): List<TourListResponse>
-  + findAllFavByUser(UUID): List<TourTypeListResponse>
-  + findByIdAndUser(UUID, UUID): TourDto
+  + findAllNotFavByUser(UUID): List<TourTypeListResponse>
   + findByIdAndUserWithFavorite(UUID, UUID): TourWithFavoriteDto
+  + findAllByUser(UUID): List<TourListResponse>
+  + findByIdAndUser(UUID, UUID): TourDto
   + deleteByUser(UUID, UUID): void
+  + findAllFavByUser(UUID): List<TourTypeListResponse>
   + create(UUID, TourDto, UUID): TourDto
 }
 class TourServiceImpl {
   + TourServiceImpl(TourJpaRepository, RouteJpaRepository, UserFavoriteTourJpaRepository, RouteServiceClient):
+  - createOrUpdateRoute(Tour): void
   + update(UUID, UUID, TourDto): TourDto
+  + findByIdAndUser(UUID, UUID): TourDto
+  + findAllNotFavByUser(UUID): List<TourTypeListResponse>
+  + findByIdAndUserWithFavorite(UUID, UUID): TourWithFavoriteDto
+  + deleteByUser(UUID, UUID): void
+  + findAllByUser(UUID): List<TourListResponse>
   + create(UUID, TourDto, UUID): TourDto
   + findAllFavByUser(UUID): List<TourTypeListResponse>
-  + findAllByUser(UUID): List<TourListResponse>
-  - createOrUpdateRoute(Tour): void
-  + findByIdAndUserWithFavorite(UUID, UUID): TourWithFavoriteDto
-  + findAllNotFavByUser(UUID): List<TourTypeListResponse>
-  + findByIdAndUser(UUID, UUID): TourDto
-  + deleteByUser(UUID, UUID): void
 }
 enum TourType << enumeration >> {
-  + TourType():
+  - TourType():
   + values(): TourType[]
   + valueOf(String): TourType
 }
 entity TourTypeListResponse << record >> {
   + TourTypeListResponse(String, String, TourType):
+  + name(): String
   + id(): String
   + tourType(): TourType
-  + name(): String
 }
 class TourWithFavoriteDto {
   + TourWithFavoriteDto(String, String, String, String, TourType, String, String, boolean):
@@ -475,14 +498,20 @@ class UUIDv7 {
   + randomBytes(): byte[]
   + randomUUID(): UUID
 }
+class UpdateProjectStructure {
+  + UpdateProjectStructure():
+  + exportProjectStructure(): void
+  + update(): void
+  ~ main(): void
+}
 class User {
-  # User():
   + User(UUID, String, String, String, Instant):
-  - password: String
-  - email: String
-  - createdAt: Instant
+  # User():
   - id: UUID
   - username: String
+  - email: String
+  - createdAt: Instant
+  - password: String
    password: String
    id: UUID
    username: String
@@ -490,91 +519,84 @@ class User {
    createdAt: Instant
 }
 entity UserDto << record >> {
-  + UserDto(UUID, String, String, String, Instant):
   + UserDto(UUID, String, String, String):
+  + UserDto(UUID, String, String, String, Instant):
   - id: UUID
-  + email(): String
+  + createdAt(): Instant
   + id(): UUID
   + username(): String
-  + createdAt(): Instant
   + passwordHash(): String
+  + email(): String
    id: UUID
 }
 class UserFavoriteTour {
   + UserFavoriteTour():
   + UserFavoriteTour(UUID, UUID):
-  - tourId: UUID
   - userId: UUID
+  - tourId: UUID
    tourId: UUID
    userId: UUID
 }
 class UserFavoriteTourId {
   + UserFavoriteTourId():
-  + hashCode(): int
   + equals(Object): boolean
+  + hashCode(): int
 }
 interface UserFavoriteTourJpaRepository << interface >> {
-  + deleteByUserIdAndTourId(UUID, UUID): void
   + existsByUserIdAndTourId(UUID, UUID): boolean
+  + deleteByUserIdAndTourId(UUID, UUID): void
 }
 interface UserRepository << interface >> {
   + existsByUsername(String): boolean
   + existsById(UUID): boolean
+  + deleteById(UUID): void
   + save(UserDto): UserDto
   + findByUsername(String): Optional<UserDto>
-  + deleteById(UUID): void
 }
 interface UserService << interface >> {
-  + login(String, String): String
-  + deleteUser(UUID): void
   + register(String, String, String): UserDto
+  + login(String, String): String
   + validateCredentials(String, String): void
+  + deleteUser(UUID): void
 }
 class UserServiceImpl {
   + UserServiceImpl(UserRepository, PasswordHasher):
   + login(String, String): String
-  + deleteUser(UUID): void
   + register(String, String, String): UserDto
+  + deleteUser(UUID): void
 }
 
-AuthController                  -[#595959,dashed]->  AuthResponse                   : "«create»"
-AuthController                 "1" *-[#595959,plain]-> "authServiceImpl\n1" AuthServiceImpl
-AuthController                 "1" *-[#595959,plain]-> "userServiceImpl\n1" UserServiceImpl
+AuthController                 "1" *-[#595959,plain]-> "authServiceImpl\n1" AuthService
+AuthController                 "1" *-[#595959,plain]-> "userServiceImpl\n1" UserService
 AuthServiceImpl                 -[#008200,dashed]-^  AuthService
-AuthServiceImpl                 -[#595959,dashed]->  LoginResponse                  : "«create»"
 AuthServiceImpl                "1" *-[#595959,plain]-> "passwordHasher\n1" PasswordHasher
-AuthServiceImpl                 -[#595959,dashed]->  SessionDto                     : "«create»"
 AuthServiceImpl                "1" *-[#595959,plain]-> "sessionRepository\n1" SessionRepository
 AuthServiceImpl                "1" *-[#595959,plain]-> "tokenService\n1" TokenService
 AuthServiceImpl                "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
 BCryptPasswordHasher            -[#008200,dashed]-^  PasswordHasher
-FavoriteController             "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
-FavoriteController              -[#595959,dashed]->  UserFavoriteTour               : "«create»"
-FavoriteController             "1" *-[#595959,plain]-> "favoriteRepository\n1" UserFavoriteTourJpaRepository
-ImageDownloadController        "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
+FavoriteController             "1" *-[#595959,plain]-> "favoriteService\n1" FavoriteService
+FavoriteServiceImpl             -[#008200,dashed]-^  FavoriteService
+FavoriteServiceImpl            "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
+FavoriteServiceImpl            "1" *-[#595959,plain]-> "favoriteRepository\n1" UserFavoriteTourJpaRepository
+ImageDownloadController        "1" *-[#595959,plain]-> "imageService\n1" ImageService
 ImageDownloadController        "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
 ImageServiceImpl                -[#008200,dashed]-^  ImageService
+ImageServiceImpl               "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
 ImageUploadController          "1" *-[#595959,plain]-> "imageService\n1" ImageService
-ImageUploadController          "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
 ImageUploadController          "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
-JpaSessionRepositoryAdapter     -[#595959,dashed]->  Session                        : "«create»"
-JpaSessionRepositoryAdapter     -[#595959,dashed]->  SessionDto                     : "«create»"
 JpaSessionRepositoryAdapter     -[#008200,dashed]-^  SessionRepository
 JpaSessionRepositoryAdapter    "1" *-[#595959,plain]-> "repository\n1" SpringDataSessionJpaRepository
 JpaUserRepositoryAdapter       "1" *-[#595959,plain]-> "repository\n1" SpringDataUserJpaRepository
-JpaUserRepositoryAdapter        -[#595959,dashed]->  User                           : "«create»"
-JpaUserRepositoryAdapter        -[#595959,dashed]->  UserDto                        : "«create»"
 JpaUserRepositoryAdapter        -[#008200,dashed]-^  UserRepository
-JwtAuthenticationFilter         -[#595959,dashed]->  JwtUserDetails                 : "«create»"
 JwtAuthenticationFilter        "1" *-[#595959,plain]-> "sessionRepository\n1" SessionRepository
 JwtAuthenticationFilter        "1" *-[#595959,plain]-> "tokenService\n1" TokenService
-JwtTokenService                 -[#595959,dashed]->  TokenPayload                   : "«create»"
 JwtTokenService                 -[#008200,dashed]-^  TokenService
-RouteController                 -[#595959,dashed]->  RouteDto                       : "«create»"
-RouteController                "1" *-[#595959,plain]-> "routeRepository\n1" RouteJpaRepository
-RouteController                "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
-RouteServiceClientImpl          -[#595959,dashed]->  RouteDto                       : "«create»"
+RouteController                "1" *-[#595959,plain]-> "routeService\n1" RouteService
 RouteServiceClientImpl          -[#008200,dashed]-^  RouteServiceClient
+RouteServiceImpl               "1" *-[#595959,plain]-> "routeRepository\n1" RouteJpaRepository
+RouteServiceImpl                -[#008200,dashed]-^  RouteService
+RouteServiceImpl               "1" *-[#595959,plain]-> "routeClient\n1" RouteServiceClient
+RouteServiceImpl               "1" *-[#595959,plain]-> "tourRepository\n1" TourJpaRepository
 SecurityConfig                 "1" *-[#595959,plain]-> "jwtAuthenticationFilter\n1" JwtAuthenticationFilter
 SessionCleanupServiceImpl       -[#008200,dashed]-^  SessionCleanupService
 SessionCleanupServiceImpl      "1" *-[#595959,plain]-> "sessionRepository\n1" SessionRepository
@@ -582,18 +604,11 @@ Tour                           "1" *-[#595959,plain]-> "tourType\n1" TourType
 TourController                 "1" *-[#595959,plain]-> "service\n1" TourService
 TourDto                        "1" *-[#595959,plain]-> "tourType\n1" TourType
 TourDtoBuilder                  +-[#820000,plain]-  TourDto
+TourDtoBuilder                 "1" *-[#595959,plain]-> "tourType\n1" TourType
 TourLogController              "1" *-[#595959,plain]-> "service\n1" TourLogService
 TourLogDtoBuilder               +-[#820000,plain]-  TourLogDto
-TourLogMapper                   -[#595959,dashed]->  TourLog                        : "«create»"
-TourLogMapper                   -[#595959,dashed]->  TourLogDto                     : "«create»"
 TourLogServiceImpl             "1" *-[#595959,plain]-> "repository\n1" TourLogJpaRepository
 TourLogServiceImpl              -[#008200,dashed]-^  TourLogService
-TourMapper                      -[#595959,dashed]->  Tour                           : "«create»"
-TourMapper                      -[#595959,dashed]->  TourDto                        : "«create»"
-TourMapper                      -[#595959,dashed]->  TourListResponse               : "«create»"
-TourMapper                      -[#595959,dashed]->  TourTypeListResponse           : "«create»"
-TourMapper                      -[#595959,dashed]->  TourWithFavoriteDto            : "«create»"
-TourServiceImpl                 -[#595959,dashed]->  Route                          : "«create»"
 TourServiceImpl                "1" *-[#595959,plain]-> "routeRepository\n1" RouteJpaRepository
 TourServiceImpl                "1" *-[#595959,plain]-> "routeClient\n1" RouteServiceClient
 TourServiceImpl                "1" *-[#595959,plain]-> "repository\n1" TourJpaRepository
@@ -601,7 +616,6 @@ TourServiceImpl                 -[#008200,dashed]-^  TourService
 TourServiceImpl                "1" *-[#595959,plain]-> "favoriteRepository\n1" UserFavoriteTourJpaRepository
 TourWithFavoriteDto             -[#000082,plain]-^  TourDto
 UserServiceImpl                "1" *-[#595959,plain]-> "passwordHasher\n1" PasswordHasher
-UserServiceImpl                 -[#595959,dashed]->  UserDto                        : "«create»"
 UserServiceImpl                "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
 UserServiceImpl                 -[#008200,dashed]-^  UserService
 @enduml
