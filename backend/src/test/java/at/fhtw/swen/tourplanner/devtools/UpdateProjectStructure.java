@@ -54,7 +54,7 @@ public class UpdateProjectStructure {
         exportProjectStructure();
     }
 
-    public static void main(String[] args) {
+    static void main() {
         update();
     }
 }

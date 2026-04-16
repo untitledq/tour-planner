@@ -42,12 +42,12 @@ public class JpaSessionRepositoryAdapter implements SessionRepository {
 
     private Session toEntity(SessionDto sessionDto) {
         return new Session(
-                sessionDto.getJti(),
-                sessionDto.getUserId(),
-                sessionDto.getToken(),
-                sessionDto.getIssuedAt(),
-                sessionDto.getExpiresAt(),
-                sessionDto.isRevoked()
+                sessionDto.jti(),
+                sessionDto.userId(),
+                sessionDto.token(),
+                sessionDto.issuedAt(),
+                sessionDto.expiresAt(),
+                sessionDto.revoked()
         );
     }
 

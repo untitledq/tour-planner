@@ -127,9 +127,9 @@ public class TourServiceImpl implements TourService {
                     return r;
                 });
 
-        route.setDistance(routeResponse.getDistance());
-        route.setDuration(routeResponse.getDuration());
-        route.setCoordinates(routeResponse.getCoordinates());
+        route.setDistance(routeResponse.distance());
+        route.setDuration(routeResponse.duration());
+        route.setCoordinates(routeResponse.coordinates());
 
         routeRepository.save(route);
     }

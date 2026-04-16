@@ -23,8 +23,7 @@ public class TourController {
 
     public TourController(TourService service) {
         this.service = service;
-        LoggerService logService = new LoggerService();
-        this.logger = logService.getInstance().getLogger(getClass());
+        this.logger = LoggerService.getInstance().getLogger(getClass());
     }
 
     @PostMapping

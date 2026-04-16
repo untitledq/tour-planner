@@ -6,7 +6,7 @@ import java.util.UUID;
 
 
 public class UUIDv7 {
-    private static SecureRandom random = new SecureRandom();
+    private static final SecureRandom random = new SecureRandom();
 
     public static UUID randomUUID() {
         byte[] value = randomBytes();

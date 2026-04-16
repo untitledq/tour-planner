@@ -21,7 +21,7 @@ public class TourLogController {
 
     public TourLogController(TourLogService service) {
         this.service = service;
-        this.logger = new LoggerService().getInstance().getLogger(getClass());
+        this.logger = LoggerService.getInstance().getLogger(getClass());
     }
 
 
