@@ -11,7 +11,7 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - tourdata:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro,Z
 
 volumes:
   tourdata:
