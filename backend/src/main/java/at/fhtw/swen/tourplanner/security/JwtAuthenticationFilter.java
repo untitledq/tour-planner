@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final SessionRepository sessionRepository;
 
     // --- Logger ---
-    private final org.slf4j.Logger logger = LoggerService.getInstance().getLogger(getClass());
+    private final Logger logger = LoggerService.getInstance().getLogger(getClass());
 
     public JwtAuthenticationFilter(TokenService tokenService, SessionRepository sessionRepository) {
         this.tokenService = tokenService;
@@ -61,9 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (optionalSession.isPresent()) {
                 SessionDto sessionDto = optionalSession.get();
 
-                boolean valid = !sessionDto.isRevoked()
-                        && sessionDto.getExpiresAt().isAfter(Instant.now())
-                        && sessionDto.getToken().equals(token);
+                boolean valid = !sessionDto.revoked()
+                        && sessionDto.expiresAt().isAfter(Instant.now())
+                        && sessionDto.token().equals(token);
 
                 logger.info("SessionDto valid: {}", valid);
 
