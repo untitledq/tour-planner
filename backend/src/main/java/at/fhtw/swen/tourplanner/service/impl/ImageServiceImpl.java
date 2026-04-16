@@ -1,30 +1,74 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.config.ImageStorageProperties;
+import at.fhtw.swen.tourplanner.persistence.entity.Tour;
+import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
 import at.fhtw.swen.tourplanner.service.ImageService;
+import at.fhtw.swen.tourplanner.service.dto.TourDto;
+import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.UUID;
 
 @Service
 public class ImageServiceImpl implements ImageService {
 
     private final Path basePath;
+    private final TourJpaRepository tourRepository;
 
-    public ImageServiceImpl(ImageStorageProperties props) {
+    public ImageServiceImpl(ImageStorageProperties props,
+                            TourJpaRepository tourRepository) {
         this.basePath = Paths.get(props.getBaseDir());
+        this.tourRepository = tourRepository;
     }
 
     @Override
-    public String saveTourImage(UUID tourId, MultipartFile file, String frontendUsername) {
+    public TourDto uploadTourImage(UUID tourId, UUID userId, String username, MultipartFile file) {
+
+        Tour tour = tourRepository.findByIdAndCreatedBy(tourId, userId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        String path = storeFile(tourId, username, file);
+
+        tour.setImagePath(path);
+        tourRepository.save(tour);
+
+        return TourMapper.toResponse(tour);
+    }
+
+    @Override
+    public Resource downloadTourImage(UUID tourId, UUID userId) {
+
+        Tour tour = tourRepository.findByIdAndCreatedBy(tourId, userId)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        if (tour.getImagePath() == null) {
+            throw new RuntimeException("No image uploaded");
+        }
+
         try {
-            String safeUsername = sanitizeUsername(frontendUsername);
+            Path path = Paths.get(tour.getImagePath());
+
+            if (!Files.exists(path)) {
+                throw new RuntimeException("Image missing on disk");
+            }
+
+            return new UrlResource(path.toUri());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load image", e);
+        }
+    }
+
+    // internal helper (was previously the whole service)
+    private String storeFile(UUID tourId, String username, MultipartFile file) {
+        try {
+            String safeUsername = sanitizeUsername(username);
             Path userFolder = basePath.resolve(safeUsername);
             Files.createDirectories(userFolder);
 
@@ -42,4 +86,12 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    private String getExtension(String name) {
+        if (name == null || !name.contains(".")) return "jpg";
+        return name.substring(name.lastIndexOf('.') + 1);
+    }
+
+    private String sanitizeUsername(String username) {
+        return username.replaceAll("[^a-zA-Z0-9._-]", "_");
+    }
 }
