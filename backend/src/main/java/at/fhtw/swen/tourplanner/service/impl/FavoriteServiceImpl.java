@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.UserFavoriteTour;
-import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
 import at.fhtw.swen.tourplanner.service.FavoriteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +12,11 @@ import java.util.UUID;
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
 
-    private final UserFavoriteTourJpaRepository favoriteRepository;
-    private final TourJpaRepository tourRepository;
+    private final UserFavoriteTourRepository favoriteRepository;
+    private final TourRepository tourRepository;
 
-    public FavoriteServiceImpl(UserFavoriteTourJpaRepository favoriteRepository,
-                               TourJpaRepository tourRepository) {
+    public FavoriteServiceImpl(UserFavoriteTourRepository favoriteRepository,
+                               TourRepository tourRepository) {
         this.favoriteRepository = favoriteRepository;
         this.tourRepository = tourRepository;
     }

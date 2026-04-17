@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Repository
-public interface UserFavoriteTourJpaRepository
+public interface UserFavoriteTourRepository
         extends JpaRepository<UserFavoriteTour, UserFavoriteTourId> {
 
     boolean existsByUserIdAndTourId(UUID userId, UUID tourId);

@@ -1,7 +1,5 @@
 package at.fhtw.swen.tourplanner.security;
 
-import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
-import at.fhtw.swen.tourplanner.persistence.port.TokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

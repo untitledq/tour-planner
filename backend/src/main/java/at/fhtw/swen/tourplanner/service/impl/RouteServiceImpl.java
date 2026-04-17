@@ -2,8 +2,8 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.repository.RouteJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.RouteRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.service.RouteService;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.RouteDto;
@@ -15,12 +15,12 @@ import java.util.UUID;
 @Service
 public class RouteServiceImpl implements RouteService {
 
-    private final RouteJpaRepository routeRepository;
-    private final TourJpaRepository tourRepository;
+    private final RouteRepository routeRepository;
+    private final TourRepository tourRepository;
     private final RouteServiceClient routeClient;
 
-    public RouteServiceImpl(RouteJpaRepository routeRepository,
-                            TourJpaRepository tourRepository,
+    public RouteServiceImpl(RouteRepository routeRepository,
+                            TourRepository tourRepository,
                             RouteServiceClient routeClient) {
         this.routeRepository = routeRepository;
         this.tourRepository = tourRepository;

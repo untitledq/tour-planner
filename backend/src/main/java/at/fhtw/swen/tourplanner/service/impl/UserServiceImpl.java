@@ -1,9 +1,11 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
-import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
+import at.fhtw.swen.tourplanner.persistence.entity.User;
+import at.fhtw.swen.tourplanner.security.PasswordHasher;
+import at.fhtw.swen.tourplanner.persistence.repository.UserRepository;
 import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
+import at.fhtw.swen.tourplanner.service.mapper.UserMapper;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.slf4j.Logger;
@@ -35,7 +37,6 @@ public class UserServiceImpl implements UserService {
         validateCredentials(username, password);
 
         if (userRepository.existsByUsername(username)) {
-            logger.warn("Registration failed: username already exists: {}", username);
             throw new IllegalArgumentException("username already exists");
         }
 
@@ -49,10 +50,13 @@ public class UserServiceImpl implements UserService {
                 Instant.now()
         );
 
-        UserDto saved = userRepository.save(userDto);
+        User entity = UserMapper.toEntity(userDto);
+        User saved = userRepository.save(entity);
 
-        logger.info("User registered successfully: username={}, id={}", saved.username(), saved.id());
-        return saved;
+        UserDto result = UserMapper.toDto(saved);
+
+        logger.info("User registered: id={}, username={}", result.id(), result.username());
+        return result;
     }
 
     @Override
@@ -62,7 +66,15 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.deleteById(uuid);
-
         logger.info("User deleted: {}", uuid);
+    }
+
+    public void validateCredentials(String username, String password) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("username must not be blank");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("password must not be blank");
+        }
     }
 }

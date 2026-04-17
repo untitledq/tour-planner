@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.service;
 
-import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
+import at.fhtw.swen.tourplanner.security.TokenPayload;
 import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
 
 public interface AuthService {

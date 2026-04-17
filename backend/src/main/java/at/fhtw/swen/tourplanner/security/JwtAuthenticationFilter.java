@@ -1,9 +1,7 @@
 package at.fhtw.swen.tourplanner.security;
 
-import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
-import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
-import at.fhtw.swen.tourplanner.persistence.port.TokenService;
-import at.fhtw.swen.tourplanner.service.dto.SessionDto;
+import at.fhtw.swen.tourplanner.persistence.entity.Session;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -46,6 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("Authorization header: {}", header);
 
         if (header == null || !header.startsWith("Bearer ")) {
+            SecurityContextHolder.clearContext();
             filterChain.doFilter(request, response);
             return;
         }
@@ -55,22 +54,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             TokenPayload tokenPayload = tokenService.parseAndValidate(token);
 
-            Optional<SessionDto> optionalSession =
+            Optional<Session> optionalSession =
                     sessionRepository.findByJti(tokenPayload.sessionId());
 
             if (optionalSession.isEmpty()) {
+                SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            SessionDto session = optionalSession.get();
+            Session session = optionalSession.get();
 
             boolean valid =
-                    !session.revoked()
-                            && session.expiresAt().isAfter(Instant.now())
-                            && session.token().equals(token);
+                    !session.isRevoked()
+                            && session.getExpiresAt().isAfter(Instant.now())
+                            && session.getToken().equals(token);
 
             if (!valid) {
+                SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -93,6 +94,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.info("User {} authenticated successfully", tokenPayload.username());
 
         } catch (Exception e) {
+            SecurityContextHolder.clearContext();
             logger.warn("JWT authentication failed: {}", e.getMessage());
         }
 
