@@ -1,9 +1,9 @@
 package at.fhtw.swen.tourplanner.security;
 
-import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
+import at.fhtw.swen.tourplanner.persistence.entity.Session;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionJpaRepository;
 import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
 import at.fhtw.swen.tourplanner.persistence.port.TokenService;
-import at.fhtw.swen.tourplanner.service.dto.SessionDto;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,13 +25,13 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final SessionRepository sessionRepository;
+    private final SessionJpaRepository sessionJpaRepository;
     private final Logger logger = LoggerService.getInstance().getLogger(getClass());
 
     public JwtAuthenticationFilter(TokenService tokenService,
-                                   SessionRepository sessionRepository) {
+                                   SessionJpaRepository sessionJpaRepository) {
         this.tokenService = tokenService;
-        this.sessionRepository = sessionRepository;
+        this.sessionJpaRepository = sessionJpaRepository;
     }
 
     @Override
@@ -56,8 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             TokenPayload tokenPayload = tokenService.parseAndValidate(token);
 
-            Optional<SessionDto> optionalSession =
-                    sessionRepository.findByJti(tokenPayload.sessionId());
+            Optional<Session> optionalSession =
+                    sessionJpaRepository.findByJti(tokenPayload.sessionId());
 
             if (optionalSession.isEmpty()) {
                 SecurityContextHolder.clearContext();
@@ -65,12 +65,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            SessionDto session = optionalSession.get();
+            Session session = optionalSession.get();
 
             boolean valid =
-                    !session.revoked()
-                            && session.expiresAt().isAfter(Instant.now())
-                            && session.token().equals(token);
+                    !session.isRevoked()
+                            && session.getExpiresAt().isAfter(Instant.now())
+                            && session.getToken().equals(token);
 
             if (!valid) {
                 SecurityContextHolder.clearContext();

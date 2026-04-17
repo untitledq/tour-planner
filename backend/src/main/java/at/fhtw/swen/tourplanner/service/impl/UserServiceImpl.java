@@ -1,9 +1,11 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.persistence.entity.User;
 import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
-import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.UserJpaRepository;
 import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
+import at.fhtw.swen.tourplanner.service.mapper.UserMapper;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.slf4j.Logger;
@@ -16,14 +18,14 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final Logger logger;
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
     private final PasswordHasher passwordHasher;
 
     public UserServiceImpl(
-            UserRepository userRepository,
+            UserJpaRepository userJpaRepository,
             PasswordHasher passwordHasher
     ) {
-        this.userRepository = userRepository;
+        this.userJpaRepository = userJpaRepository;
         this.passwordHasher = passwordHasher;
         this.logger = LoggerService.getInstance().getLogger(getClass());
     }
@@ -34,8 +36,7 @@ public class UserServiceImpl implements UserService {
 
         validateCredentials(username, password);
 
-        if (userRepository.existsByUsername(username)) {
-            logger.warn("Registration failed: username already exists: {}", username);
+        if (userJpaRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("username already exists");
         }
 
@@ -49,20 +50,31 @@ public class UserServiceImpl implements UserService {
                 Instant.now()
         );
 
-        UserDto saved = userRepository.save(userDto);
+        User entity = UserMapper.toEntity(userDto);
+        User saved = userJpaRepository.save(entity);
 
-        logger.info("User registered successfully: username={}, id={}", saved.username(), saved.id());
-        return saved;
+        UserDto result = UserMapper.toDto(saved);
+
+        logger.info("User registered: id={}, username={}", result.id(), result.username());
+        return result;
     }
 
     @Override
     public void deleteUser(UUID uuid) {
-        if (!userRepository.existsById(uuid)) {
+        if (!userJpaRepository.existsById(uuid)) {
             throw new IllegalArgumentException("User not found");
         }
 
-        userRepository.deleteById(uuid);
-
+        userJpaRepository.deleteById(uuid);
         logger.info("User deleted: {}", uuid);
+    }
+
+    public void validateCredentials(String username, String password) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("username must not be blank");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("password must not be blank");
+        }
     }
 }

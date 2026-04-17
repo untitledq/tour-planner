@@ -1,17 +1,18 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.persistence.entity.Session;
+import at.fhtw.swen.tourplanner.persistence.entity.User;
 import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
-import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
 import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
 import at.fhtw.swen.tourplanner.persistence.port.TokenService;
-import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.UserJpaRepository;
 import at.fhtw.swen.tourplanner.service.AuthService;
-import at.fhtw.swen.tourplanner.service.dto.SessionDto;
-import at.fhtw.swen.tourplanner.service.dto.UserDto;
 import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -22,21 +23,21 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordHasher passwordHasher;
     private final TokenService tokenService;
-    private final SessionRepository sessionRepository;
-    private final UserRepository userRepository;
+    private final SessionJpaRepository sessionJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     private final long expirationMinutes;
 
     public AuthServiceImpl(
             PasswordHasher passwordHasher,
             TokenService tokenService,
-            SessionRepository sessionRepository,
-            UserRepository userRepository,
+            SessionJpaRepository sessionJpaRepository,
+            UserJpaRepository userJpaRepository,
             @Value("${security.jwt.expiration-minutes}") long expirationMinutes
     ) {
         this.passwordHasher = passwordHasher;
         this.tokenService = tokenService;
-        this.sessionRepository = sessionRepository;
-        this.userRepository = userRepository;
+        this.sessionJpaRepository = sessionJpaRepository;
+        this.userJpaRepository = userJpaRepository;
         this.expirationMinutes = expirationMinutes;
     }
 
@@ -48,10 +49,10 @@ public class AuthServiceImpl implements AuthService {
             throw new SecurityException("Invalid credentials");
         }
 
-        UserDto user = userRepository.findByUsername(username)
+        User user = userJpaRepository.findByUsername(username)
                 .orElseThrow(() -> new SecurityException("Invalid credentials"));
 
-        if (passwordHasher.invalid(rawPassword, user.passwordHash())) {
+        if (passwordHasher.invalid(rawPassword, user.getPassword())) {
             throw new SecurityException("Invalid credentials");
         }
 
@@ -59,34 +60,35 @@ public class AuthServiceImpl implements AuthService {
         Instant expiresAt = Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES);
 
         String token = tokenService.createToken(
-                user.id(),
-                user.username(),
+                user.getId(),
+                user.getUsername(),
                 sessionId,
                 expiresAt
         );
 
-        SessionDto session = new SessionDto(
+        Session session = new Session(
                 sessionId,
-                user.id(),
+                user.getId(),
                 token,
                 Instant.now(),
                 expiresAt,
                 false
         );
 
-        sessionRepository.save(session);
+        sessionJpaRepository.save(session);
 
         return new LoginResponse(token, expiresAt, sessionId);
     }
 
     @Override
+    @Transactional
     public void logout(String token) {
         if (token == null || token.isBlank()) {
             throw new SecurityException("Missing token");
         }
 
         TokenPayload payload = tokenService.parseAndValidate(token);
-        sessionRepository.revokeByJti(payload.sessionId());
+        sessionJpaRepository.revokeByJti(payload.sessionId());
     }
 
     @Override
