@@ -9,7 +9,7 @@ public class UserMapper {
         return new UserDto(
                 user.getId(),
                 user.getUsername(),
-                user.getPassword(), // maps to passwordHash
+                user.getPasswordHash(), // maps to passwordHash
                 user.getEmail(),
                 user.getCreatedAt()
         );

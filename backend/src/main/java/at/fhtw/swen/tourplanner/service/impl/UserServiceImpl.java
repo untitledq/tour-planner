@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
-import at.fhtw.swen.tourplanner.persistence.repository.UserJpaRepository;
+import at.fhtw.swen.tourplanner.security.PasswordHasher;
+import at.fhtw.swen.tourplanner.persistence.repository.UserRepository;
 import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
 import at.fhtw.swen.tourplanner.service.mapper.UserMapper;
@@ -18,14 +18,14 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final Logger logger;
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
 
     public UserServiceImpl(
-            UserJpaRepository userJpaRepository,
+            UserRepository userRepository,
             PasswordHasher passwordHasher
     ) {
-        this.userJpaRepository = userJpaRepository;
+        this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
         this.logger = LoggerService.getInstance().getLogger(getClass());
     }
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
         validateCredentials(username, password);
 
-        if (userJpaRepository.existsByUsername(username)) {
+        if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("username already exists");
         }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         );
 
         User entity = UserMapper.toEntity(userDto);
-        User saved = userJpaRepository.save(entity);
+        User saved = userRepository.save(entity);
 
         UserDto result = UserMapper.toDto(saved);
 
@@ -61,11 +61,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UUID uuid) {
-        if (!userJpaRepository.existsById(uuid)) {
+        if (!userRepository.existsById(uuid)) {
             throw new IllegalArgumentException("User not found");
         }
 
-        userJpaRepository.deleteById(uuid);
+        userRepository.deleteById(uuid);
         logger.info("User deleted: {}", uuid);
     }
 

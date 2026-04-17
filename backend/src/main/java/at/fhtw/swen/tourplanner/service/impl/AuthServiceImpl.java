@@ -2,11 +2,11 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Session;
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
-import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
-import at.fhtw.swen.tourplanner.persistence.port.TokenService;
-import at.fhtw.swen.tourplanner.persistence.repository.SessionJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
+import at.fhtw.swen.tourplanner.security.PasswordHasher;
+import at.fhtw.swen.tourplanner.security.TokenPayload;
+import at.fhtw.swen.tourplanner.security.TokenService;
+import at.fhtw.swen.tourplanner.persistence.repository.UserRepository;
 import at.fhtw.swen.tourplanner.service.AuthService;
 import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
@@ -23,21 +23,21 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordHasher passwordHasher;
     private final TokenService tokenService;
-    private final SessionJpaRepository sessionJpaRepository;
-    private final UserJpaRepository userJpaRepository;
+    private final SessionRepository sessionRepository;
+    private final UserRepository userRepository;
     private final long expirationMinutes;
 
     public AuthServiceImpl(
             PasswordHasher passwordHasher,
             TokenService tokenService,
-            SessionJpaRepository sessionJpaRepository,
-            UserJpaRepository userJpaRepository,
+            SessionRepository sessionRepository,
+            UserRepository userRepository,
             @Value("${security.jwt.expiration-minutes}") long expirationMinutes
     ) {
         this.passwordHasher = passwordHasher;
         this.tokenService = tokenService;
-        this.sessionJpaRepository = sessionJpaRepository;
-        this.userJpaRepository = userJpaRepository;
+        this.sessionRepository = sessionRepository;
+        this.userRepository = userRepository;
         this.expirationMinutes = expirationMinutes;
     }
 
@@ -49,10 +49,10 @@ public class AuthServiceImpl implements AuthService {
             throw new SecurityException("Invalid credentials");
         }
 
-        User user = userJpaRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new SecurityException("Invalid credentials"));
 
-        if (passwordHasher.invalid(rawPassword, user.getPassword())) {
+        if (passwordHasher.invalid(rawPassword, user.getPasswordHash())) {
             throw new SecurityException("Invalid credentials");
         }
 
@@ -75,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
                 false
         );
 
-        sessionJpaRepository.save(session);
+        sessionRepository.save(session);
 
         return new LoginResponse(token, expiresAt, sessionId);
     }
@@ -88,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         TokenPayload payload = tokenService.parseAndValidate(token);
-        sessionJpaRepository.revokeByJti(payload.sessionId());
+        sessionRepository.revokeByJti(payload.sessionId());
     }
 
     @Override

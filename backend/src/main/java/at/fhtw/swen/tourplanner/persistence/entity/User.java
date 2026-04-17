@@ -18,7 +18,7 @@ public class User {
     private String username;
 
     @Column(name = "password_hash", nullable = false, length = 256)
-    private String password;
+    private String passwordHash;
 
     @Column(length = 255)
     private String email;
@@ -29,10 +29,10 @@ public class User {
     protected User() {
     }
 
-    public User(UUID id, String username, String password, String email, Instant createdAt) {
+    public User(UUID id, String username, String passwordHash, String email, Instant createdAt) {
         this.id = id;
         this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.email = email;
         this.createdAt = createdAt;
     }

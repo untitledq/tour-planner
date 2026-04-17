@@ -1,6 +1,5 @@
 package at.fhtw.swen.tourplanner.security;
 
-import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 

@@ -2,10 +2,6 @@ package at.fhtw.swen.tourplanner.controller;
 
 import at.fhtw.swen.tourplanner.service.RouteService;
 import at.fhtw.swen.tourplanner.service.dto.RouteDto;
-import at.fhtw.swen.tourplanner.persistence.entity.Route;
-import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.repository.RouteJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
 import at.fhtw.swen.tourplanner.security.JwtUserDetails;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.slf4j.Logger;

@@ -1,9 +1,7 @@
 package at.fhtw.swen.tourplanner.security;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Session;
-import at.fhtw.swen.tourplanner.persistence.repository.SessionJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
-import at.fhtw.swen.tourplanner.persistence.port.TokenService;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,13 +23,13 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final SessionJpaRepository sessionJpaRepository;
+    private final SessionRepository sessionRepository;
     private final Logger logger = LoggerService.getInstance().getLogger(getClass());
 
     public JwtAuthenticationFilter(TokenService tokenService,
-                                   SessionJpaRepository sessionJpaRepository) {
+                                   SessionRepository sessionRepository) {
         this.tokenService = tokenService;
-        this.sessionJpaRepository = sessionJpaRepository;
+        this.sessionRepository = sessionRepository;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             TokenPayload tokenPayload = tokenService.parseAndValidate(token);
 
             Optional<Session> optionalSession =
-                    sessionJpaRepository.findByJti(tokenPayload.sessionId());
+                    sessionRepository.findByJti(tokenPayload.sessionId());
 
             if (optionalSession.isEmpty()) {
                 SecurityContextHolder.clearContext();

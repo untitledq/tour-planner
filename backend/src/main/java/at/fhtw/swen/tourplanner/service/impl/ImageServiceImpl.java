@@ -2,7 +2,7 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.config.ImageStorageProperties;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.service.ImageService;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
@@ -19,10 +19,10 @@ import java.util.UUID;
 public class ImageServiceImpl implements ImageService {
 
     private final Path basePath;
-    private final TourJpaRepository tourRepository;
+    private final TourRepository tourRepository;
 
     public ImageServiceImpl(ImageStorageProperties props,
-                            TourJpaRepository tourRepository) {
+                            TourRepository tourRepository) {
         this.basePath = Paths.get(props.getBaseDir());
         this.tourRepository = tourRepository;
     }

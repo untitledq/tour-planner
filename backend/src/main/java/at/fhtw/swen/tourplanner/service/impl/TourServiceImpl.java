@@ -7,9 +7,9 @@ import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.repository.RouteJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.RouteRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
 import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
 import org.springframework.stereotype.Service;
@@ -22,14 +22,14 @@ import java.util.UUID;
 @Service
 public class TourServiceImpl implements TourService {
 
-    private final TourJpaRepository repository;
-    private final RouteJpaRepository routeRepository;
-    private final UserFavoriteTourJpaRepository favoriteRepository;
+    private final TourRepository repository;
+    private final RouteRepository routeRepository;
+    private final UserFavoriteTourRepository favoriteRepository;
     private final RouteServiceClient routeClient;
 
-    public TourServiceImpl(TourJpaRepository repository,
-                           RouteJpaRepository routeRepository,
-                           UserFavoriteTourJpaRepository favoriteRepository,
+    public TourServiceImpl(TourRepository repository,
+                           RouteRepository routeRepository,
+                           UserFavoriteTourRepository favoriteRepository,
                            RouteServiceClient routeClient) {
         this.repository = repository;
         this.routeRepository = routeRepository;

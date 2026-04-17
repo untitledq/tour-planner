@@ -25,6 +25,7 @@
 │   └── workspace.xml
 ├── init.sql
 ├── logs
+│   ├── tourplanner.2026-04-16.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -59,9 +60,6 @@
     │   │                   │   ├── TourController.java
     │   │                   │   └── TourLogController.java
     │   │                   ├── persistence
-    │   │                   │   ├── adapter
-    │   │                   │   │   ├── JpaSessionRepositoryAdapter.java
-    │   │                   │   │   └── JpaUserRepositoryAdapter.java
     │   │                   │   ├── entity
     │   │                   │   │   ├── Route.java
     │   │                   │   │   ├── Session.java
@@ -73,17 +71,15 @@
     │   │                   │   │   └── User.java
     │   │                   │   ├── port
     │   │                   │   │   ├── PasswordHasher.java
-    │   │                   │   │   ├── SessionRepository.java
     │   │                   │   │   ├── TokenPayload.java
-    │   │                   │   │   ├── TokenService.java
-    │   │                   │   │   └── UserRepository.java
+    │   │                   │   │   └── TokenService.java
     │   │                   │   └── repository
     │   │                   │       ├── RouteJpaRepository.java
-    │   │                   │       ├── SpringDataSessionJpaRepository.java
-    │   │                   │       ├── SpringDataUserJpaRepository.java
+    │   │                   │       ├── SessionJpaRepository.java
     │   │                   │       ├── TourJpaRepository.java
     │   │                   │       ├── TourLogJpaRepository.java
-    │   │                   │       └── UserFavoriteTourJpaRepository.java
+    │   │                   │       ├── UserFavoriteTourJpaRepository.java
+    │   │                   │       └── UserJpaRepository.java
     │   │                   ├── security
     │   │                   │   ├── BCryptPasswordHasher.java
     │   │                   │   ├── CurrentUserServiceImpl.java
@@ -115,7 +111,8 @@
     │   │                   │   ├── mapper
     │   │                   │   │   ├── OrsProfileMapper.java
     │   │                   │   │   ├── TourLogMapper.java
-    │   │                   │   │   └── TourMapper.java
+    │   │                   │   │   ├── TourMapper.java
+    │   │                   │   │   └── UserMapper.java
     │   │                   │   ├── RouteServiceClient.java
     │   │                   │   ├── RouteService.java
     │   │                   │   ├── SessionCleanupService.java
@@ -140,4 +137,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-37 directories, 104 files
+36 directories, 102 files
