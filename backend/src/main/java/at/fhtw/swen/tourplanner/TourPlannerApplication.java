@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner;
 
-import at.fhtw.swen.tourplanner.config.ImageStorageProperties;
+import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;

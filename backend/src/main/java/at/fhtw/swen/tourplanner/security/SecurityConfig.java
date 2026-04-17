@@ -1,6 +1,6 @@
-package at.fhtw.swen.tourplanner.config;
+package at.fhtw.swen.tourplanner.security;
 
-import at.fhtw.swen.tourplanner.security.JwtAuthenticationFilter;
+import at.fhtw.swen.tourplanner.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

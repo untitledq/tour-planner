@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.security;
+package at.fhtw.swen.tourplanner.security.core;
 
 import java.time.Instant;
 import java.util.UUID;

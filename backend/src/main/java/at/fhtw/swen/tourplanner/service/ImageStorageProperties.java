@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.config;
+package at.fhtw.swen.tourplanner.service;
 
 import lombok.Getter;
 import lombok.Setter;

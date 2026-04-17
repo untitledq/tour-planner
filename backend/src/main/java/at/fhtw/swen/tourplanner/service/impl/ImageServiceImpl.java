@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.config.ImageStorageProperties;
+import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.service.ImageService;
