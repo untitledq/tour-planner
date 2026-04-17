@@ -40,9 +40,6 @@
     │   │       └── fhtw
     │   │           └── swen
     │   │               └── tourplanner
-    │   │                   ├── config
-    │   │                   │   ├── ImageStorageProperties.java
-    │   │                   │   └── SecurityConfig.java
     │   │                   ├── controller
     │   │                   │   ├── AuthController.java
     │   │                   │   ├── FavoriteController.java
@@ -69,24 +66,27 @@
     │   │                   │   │   ├── UserFavoriteTourId.java
     │   │                   │   │   ├── UserFavoriteTour.java
     │   │                   │   │   └── User.java
-    │   │                   │   ├── port
+    │   │                   │   └── repository
+    │   │                   │       ├── RouteRepository.java
+    │   │                   │       ├── SessionRepository.java
+    │   │                   │       ├── TourLogRepository.java
+    │   │                   │       ├── TourRepository.java
+    │   │                   │       ├── UserFavoriteTourRepository.java
+    │   │                   │       └── UserRepository.java
+    │   │                   ├── security
+    │   │                   │   ├── core
+    │   │                   │   │   ├── BCryptPasswordHasher.java
     │   │                   │   │   ├── PasswordHasher.java
     │   │                   │   │   ├── TokenPayload.java
     │   │                   │   │   └── TokenService.java
-    │   │                   │   └── repository
-    │   │                   │       ├── RouteJpaRepository.java
-    │   │                   │       ├── SessionJpaRepository.java
-    │   │                   │       ├── TourJpaRepository.java
-    │   │                   │       ├── TourLogJpaRepository.java
-    │   │                   │       ├── UserFavoriteTourJpaRepository.java
-    │   │                   │       └── UserJpaRepository.java
-    │   │                   ├── security
-    │   │                   │   ├── BCryptPasswordHasher.java
-    │   │                   │   ├── CurrentUserServiceImpl.java
-    │   │                   │   ├── CurrentUserService.java
-    │   │                   │   ├── JwtAuthenticationFilter.java
-    │   │                   │   ├── JwtTokenService.java
-    │   │                   │   └── JwtUserDetails.java
+    │   │                   │   ├── jwt
+    │   │                   │   │   ├── JwtAuthenticationFilter.java
+    │   │                   │   │   └── JwtTokenService.java
+    │   │                   │   ├── SecurityConfig.java
+    │   │                   │   └── spring
+    │   │                   │       ├── CurrentUserServiceImpl.java
+    │   │                   │       ├── CurrentUserService.java
+    │   │                   │       └── JwtUserDetails.java
     │   │                   ├── service
     │   │                   │   ├── AuthService.java
     │   │                   │   ├── dto
@@ -98,6 +98,7 @@
     │   │                   │   │   └── UserDto.java
     │   │                   │   ├── FavoriteService.java
     │   │                   │   ├── ImageService.java
+    │   │                   │   ├── ImageStorageProperties.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
     │   │                   │   │   ├── FavoriteServiceImpl.java
@@ -137,4 +138,4 @@
                             └── devtools
                                 └── UpdateProjectStructure.java
 
-36 directories, 102 files
+37 directories, 102 files

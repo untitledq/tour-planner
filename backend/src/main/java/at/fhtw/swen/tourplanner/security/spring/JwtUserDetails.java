@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.security;
+package at.fhtw.swen.tourplanner.security.spring;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

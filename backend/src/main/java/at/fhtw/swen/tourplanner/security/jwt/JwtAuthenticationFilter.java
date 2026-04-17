@@ -1,7 +1,10 @@
-package at.fhtw.swen.tourplanner.security;
+package at.fhtw.swen.tourplanner.security.jwt;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Session;
 import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
+import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
+import at.fhtw.swen.tourplanner.security.core.TokenPayload;
+import at.fhtw.swen.tourplanner.security.core.TokenService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

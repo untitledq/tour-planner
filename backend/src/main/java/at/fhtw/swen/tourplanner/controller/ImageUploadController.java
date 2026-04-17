@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.security.CurrentUserService;
+import at.fhtw.swen.tourplanner.security.spring.CurrentUserService;
 import at.fhtw.swen.tourplanner.service.ImageService;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import org.springframework.http.MediaType;

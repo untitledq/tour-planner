@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.security;
+package at.fhtw.swen.tourplanner.security.core;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

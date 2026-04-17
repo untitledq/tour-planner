@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.security;
+package at.fhtw.swen.tourplanner.security.spring;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;

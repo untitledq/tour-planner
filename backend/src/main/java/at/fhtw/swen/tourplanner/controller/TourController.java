@@ -3,7 +3,7 @@ package at.fhtw.swen.tourplanner.controller;
 import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
-import at.fhtw.swen.tourplanner.security.JwtUserDetails;
+import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
 import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
