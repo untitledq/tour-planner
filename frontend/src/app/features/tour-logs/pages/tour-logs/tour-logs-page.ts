@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { finalize } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
+import { SearchApiService, SearchResultResponse } from '../../../../core/services/search-api.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination';
@@ -59,12 +60,20 @@ export class TourLogsPage {
   protected readonly isLoadingTours = signal(true);
   protected readonly toursLoadError = signal('');
   protected readonly tourCards = signal<TourLogTourCard[]>([]);
+  protected readonly searchTourCards = signal<TourLogTourCard[]>([]);
+  protected readonly isSearching = signal(false);
+  protected readonly searchError = signal('');
   protected readonly showDeleteDialog = signal(false);
   protected readonly isDeletingLog = signal(false);
   protected readonly selectedLogForDelete = signal<SelectedLogForDelete | null>(null);
   protected readonly hasTours = computed(() => this.tourCards().length > 0);
+  protected readonly hasActiveSearch = computed(() => this.searchTerm().trim() !== '');
   protected readonly filteredTourCards = computed(() => {
     const normalizedSearch = this.searchTerm().trim().toLowerCase();
+
+    if (normalizedSearch !== '') {
+      return this.searchTourCards();
+    }
 
     return this.tourCards().filter((card) => {
       return normalizedSearch === '' || card.name.toLowerCase().includes(normalizedSearch);
@@ -78,15 +87,11 @@ export class TourLogsPage {
   private readonly authApi = inject(AuthApiService);
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
+  private readonly searchApi = inject(SearchApiService);
   private readonly tourApi = inject(TourApiService);
   private readonly tourLogApi = inject(TourLogApiService);
 
   constructor() {
-    this.searchControl.valueChanges.subscribe((value) => {
-      this.searchTerm.set(value);
-      this.first.set(0);
-    });
-
     this.loadTours();
   }
 
@@ -113,6 +118,20 @@ export class TourLogsPage {
 
   protected onPageChange(event: { first?: number }): void {
     this.first.set(event.first ?? 0);
+  }
+
+  protected submitSearch(): void {
+    const value = this.searchControl.value;
+
+    this.searchTerm.set(value);
+    this.first.set(0);
+
+    if (value.trim()) {
+      this.searchAll();
+    } else {
+      this.searchTourCards.set([]);
+      this.searchError.set('');
+    }
   }
 
   protected openLogDetails(logId: string): void {
@@ -262,6 +281,37 @@ export class TourLogsPage {
       });
   }
 
+  private searchAll(): void {
+    const normalizedSearch = this.searchTerm().trim();
+
+    if (!normalizedSearch) {
+      this.searchTourCards.set([]);
+      this.searchError.set('');
+      return;
+    }
+
+    this.isSearching.set(true);
+    this.searchError.set('');
+
+    this.searchApi
+      .search(normalizedSearch, 'all')
+      .pipe(finalize(() => this.isSearching.set(false)))
+      .subscribe({
+        next: (results) => {
+          const cards = this.toUniqueTourCards(results);
+          this.searchTourCards.set(cards);
+
+          for (const card of cards) {
+            this.loadLogCount(card.id);
+          }
+        },
+        error: () => {
+          this.searchTourCards.set([]);
+          this.searchError.set('Tour logs could not be searched.');
+        }
+      });
+  }
+
   private loadLogCount(tourId: string): void {
     this.tourLogApi.listByTourId(tourId).subscribe({
       next: (logs) => {
@@ -295,8 +345,42 @@ export class TourLogsPage {
     };
   }
 
+  private toUniqueTourCards(results: SearchResultResponse[]): TourLogTourCard[] {
+    const cards = new Map<string, TourLogTourCard>();
+
+    for (const result of results) {
+      const tourId = result.type === 'TOUR' ? result.id : result.tourId;
+
+      if (!cards.has(tourId)) {
+        cards.set(
+          tourId,
+          this.createTourCard({
+            id: tourId,
+            name: result.title,
+            isFavorite: false
+          })
+        );
+      }
+    }
+
+    return [...cards.values()];
+  }
+
   private updateTourCard(tourId: string, partial: Partial<TourLogTourCard>): void {
     this.tourCards.update((cards) =>
+      cards.map((card) => {
+        if (card.id !== tourId) {
+          return card;
+        }
+
+        return {
+          ...card,
+          ...partial
+        };
+      })
+    );
+
+    this.searchTourCards.update((cards) =>
       cards.map((card) => {
         if (card.id !== tourId) {
           return card;

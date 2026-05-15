@@ -62,7 +62,7 @@ h1 {
 
 .tours-filter-bar {
   display: grid;
-  grid-template-columns: minmax(0, 36rem) minmax(13rem, 16rem);
+  grid-template-columns: minmax(0, 36rem) auto minmax(13rem, 16rem);
   align-items: end;
   gap: 1rem;
   margin-bottom: 1.5rem;
@@ -95,6 +95,22 @@ h1 {
   outline-offset: 0;
   border-color: #ff8a33;
   box-shadow: none;
+}
+
+:host ::ng-deep .tours-search-button.p-button {
+  min-height: 2.85rem;
+  border: 1px solid var(--tp-blue);
+  border-radius: 0.6rem;
+  background: var(--tp-blue);
+  color: #ffffff;
+  padding: 0.75rem 1.1rem;
+  font-weight: 600;
+}
+
+:host ::ng-deep .tours-search-button.p-button:hover {
+  border-color: var(--tp-blue-hover);
+  background: var(--tp-blue-hover);
+  color: #ffffff;
 }
 
 .tours-filter-select {
@@ -306,6 +322,10 @@ h1 {
 
   .tours-filter-bar {
     grid-template-columns: 1fr;
+  }
+
+  :host ::ng-deep .tours-search-button.p-button {
+    width: 100%;
   }
 }
 

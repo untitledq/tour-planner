@@ -22,8 +22,16 @@
             type="text"
             placeholder="Search tours..."
             [formControl]="searchControl"
+            (keydown.enter)="submitSearch()"
           />
         </p-iconfield>
+
+        <p-button
+          label="Search"
+          icon="pi pi-search"
+          styleClass="tours-search-button"
+          (onClick)="submitSearch()"
+        />
 
         <label class="tours-filter-select">
           <span class="tours-filter-select__wrap">
