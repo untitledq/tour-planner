@@ -24,8 +24,16 @@
             type="text"
             placeholder="Search tours..."
             [formControl]="searchControl"
+            (keydown.enter)="submitSearch()"
           />
         </p-iconfield>
+
+        <p-button
+          label="Search"
+          icon="pi pi-search"
+          styleClass="tour-logs-search-button"
+          (onClick)="submitSearch()"
+        />
       </section>
 
       @if (isLoadingTours()) {
@@ -38,7 +46,27 @@
           <h2>Could not load tours</h2>
           <p>{{ toursLoadError() }}</p>
         </section>
-      } @else if (filteredTourCards().length > 0) {
+      } @else if (hasActiveSearch()) {
+        @if (isSearching()) {
+          <section class="tour-logs-empty-state">
+            <h2>Searching...</h2>
+            <p>The full-text search is checking tours and tour logs.</p>
+          </section>
+        } @else if (searchError()) {
+          <section class="tour-logs-empty-state">
+            <h2>Could not search</h2>
+            <p>{{ searchError() }}</p>
+          </section>
+        } @else if (filteredTourCards().length === 0) {
+          <section class="tour-logs-empty-state">
+            <h2>No search results found</h2>
+            <p>Try a different search term.</p>
+          </section>
+        }
+      } 
+
+      @if (!hasActiveSearch() || (!isSearching() && !searchError() && filteredTourCards().length > 0)) {
+      @if (filteredTourCards().length > 0) {
         <section class="tour-logs-list">
           @for (card of visibleTourCards(); track trackTourCard($index, card)) {
             <article class="tour-log-tour-card">
@@ -172,6 +200,7 @@
           <h2>No tours found</h2>
           <p>Adjust the search or create a tour first before managing tour-specific logs.</p>
         </section>
+      }
       }
     </div>
   </section>

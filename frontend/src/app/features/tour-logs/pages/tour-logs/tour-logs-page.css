@@ -68,7 +68,7 @@ h1 {
 
 .tour-logs-filter-bar {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 1rem;
   margin-bottom: 1.5rem;
@@ -101,6 +101,22 @@ h1 {
   outline-offset: 0;
   border-color: #ff8a33;
   box-shadow: none;
+}
+
+:host ::ng-deep .tour-logs-search-button.p-button {
+  min-height: 2.85rem;
+  border: 1px solid var(--tp-blue);
+  border-radius: 0.6rem;
+  background: var(--tp-blue);
+  color: #ffffff;
+  padding: 0.75rem 1.1rem;
+  font-weight: 600;
+}
+
+:host ::ng-deep .tour-logs-search-button.p-button:hover {
+  border-color: var(--tp-blue-hover);
+  background: var(--tp-blue-hover);
+  color: #ffffff;
 }
 
 .tour-log-tour-card {
@@ -356,6 +372,10 @@ h1 {
 
   .tour-logs-filter-bar {
     grid-template-columns: 1fr;
+  }
+
+  :host ::ng-deep .tour-logs-search-button.p-button {
+    width: 100%;
   }
 
   .tour-details-log-card {

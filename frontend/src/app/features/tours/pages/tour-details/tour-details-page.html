@@ -206,11 +206,35 @@
                 <p>All recorded log entries that belong to this tour.</p>
               </div>
 
-              <p-button
-                label="+ New Tour Log"
-                styleClass="tour-details-new-log-button"
-                (onClick)="openCreateLog()"
-              />
+              <div class="tour-details-log-tools">
+                <div class="tour-details-log-search">
+                  <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input
+                      pInputText
+                      type="text"
+                      placeholder="Search logs..."
+                      [formControl]="logSearchControl"
+                      (keydown.enter)="submitLogSearch()"
+                    />
+                  </p-iconfield>
+
+                  <p-button
+                    icon="pi pi-search"
+                    ariaLabel="Search tour logs"
+                    styleClass="tour-details-log-search-button"
+                    [loading]="isSearchingLogs()"
+                    [disabled]="isSearchingLogs()"
+                    (onClick)="submitLogSearch()"
+                  />
+                </div>
+
+                <p-button
+                  label="+ New Tour Log"
+                  styleClass="tour-details-new-log-button"
+                  (onClick)="openCreateLog()"
+                />
+              </div>
             </div>
 
             @if (isLoadingLogs()) {
@@ -223,14 +247,24 @@
                 <strong>Could not load tour logs.</strong>
                 <p>{{ logLoadError() }}</p>
               </div>
+            } @else if (logSearchError()) {
+              <div class="tour-details-log-placeholder">
+                <strong>Could not search tour logs.</strong>
+                <p>{{ logSearchError() }}</p>
+              </div>
             } @else if (!tourLogs().length) {
               <div class="tour-details-log-placeholder">
                 <strong>No logs for this tour yet.</strong>
                 <p>Create the first tour log to start tracking this specific route.</p>
               </div>
+            } @else if (!visibleTourLogs().length) {
+              <div class="tour-details-log-placeholder">
+                <strong>No matching logs found.</strong>
+                <p>Try a different search term or clear the search field and press Enter.</p>
+              </div>
             } @else {
               <div class="tour-details-log-list">
-                @for (log of tourLogs(); track log.id) {
+                @for (log of visibleTourLogs(); track log.id) {
                   <article class="tour-details-log-card">
                     <div class="tour-details-log-card__top">
                       <div>

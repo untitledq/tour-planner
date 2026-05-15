@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { finalize, forkJoin } from 'rxjs';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
+import { SearchApiService } from '../../../../core/services/search-api.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { FavoriteToggleComponent } from '../../../../shared/components/favorite-toggle/favorite-toggle';
@@ -56,6 +57,10 @@ export class ToursPage {
   protected readonly filteredTours = computed(() => {
     const normalizedSearch = this.searchTerm().trim().toLowerCase();
 
+    if (normalizedSearch !== '') {
+      return this.tours();
+    }
+
     return this.tours().filter((tour) => {
       return normalizedSearch === '' || tour.name.toLowerCase().includes(normalizedSearch);
     });
@@ -70,14 +75,10 @@ export class ToursPage {
   private readonly authSession = inject(AuthSessionService);
   private readonly router = inject(Router);
   private readonly createTourFlow = inject(CreateTourFlowService);
+  private readonly searchApi = inject(SearchApiService);
   private readonly tourApi = inject(TourApiService);
 
   constructor() {
-    this.searchControl.valueChanges.subscribe((value) => {
-      this.searchTerm.set(value);
-      this.first.set(0);
-    });
-
     this.filterControl.valueChanges.subscribe((value) => {
       this.activeFilter.set(value);
       this.first.set(0);
@@ -111,6 +112,12 @@ export class ToursPage {
 
   protected onPageChange(event: { first?: number; rows?: number }): void {
     this.first.set(event.first ?? 0);
+  }
+
+  protected submitSearch(): void {
+    this.searchTerm.set(this.searchControl.value);
+    this.first.set(0);
+    this.loadTours();
   }
 
   protected openTourDetails(tourId: string): void {
@@ -221,6 +228,35 @@ export class ToursPage {
     this.isLoadingTours.set(true);
     this.toursLoadError.set('');
 
+    const normalizedSearch = this.searchTerm().trim();
+
+    if (normalizedSearch) {
+      forkJoin({
+        results: this.searchApi.search(normalizedSearch, 'tours'),
+        favorites: this.tourApi.listFavorites()
+      })
+        .pipe(finalize(() => this.isLoadingTours.set(false)))
+        .subscribe({
+          next: ({ results, favorites }) => {
+            const favoriteIds = new Set(favorites.map((tour) => tour.id));
+            const searchedTours = results
+              .filter((result) => result.type === 'TOUR')
+              .map((result) => ({
+                id: result.id,
+                name: result.title,
+                isFavorite: favoriteIds.has(result.id)
+              }));
+
+            this.tours.set(this.applyFavoriteFilter(searchedTours));
+          },
+          error: () => {
+            this.toursLoadError.set('Tours could not be searched.');
+            this.tours.set([]);
+          }
+        });
+      return;
+    }
+
     if (this.activeFilter() === 'all') {
       forkJoin({
         tours: this.tourApi.list(),
@@ -266,5 +302,16 @@ export class ToursPage {
           this.tours.set([]);
         }
       });
+  }
+
+  private applyFavoriteFilter(tours: TourListItem[]): TourListItem[] {
+    switch (this.activeFilter()) {
+      case 'favorites':
+        return tours.filter((tour) => tour.isFavorite);
+      case 'not-favorites':
+        return tours.filter((tour) => !tour.isFavorite);
+      default:
+        return tours;
+    }
   }
 }
