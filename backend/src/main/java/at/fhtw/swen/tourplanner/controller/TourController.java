@@ -4,6 +4,7 @@ import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
+import at.fhtw.swen.tourplanner.service.dto.TourSortOption;
 import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
@@ -39,24 +40,33 @@ public class TourController {
     }
 
     @GetMapping
-    public List<TourListResponse> all(@AuthenticationPrincipal JwtUserDetails userDetails) {
+    public List<TourListResponse> all(
+            @RequestParam(name = "sort", defaultValue = "POPULARITY_DESC") TourSortOption sort,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
         UUID userId = userDetails.getUserId();
-        logger.info("Get All Tours called by user: {}", userId);
-        return service.findAllByUser(userId);
+        logger.info("Get All Tours called by user: {}, sort={}", userId, sort);
+        return service.findAllByUser(userId, sort);
     }
 
     @GetMapping("/favorites")
-    public List<TourTypeListResponse> allFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+    public List<TourTypeListResponse> allFav(
+            @RequestParam(name = "sort", defaultValue = "POPULARITY_DESC") TourSortOption sort,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
         UUID userId = userDetails.getUserId();
-        logger.info("Get All favorite Tours called by user: {}", userId);
-        return service.findAllFavByUser(userId);
+        logger.info("Get All favorite Tours called by user: {}, sort={}", userId, sort);
+        return service.findAllFavByUser(userId, sort);
     }
 
     @GetMapping("/not-favorites")
-    public List<TourTypeListResponse> allNotFav(@AuthenticationPrincipal JwtUserDetails userDetails) {
+    public List<TourTypeListResponse> allNotFav(
+            @RequestParam(name = "sort", defaultValue = "POPULARITY_DESC") TourSortOption sort,
+            @AuthenticationPrincipal JwtUserDetails userDetails
+    ) {
         UUID userId = userDetails.getUserId();
-        logger.info("Get All not favorite Tours called by user: {}", userId);
-        return service.findAllNotFavByUser(userId);
+        logger.info("Get All not favorite Tours called by user: {}, sort={}", userId, sort);
+        return service.findAllNotFavByUser(userId, sort);
     }
 
     @GetMapping("/{id}")
