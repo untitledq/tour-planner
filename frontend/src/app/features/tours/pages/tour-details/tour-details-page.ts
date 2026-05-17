@@ -20,6 +20,9 @@ import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { TourLogResponse } from '../../../tour-logs/models/tour-log.models';
 import { TourLogApiService } from '../../../tour-logs/services/tour-log-api.service';
 import {
+  TourChildFriendliness,
+  TourComputedAttributes,
+  TourPopularity,
   TourResponse,
   TourRouteResponse,
   TourType,
@@ -585,5 +588,65 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     return `${hours} h ${minutes} min`;
+  }
+
+  protected popularityLabel(value: TourPopularity | undefined): string {
+    switch (value) {
+      case 'VERY_POPULAR':
+        return 'Very popular';
+      case 'POPULAR':
+        return 'Popular';
+      case 'LOW':
+        return 'Low';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  protected childFriendlinessLabel(value: TourChildFriendliness | undefined): string {
+    switch (value) {
+      case 'VERY_CHILD_FRIENDLY':
+        return 'Very child-friendly';
+      case 'CHILD_FRIENDLY':
+        return 'Child-friendly';
+      case 'MODERATE':
+        return 'Moderate';
+      case 'NOT_CHILD_FRIENDLY':
+        return 'Not child-friendly';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  protected formatAverageDifficulty(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageDifficulty == null) {
+      return 'No data';
+    }
+
+    return `${attributes.averageDifficulty.toFixed(1)}/5`;
+  }
+
+  protected formatAverageDistance(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageTotalDistance == null) {
+      return 'No data';
+    }
+
+    return `${attributes.averageTotalDistance.toFixed(1)} km`;
+  }
+
+  protected formatAverageTime(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageTotalTime == null) {
+      return 'No data';
+    }
+
+    return this.formatLogDuration(Math.round(attributes.averageTotalTime));
+  }
+
+  protected childFriendlinessSummary(attributes: TourComputedAttributes | undefined): string {
+    return [
+      `${this.formatAverageDifficulty(attributes)} difficulty`,
+      this.formatAverageTime(attributes),
+      this.formatAverageDistance(attributes)
+    ].join(' · ');
   }
 }

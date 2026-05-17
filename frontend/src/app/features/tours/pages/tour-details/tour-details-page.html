@@ -90,11 +90,12 @@
               <div class="tour-statistics-overview">
                 <div class="tour-statistics-item">
                   <div class="tour-statistics-icon tour-statistics-icon--orange" aria-hidden="true">
-                    ☆
+                    <span class="pi pi-star"></span>
                   </div>
                   <div class="tour-statistics-copy">
                     <span>Popularity:</span>
-                    <strong>4 Stars</strong>
+                    <strong>{{ popularityLabel(selectedTour.computedAttributes?.popularity) }}</strong>
+                    <small>{{ selectedTour.computedAttributes?.logCount ?? 0 }} logs</small>
                   </div>
                 </div>
 
@@ -102,11 +103,14 @@
 
                 <div class="tour-statistics-item">
                   <div class="tour-statistics-icon tour-statistics-icon--green" aria-hidden="true">
-                    ☺
+                    <span class="pi pi-heart"></span>
                   </div>
                   <div class="tour-statistics-copy">
                     <span>Child-Friendly:</span>
-                    <strong>Medium</strong>
+                    <strong>
+                      {{ childFriendlinessLabel(selectedTour.computedAttributes?.childFriendliness) }}
+                    </strong>
+                    <small>{{ childFriendlinessSummary(selectedTour.computedAttributes) }}</small>
                   </div>
                 </div>
               </div>
@@ -138,6 +142,16 @@
               <div class="tour-details-item">
                 <span>To</span>
                 <strong>{{ selectedTour.endName }}</strong>
+              </div>
+
+              <div class="tour-details-item">
+                <span>Avg. Time</span>
+                <strong>{{ formatAverageTime(selectedTour.computedAttributes) }}</strong>
+              </div>
+
+              <div class="tour-details-item">
+                <span>Avg. Distance</span>
+                <strong>{{ formatAverageDistance(selectedTour.computedAttributes) }}</strong>
               </div>
 
               <div class="tour-details-item tour-details-item--wide">
@@ -207,8 +221,8 @@
               </div>
 
               <div class="tour-details-log-tools">
-                <div class="tour-details-log-search">
-                  <p-iconfield>
+                <form class="tour-details-log-search" (submit)="submitLogSearch(); $event.preventDefault()">
+                  <p-iconfield class="tour-details-log-search__field">
                     <p-inputicon styleClass="pi pi-search" />
                     <input
                       pInputText
@@ -220,14 +234,15 @@
                   </p-iconfield>
 
                   <p-button
+                    label="Search"
                     icon="pi pi-search"
                     ariaLabel="Search tour logs"
                     styleClass="tour-details-log-search-button"
+                    type="submit"
                     [loading]="isSearchingLogs()"
                     [disabled]="isSearchingLogs()"
-                    (onClick)="submitLogSearch()"
                   />
-                </div>
+                </form>
 
                 <p-button
                   label="+ New Tour Log"
