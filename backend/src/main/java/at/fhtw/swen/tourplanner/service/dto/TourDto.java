@@ -23,7 +23,20 @@ public class TourDto {
     private String startName;
     private String endName;
 
+    private TourComputedAttributesDto computedAttributes;
+
     public TourDto(String id, String name, String description, String imagePath, TourType tourType, String startName, String endName) {
+        this(id, name, description, imagePath, tourType, startName, endName, TourComputedAttributesDto.empty());
+    }
+
+    public TourDto(String id,
+                   String name,
+                   String description,
+                   String imagePath,
+                   TourType tourType,
+                   String startName,
+                   String endName,
+                   TourComputedAttributesDto computedAttributes) {
         this.id = UUID.fromString(id);
         this.createdBy = UUID.fromString(id);
         this.name = name;
@@ -32,5 +45,6 @@ public class TourDto {
         this.tourType = tourType;
         this.startName = startName;
         this.endName = endName;
+        this.computedAttributes = computedAttributes;
     }
 }

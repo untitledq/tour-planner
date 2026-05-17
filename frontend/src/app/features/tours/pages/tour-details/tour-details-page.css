@@ -168,38 +168,48 @@ h1 {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .tour-details-log-tools {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
   gap: 0.75rem;
+  width: 100%;
+  max-width: 36rem;
+  margin-left: auto;
 }
 
 .tour-details-log-search {
   display: grid;
-  grid-template-columns: minmax(10rem, 14rem) auto;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
   gap: 0.5rem;
+  min-width: 0;
 }
 
-:host ::ng-deep .tour-details-log-search .p-iconfield {
+.tour-details-log-search__field {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+:host ::ng-deep .tour-details-log-search__field .p-iconfield {
   width: 100%;
 }
 
-:host ::ng-deep .tour-details-log-search .p-inputtext {
+:host ::ng-deep .tour-details-log-search__field .p-inputtext {
   width: 100%;
-  min-height: 2.55rem;
+  min-height: 2.85rem;
   border: 1px solid #cbd5e1;
-  border-radius: 0.45rem;
+  border-radius: 0.55rem;
   background: #ffffff;
   color: #111827;
-  padding-block: 0.65rem;
+  padding-block: 0.72rem;
   box-sizing: border-box;
 }
 
-:host ::ng-deep .tour-details-log-search .p-inputtext:focus {
+:host ::ng-deep .tour-details-log-search__field .p-inputtext:focus {
   outline: 2px solid rgba(255, 138, 51, 0.18);
   outline-offset: 0;
   border-color: #ff8a33;
@@ -207,14 +217,14 @@ h1 {
 }
 
 :host ::ng-deep .tour-details-log-search-button.p-button {
-  width: 2.55rem;
-  min-width: 2.55rem;
-  height: 2.55rem;
+  min-width: 7rem;
+  min-height: 2.85rem;
   border: 1px solid #5b7ee5;
-  border-radius: 0.45rem;
+  border-radius: 0.55rem;
   background: #5b7ee5;
   color: #ffffff;
-  padding: 0;
+  padding: 0.72rem 1rem;
+  font-weight: 600;
 }
 
 :host ::ng-deep .tour-details-log-search-button.p-button:hover {
@@ -540,6 +550,10 @@ h1 {
   line-height: 1;
 }
 
+.tour-statistics-icon .pi {
+  font-size: 1.85rem;
+}
+
 .tour-statistics-icon--orange {
   color: #f97316;
 }
@@ -568,6 +582,12 @@ h1 {
   font-size: 1.35rem;
   font-weight: 700;
   line-height: 1.1;
+}
+
+.tour-statistics-copy small {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .tour-statistics-divider {
@@ -618,12 +638,13 @@ h1 {
   }
 
   .tour-details-log-tools {
-    align-items: stretch;
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: none;
+    margin-left: 0;
   }
 
   .tour-details-log-search {
-    grid-template-columns: minmax(0, 1fr) auto;
+    width: 100%;
   }
 }
 
@@ -653,6 +674,14 @@ h1 {
 
   .tour-details-log-grid {
     grid-template-columns: 1fr;
+  }
+
+  .tour-details-log-search {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  :host ::ng-deep .tour-details-log-search-button.p-button {
+    width: 100%;
   }
 
   .tour-details-log-item--wide {

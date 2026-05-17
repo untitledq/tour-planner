@@ -1,6 +1,7 @@
 package at.fhtw.swen.tourplanner.service.mapper;
 
 import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourComputedAttributesDto;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
@@ -33,6 +34,10 @@ public class TourMapper {
     }
 
     public static TourDto toResponse(Tour tour) {
+        return toResponse(tour, TourComputedAttributesDto.empty());
+    }
+
+    public static TourDto toResponse(Tour tour, TourComputedAttributesDto computedAttributes) {
         return new TourDto(
                 tour.getId().toString(),
                 tour.getName(),
@@ -40,11 +45,20 @@ public class TourMapper {
                 tour.getImagePath(),
                 tour.getTourType(),
                 tour.getStartName(),
-                tour.getEndName()
+                tour.getEndName(),
+                computedAttributes
         );
     }
 
     public static TourWithFavoriteDto toWithFavoriteResponse(Tour tour, boolean isFavorite) {
+        return toWithFavoriteResponse(tour, TourComputedAttributesDto.empty(), isFavorite);
+    }
+
+    public static TourWithFavoriteDto toWithFavoriteResponse(
+            Tour tour,
+            TourComputedAttributesDto computedAttributes,
+            boolean isFavorite
+    ) {
         return new TourWithFavoriteDto(
                 tour.getId().toString(),
                 tour.getName(),
@@ -53,22 +67,33 @@ public class TourMapper {
                 tour.getTourType(),
                 tour.getStartName(),
                 tour.getEndName(),
+                computedAttributes,
                 isFavorite
         );
     }
 
     public static TourListResponse toListResponse(Tour tour) {
+        return toListResponse(tour, TourComputedAttributesDto.empty());
+    }
+
+    public static TourListResponse toListResponse(Tour tour, TourComputedAttributesDto computedAttributes) {
         return new TourListResponse(
                 tour.getId().toString(),
-                tour.getName()
+                tour.getName(),
+                computedAttributes
         );
     }
 
     public static TourTypeListResponse toTypeListResponse(Tour tour) {
+        return toTypeListResponse(tour, TourComputedAttributesDto.empty());
+    }
+
+    public static TourTypeListResponse toTypeListResponse(Tour tour, TourComputedAttributesDto computedAttributes) {
         return new TourTypeListResponse(
                 tour.getId().toString(),
                 tour.getName(),
-                tour.getTourType()
+                tour.getTourType(),
+                computedAttributes
         );
     }
 

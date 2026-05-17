@@ -17,7 +17,21 @@ public class TourWithFavoriteDto extends TourDto {
             String endName,
             boolean favorite
     ) {
-        super(id, name, description, imagePath, tourType, startName, endName);
+        this(id, name, description, imagePath, tourType, startName, endName, TourComputedAttributesDto.empty(), favorite);
+    }
+
+    public TourWithFavoriteDto(
+            String id,
+            String name,
+            String description,
+            String imagePath,
+            TourType tourType,
+            String startName,
+            String endName,
+            TourComputedAttributesDto computedAttributes,
+            boolean favorite
+    ) {
+        super(id, name, description, imagePath, tourType, startName, endName, computedAttributes);
         this.favorite = favorite;
     }
 }

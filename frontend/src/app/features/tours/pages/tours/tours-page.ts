@@ -15,10 +15,21 @@ import { FavoriteToggleComponent } from '../../../../shared/components/favorite-
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { CreateTourFlowService } from '../../services/create-tour-flow.service';
-import { TourListItem, TourType } from '../../models/tour.models';
+import {
+  TourChildFriendliness,
+  TourListItem,
+  TourPopularity,
+  TourSortOption,
+  TourType
+} from '../../models/tour.models';
 import { TourApiService } from '../../services/tour-api.service';
 
 type TourListFilter = 'all' | 'favorites' | 'not-favorites';
+
+interface TourSortSelectOption {
+  value: TourSortOption;
+  label: string;
+}
 
 @Component({
   selector: 'app-tours-page',
@@ -41,8 +52,22 @@ export class ToursPage {
   protected readonly rows = 5;
   protected readonly searchControl = new FormControl('', { nonNullable: true });
   protected readonly filterControl = new FormControl<TourListFilter>('all', { nonNullable: true });
+  protected readonly sortControl = new FormControl<TourSortOption>('POPULARITY_DESC', {
+    nonNullable: true
+  });
+  protected readonly sortOptions: TourSortSelectOption[] = [
+    { value: 'POPULARITY_DESC', label: 'Popularity ↓' },
+    { value: 'POPULARITY_ASC', label: 'Popularity ↑' },
+    { value: 'CHILD_FRIENDLINESS_DESC', label: 'Child-friendly ↓' },
+    { value: 'CHILD_FRIENDLINESS_ASC', label: 'Child-friendly ↑' },
+    { value: 'NAME_ASC', label: 'Name A-Z' },
+    { value: 'NAME_DESC', label: 'Name Z-A' },
+    { value: 'NEWEST_FIRST', label: 'Newest ↓' },
+    { value: 'OLDEST_FIRST', label: 'Newest ↑' }
+  ];
   protected readonly searchTerm = signal('');
   protected readonly activeFilter = signal<TourListFilter>('all');
+  protected readonly activeSort = signal<TourSortOption>('POPULARITY_DESC');
   protected readonly first = signal(0);
   protected isLoggingOut = false;
   protected readonly isLoadingTours = signal(true);
@@ -81,6 +106,12 @@ export class ToursPage {
   constructor() {
     this.filterControl.valueChanges.subscribe((value) => {
       this.activeFilter.set(value);
+      this.first.set(0);
+      this.loadTours();
+    });
+
+    this.sortControl.valueChanges.subscribe((value) => {
+      this.activeSort.set(value);
       this.first.set(0);
       this.loadTours();
     });
@@ -224,6 +255,28 @@ export class ToursPage {
     return this.favoriteTourId() === tourId;
   }
 
+  protected popularityBadgeLabel(value: TourPopularity | undefined): string {
+    switch (value) {
+      case 'VERY_POPULAR':
+        return 'Very popular';
+      case 'POPULAR':
+        return 'Popular';
+      default:
+        return '';
+    }
+  }
+
+  protected childFriendlinessBadgeLabel(value: TourChildFriendliness | undefined): string {
+    switch (value) {
+      case 'VERY_CHILD_FRIENDLY':
+        return 'Very child-friendly';
+      case 'CHILD_FRIENDLY':
+        return 'Child-friendly';
+      default:
+        return '';
+    }
+  }
+
   private loadTours(): void {
     this.isLoadingTours.set(true);
     this.toursLoadError.set('');
@@ -231,23 +284,33 @@ export class ToursPage {
     const normalizedSearch = this.searchTerm().trim();
 
     if (normalizedSearch) {
+      const sortedToursRequest =
+        this.activeFilter() === 'favorites'
+          ? this.tourApi.listFavorites(this.activeSort())
+          : this.activeFilter() === 'not-favorites'
+            ? this.tourApi.listNotFavorites(this.activeSort())
+            : this.tourApi.list(this.activeSort());
+
       forkJoin({
         results: this.searchApi.search(normalizedSearch, 'tours'),
+        tours: sortedToursRequest,
         favorites: this.tourApi.listFavorites()
       })
         .pipe(finalize(() => this.isLoadingTours.set(false)))
         .subscribe({
-          next: ({ results, favorites }) => {
+          next: ({ results, tours, favorites }) => {
+            const resultIds = new Set(
+              results.filter((result) => result.type === 'TOUR').map((result) => result.id)
+            );
             const favoriteIds = new Set(favorites.map((tour) => tour.id));
-            const searchedTours = results
-              .filter((result) => result.type === 'TOUR')
-              .map((result) => ({
-                id: result.id,
-                name: result.title,
-                isFavorite: favoriteIds.has(result.id)
+            const searchedTours = tours
+              .filter((tour) => resultIds.has(tour.id))
+              .map((tour) => ({
+                ...this.tourApi.toListItem(tour),
+                isFavorite: favoriteIds.has(tour.id)
               }));
 
-            this.tours.set(this.applyFavoriteFilter(searchedTours));
+            this.tours.set(searchedTours);
           },
           error: () => {
             this.toursLoadError.set('Tours could not be searched.');
@@ -259,8 +322,8 @@ export class ToursPage {
 
     if (this.activeFilter() === 'all') {
       forkJoin({
-        tours: this.tourApi.list(),
-        favorites: this.tourApi.listFavorites()
+        tours: this.tourApi.list(this.activeSort()),
+        favorites: this.tourApi.listFavorites(this.activeSort())
       })
         .pipe(finalize(() => this.isLoadingTours.set(false)))
         .subscribe({
@@ -283,8 +346,8 @@ export class ToursPage {
 
     const toursRequest =
       this.activeFilter() === 'favorites'
-        ? this.tourApi.listFavorites()
-        : this.tourApi.listNotFavorites();
+        ? this.tourApi.listFavorites(this.activeSort())
+        : this.tourApi.listNotFavorites(this.activeSort());
 
     toursRequest
       .pipe(finalize(() => this.isLoadingTours.set(false)))
