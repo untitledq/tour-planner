@@ -1,6 +1,8 @@
 # QR-BA-06 (external config)
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
@@ -32,3 +34,9 @@ session:
 tour-planner:
   image:
     base-dir: /opt/tourplanner/images
+
+ors:
+  api:
+    key: ${ORS_API_KEY}
+    directions-url: https://api.openrouteservice.org/v2/directions
+    geocode-url: https://api.openrouteservice.org/geocode/search
