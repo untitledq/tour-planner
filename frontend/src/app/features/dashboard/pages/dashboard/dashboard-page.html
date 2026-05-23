@@ -1,18 +1,18 @@
-<section class="dashboard-layout">
-  <app-sidebar
-    class="dashboard-layout__sidebar"
-    title="[Placeholder]"
-    (logoutClick)="logout()"
-  />
-
+<app-shell title="[Placeholder]" (logoutClick)="logout()">
   <section class="dashboard-content">
     <div class="dashboard-shell">
       <div class="dashboard-header">
         <div>
-          <h1>Dashboard</h1>
-          <p>Das ist mein Dashboard.</p>
+          <h1>Welcome back, User!</h1>
+          <p>Track your tours and analyze your statistics.</p>
         </div>
+
+        <p-button
+          label="+ New Tour"
+          styleClass="dashboard-new-tour-button"
+          (onClick)="openNewTour()"
+        />
       </div>
     </div>
   </section>
-</section>
+</app-shell>
