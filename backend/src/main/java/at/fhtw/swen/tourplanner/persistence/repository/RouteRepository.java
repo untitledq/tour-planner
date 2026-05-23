@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RouteJpaRepository extends JpaRepository<Route, UUID> {
+public interface RouteRepository extends JpaRepository<Route, UUID> {
 
     Optional<Route> findByTourId(UUID tourId);
 

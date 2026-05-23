@@ -1,6 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +20,6 @@ public class SessionCleanupServiceImpl implements at.fhtw.swen.tourplanner.servi
     @Scheduled(fixedDelayString = "${session.cleanup.fixed-delay-ms:900000}")
     @Override
     public void cleanupRevokedAndExpiredSessions() {
-        sessionRepository.deleteRevokedOrExpired(Instant.now());
+        sessionRepository.deleteByRevokedTrueOrExpiresAtBefore(Instant.now());
     }
 }

@@ -1,9 +1,7 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.persistence.entity.UserFavoriteTour;
-import at.fhtw.swen.tourplanner.persistence.repository.TourJpaRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourJpaRepository;
-import at.fhtw.swen.tourplanner.security.JwtUserDetails;
+import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
+import at.fhtw.swen.tourplanner.service.FavoriteService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +14,13 @@ import java.util.UUID;
 @RequestMapping("/api/users/me/favorites")
 public class FavoriteController {
 
-    private final UserFavoriteTourJpaRepository favoriteRepository;
-    private final TourJpaRepository tourRepository;
+    private final FavoriteService favoriteService;
     private final Logger logger = LoggerService.getInstance().getLogger(getClass());
 
-    public FavoriteController(UserFavoriteTourJpaRepository favoriteRepository,
-                              TourJpaRepository tourRepository) {
-        this.favoriteRepository = favoriteRepository;
-        this.tourRepository = tourRepository;
+    public FavoriteController(FavoriteService favoriteService) {
+        this.favoriteService = favoriteService;
     }
 
-    // Add favorite
     @PostMapping("/{tourId}")
     public ResponseEntity<Void> addFavorite(
             @PathVariable UUID tourId,
@@ -35,18 +29,11 @@ public class FavoriteController {
         UUID userId = userDetails.getUserId();
         logger.info("Add favorite {} for user {}", tourId, userId);
 
-        if (!tourRepository.existsById(tourId)) {
-            throw new RuntimeException("Tour not found");
-        }
-
-        if (!favoriteRepository.existsByUserIdAndTourId(userId, tourId)) {
-            favoriteRepository.save(new UserFavoriteTour(userId, tourId));
-        }
+        favoriteService.addFavorite(userId, tourId);
 
         return ResponseEntity.noContent().build();
     }
 
-    // Remove favorite
     @DeleteMapping("/{tourId}")
     public ResponseEntity<Void> removeFavorite(
             @PathVariable UUID tourId,
@@ -55,7 +42,7 @@ public class FavoriteController {
         UUID userId = userDetails.getUserId();
         logger.info("Remove favorite {} for user {}", tourId, userId);
 
-        favoriteRepository.deleteByUserIdAndTourId(userId, tourId);
+        favoriteService.removeFavorite(userId, tourId);
 
         return ResponseEntity.noContent().build();
     }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface TourJpaRepository extends JpaRepository<Tour, UUID> {
+public interface TourRepository extends JpaRepository<Tour, UUID> {
 
     // find all tours created by a user
     List<Tour> findAllByCreatedBy(UUID createdBy);

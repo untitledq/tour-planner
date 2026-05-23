@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.persistence.port;
+package at.fhtw.swen.tourplanner.security.core;
 
 public interface PasswordHasher {
     String hash(String rawPassword);

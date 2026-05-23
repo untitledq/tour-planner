@@ -3,7 +3,7 @@ package at.fhtw.swen.tourplanner.service.impl;
 import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.service.mapper.TourLogMapper;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogJpaRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
 import at.fhtw.swen.tourplanner.service.TourLogService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,9 @@ import java.util.UUID;
 @Service
 public class TourLogServiceImpl implements TourLogService {
 
-    private final TourLogJpaRepository repository;
+    private final TourLogRepository repository;
 
-    public TourLogServiceImpl(TourLogJpaRepository repository) {
+    public TourLogServiceImpl(TourLogRepository repository) {
         this.repository = repository;
     }
 

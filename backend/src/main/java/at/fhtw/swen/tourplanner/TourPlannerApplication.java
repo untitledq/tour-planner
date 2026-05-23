@@ -1,7 +1,8 @@
 package at.fhtw.swen.tourplanner;
 
-import at.fhtw.swen.tourplanner.config.ImageStorageProperties;
+import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
 import at.fhtw.swen.tourplanner.util.LoggerService;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,12 +15,12 @@ public class TourPlannerApplication implements CommandLineRunner {
 
     private final Logger logger = LoggerService.getInstance().getLogger(getClass());
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(TourPlannerApplication.class, args);
     }
 
     @Override
-    public void run(String... args) {
+    public void run(String @NonNull ... args) {
         logger.info(" ###  TourPlanner started  ### ");
     }
 }

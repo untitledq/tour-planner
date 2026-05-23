@@ -1,51 +1,58 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.service.dto.SessionDto;
-import at.fhtw.swen.tourplanner.service.dto.UserDto;
-import at.fhtw.swen.tourplanner.persistence.port.PasswordHasher;
-import at.fhtw.swen.tourplanner.persistence.port.SessionRepository;
-import at.fhtw.swen.tourplanner.persistence.port.TokenPayload;
-import at.fhtw.swen.tourplanner.persistence.port.TokenService;
-import at.fhtw.swen.tourplanner.persistence.port.UserRepository;
+import at.fhtw.swen.tourplanner.persistence.entity.Session;
+import at.fhtw.swen.tourplanner.persistence.entity.User;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
+import at.fhtw.swen.tourplanner.security.core.PasswordHasher;
+import at.fhtw.swen.tourplanner.security.core.TokenPayload;
+import at.fhtw.swen.tourplanner.security.core.TokenService;
+import at.fhtw.swen.tourplanner.persistence.repository.UserRepository;
+import at.fhtw.swen.tourplanner.service.AuthService;
 import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
-public class AuthServiceImpl implements at.fhtw.swen.tourplanner.service.AuthService {
+public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
     private final TokenService tokenService;
     private final SessionRepository sessionRepository;
+    private final UserRepository userRepository;
     private final long expirationMinutes;
 
     public AuthServiceImpl(
-            UserRepository userRepository,
             PasswordHasher passwordHasher,
             TokenService tokenService,
             SessionRepository sessionRepository,
+            UserRepository userRepository,
             @Value("${security.jwt.expiration-minutes}") long expirationMinutes
     ) {
-        this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
         this.tokenService = tokenService;
         this.sessionRepository = sessionRepository;
+        this.userRepository = userRepository;
         this.expirationMinutes = expirationMinutes;
     }
 
     @Override
     public LoginResponse login(String username, String rawPassword) {
-        UserDto userDto = userRepository.findByUsername(username)
+
+        if (username == null || username.isBlank() ||
+                rawPassword == null || rawPassword.isBlank()) {
+            throw new SecurityException("Invalid credentials");
+        }
+
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new SecurityException("Invalid credentials"));
 
-        if (passwordHasher.invalid(rawPassword, userDto.passwordHash())) {
+        if (passwordHasher.invalid(rawPassword, user.getPasswordHash())) {
             throw new SecurityException("Invalid credentials");
         }
 
@@ -53,27 +60,28 @@ public class AuthServiceImpl implements at.fhtw.swen.tourplanner.service.AuthSer
         Instant expiresAt = Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES);
 
         String token = tokenService.createToken(
-                userDto.id(),
-                userDto.username(),
+                user.getId(),
+                user.getUsername(),
                 sessionId,
                 expiresAt
         );
 
-        SessionDto sessionDto = new SessionDto(
+        Session session = new Session(
                 sessionId,
-                userDto.id(),
+                user.getId(),
                 token,
                 Instant.now(),
                 expiresAt,
                 false
         );
 
-        sessionRepository.save(sessionDto);
+        sessionRepository.save(session);
 
         return new LoginResponse(token, expiresAt, sessionId);
     }
 
     @Override
+    @Transactional
     public void logout(String token) {
         if (token == null || token.isBlank()) {
             throw new SecurityException("Missing token");
