@@ -94,6 +94,33 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly canShowTourActions = computed(() => {
     return !this.isLoadingTour() && !this.tourLoadError() && this.tour() !== null;
   });
+  protected readonly routeMetrics = computed(() => {
+    const route = this.routeDetails();
+
+    if (!route || !Number.isFinite(route.distance) || !Number.isFinite(route.duration)) {
+      return null;
+    }
+
+    return {
+      distance: this.formatDistance(route.distance),
+      duration: this.formatDuration(route.duration)
+    };
+  });
+  protected readonly routeMapState = computed(() => {
+    if (this.isLoadingRoute()) {
+      return 'loading';
+    }
+
+    if (this.routeLoadError()) {
+      return 'error';
+    }
+
+    if (!this.routeDetails()?.coordinates?.length) {
+      return 'empty';
+    }
+
+    return 'ready';
+  });
   protected readonly visibleTourLogs = computed(() => {
     const matchingIds = this.matchingLogIds();
 
@@ -149,6 +176,7 @@ export class TourDetailsPage implements OnDestroy {
       .subscribe({
         next: (route) => {
           this.routeDetails.set(route);
+          this.routeLoadError.set('');
           void this.ensureMapIsReady();
         },
         error: () => {
@@ -223,7 +251,13 @@ export class TourDetailsPage implements OnDestroy {
       return;
     }
 
-    const latLngs = route.coordinates.map(([lat, lng]) => leaflet.latLng(lat, lng));
+    const latLngs = route.coordinates
+      .map(([lng, lat]) => leaflet.latLng(lat, lng))
+      .filter((latLng) => Number.isFinite(latLng.lat) && Number.isFinite(latLng.lng));
+
+    if (!latLngs.length) {
+      return;
+    }
 
     if (this.routeLayer) {
       this.map.removeLayer(this.routeLayer);
