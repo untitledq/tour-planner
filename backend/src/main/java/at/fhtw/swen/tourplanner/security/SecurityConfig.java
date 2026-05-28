@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
                         .requestMatchers("/api/tours/*/image").authenticated()
                         .requestMatchers("/api/tours/**").authenticated()
+                        .requestMatchers("/api/tours/import").authenticated()
                         .requestMatchers("/api/tour-logs/**").authenticated()
                         .requestMatchers("/api/routes/**").authenticated()
                         .requestMatchers("/api/search/**").authenticated()
