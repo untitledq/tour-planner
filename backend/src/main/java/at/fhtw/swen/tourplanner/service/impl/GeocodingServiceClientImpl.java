@@ -2,8 +2,8 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.service.GeocodingServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.CoordinateDto;
-import at.fhtw.swen.tourplanner.service.dto.OrsFeature;
-import at.fhtw.swen.tourplanner.service.dto.OrsGeocodeResponse;
+import at.fhtw.swen.tourplanner.service.dto.ors.geocode.OrsFeature;
+import at.fhtw.swen.tourplanner.service.dto.ors.geocode.OrsGeocodeResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
