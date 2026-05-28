@@ -22,8 +22,16 @@
             type="text"
             placeholder="Search tours..."
             [formControl]="searchControl"
+            (keydown.enter)="submitSearch()"
           />
         </p-iconfield>
+
+        <p-button
+          label="Search"
+          icon="pi pi-search"
+          styleClass="tours-search-button"
+          (onClick)="submitSearch()"
+        />
 
         <label class="tours-filter-select">
           <span class="tours-filter-select__wrap">
@@ -31,6 +39,16 @@
               <option value="all">All</option>
               <option value="favorites">Favorite</option>
               <option value="not-favorites">Not Favorite</option>
+            </select>
+          </span>
+        </label>
+
+        <label class="tours-filter-select">
+          <span class="tours-filter-select__wrap">
+            <select [formControl]="sortControl">
+              @for (option of sortOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
             </select>
           </span>
         </label>
@@ -52,7 +70,32 @@
               <div class="tour-card__content">
                 <div class="tour-card__details">
                   <div class="tour-card__intro">
-                    <h2>{{ tour.name }}</h2>
+                    <div class="tour-card__title-group">
+                      <h2>{{ tour.name }}</h2>
+
+                      @if (
+                        popularityBadgeLabel(tour.computedAttributes?.popularity) ||
+                        childFriendlinessBadgeLabel(tour.computedAttributes?.childFriendliness)
+                      ) {
+                        <div class="tour-card__badges" aria-label="Tour highlights">
+                          @if (popularityBadgeLabel(tour.computedAttributes?.popularity)) {
+                            <span
+                              class="tour-card__badge tour-card__badge--popular"
+                              [class.tour-card__badge--very-popular]="tour.computedAttributes?.popularity === 'VERY_POPULAR'"
+                            >
+                              {{ popularityBadgeLabel(tour.computedAttributes?.popularity) }}
+                            </span>
+                          }
+
+                          @if (childFriendlinessBadgeLabel(tour.computedAttributes?.childFriendliness)) {
+                            <span class="tour-card__badge tour-card__badge--child-friendly">
+                              {{ childFriendlinessBadgeLabel(tour.computedAttributes?.childFriendliness) }}
+                            </span>
+                          }
+                        </div>
+                      }
+                    </div>
+
                     <app-favorite-toggle
                       [active]="tour.isFavorite"
                       [loading]="isFavoriteBusy(tour.id)"

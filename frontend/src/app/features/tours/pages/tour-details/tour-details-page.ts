@@ -1,11 +1,16 @@
 import { Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 import { finalize } from 'rxjs';
 import type * as Leaflet from 'leaflet';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
+import { SearchApiService } from '../../../../core/services/search-api.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { FavoriteToggleComponent } from '../../../../shared/components/favorite-toggle/favorite-toggle';
@@ -15,6 +20,9 @@ import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { TourLogResponse } from '../../../tour-logs/models/tour-log.models';
 import { TourLogApiService } from '../../../tour-logs/services/tour-log-api.service';
 import {
+  TourChildFriendliness,
+  TourComputedAttributes,
+  TourPopularity,
   TourResponse,
   TourRouteResponse,
   TourType,
@@ -26,7 +34,11 @@ import { TourApiService } from '../../services/tour-api.service';
   selector: 'app-tour-details-page',
   standalone: true,
   imports: [
+    ReactiveFormsModule,
     ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
     AppShellComponent,
     ConfirmDialogComponent,
     FavoriteToggleComponent,
@@ -60,9 +72,14 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly tourLoadError = signal('');
   protected readonly routeLoadError = signal('');
   protected readonly logLoadError = signal('');
+  protected readonly logSearchError = signal('');
   protected readonly tour = signal<TourResponse | null>(null);
   protected readonly routeDetails = signal<TourRouteResponse | null>(null);
   protected readonly tourLogs = signal<TourLogResponse[]>([]);
+  protected readonly matchingLogIds = signal<Set<string> | null>(null);
+  protected readonly logSearchTerm = signal('');
+  protected readonly isSearchingLogs = signal(false);
+  protected readonly logSearchControl = new FormControl('', { nonNullable: true });
   protected readonly showDeleteDialog = signal(false);
   protected readonly showDeleteLogDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
@@ -77,6 +94,15 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly canShowTourActions = computed(() => {
     return !this.isLoadingTour() && !this.tourLoadError() && this.tour() !== null;
   });
+  protected readonly visibleTourLogs = computed(() => {
+    const matchingIds = this.matchingLogIds();
+
+    if (!this.logSearchTerm().trim() || matchingIds === null) {
+      return this.tourLogs();
+    }
+
+    return this.tourLogs().filter((log) => matchingIds.has(log.id));
+  });
   protected readonly breadcrumbItems = signal<MenuItem[]>([
     { label: 'Tours', routerLink: '/tours' }
   ]);
@@ -86,6 +112,7 @@ export class TourDetailsPage implements OnDestroy {
   private readonly authSession = inject(AuthSessionService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly searchApi = inject(SearchApiService);
   private readonly tourApi = inject(TourApiService);
   private readonly tourLogApi = inject(TourLogApiService);
 
@@ -275,6 +302,40 @@ export class TourDetailsPage implements OnDestroy {
     void this.router.navigate(['/tours', selectedTour.id, 'logs', 'create']);
   }
 
+  protected submitLogSearch(): void {
+    const selectedTour = this.tour();
+    const searchTerm = this.logSearchControl.value.trim();
+
+    this.logSearchTerm.set(searchTerm);
+    this.logSearchError.set('');
+
+    if (!selectedTour || !searchTerm) {
+      this.matchingLogIds.set(null);
+      return;
+    }
+
+    this.isSearchingLogs.set(true);
+
+    this.searchApi
+      .search(searchTerm, 'tour-logs')
+      .pipe(finalize(() => this.isSearchingLogs.set(false)))
+      .subscribe({
+        next: (results) => {
+          const matchingIds = new Set(
+            results
+              .filter((result) => result.type === 'TOUR_LOG' && result.tourId === selectedTour.id)
+              .map((result) => result.id)
+          );
+
+          this.matchingLogIds.set(matchingIds);
+        },
+        error: () => {
+          this.matchingLogIds.set(new Set());
+          this.logSearchError.set('Tour logs could not be searched.');
+        }
+      });
+  }
+
   protected openEditTour(): void {
     const selectedTour = this.tour();
 
@@ -443,6 +504,15 @@ export class TourDetailsPage implements OnDestroy {
       .subscribe({
         next: () => {
           this.tourLogs.update((logs) => logs.filter((log) => log.id !== selectedLog.id));
+          this.matchingLogIds.update((ids) => {
+            if (ids === null) {
+              return ids;
+            }
+
+            const nextIds = new Set(ids);
+            nextIds.delete(selectedLog.id);
+            return nextIds;
+          });
           this.closeDeleteLogDialog();
         },
         error: () => {
@@ -518,5 +588,65 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     return `${hours} h ${minutes} min`;
+  }
+
+  protected popularityLabel(value: TourPopularity | undefined): string {
+    switch (value) {
+      case 'VERY_POPULAR':
+        return 'Very popular';
+      case 'POPULAR':
+        return 'Popular';
+      case 'LOW':
+        return 'Low';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  protected childFriendlinessLabel(value: TourChildFriendliness | undefined): string {
+    switch (value) {
+      case 'VERY_CHILD_FRIENDLY':
+        return 'Very child-friendly';
+      case 'CHILD_FRIENDLY':
+        return 'Child-friendly';
+      case 'MODERATE':
+        return 'Moderate';
+      case 'NOT_CHILD_FRIENDLY':
+        return 'Not child-friendly';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  protected formatAverageDifficulty(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageDifficulty == null) {
+      return 'No data';
+    }
+
+    return `${attributes.averageDifficulty.toFixed(1)}/5`;
+  }
+
+  protected formatAverageDistance(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageTotalDistance == null) {
+      return 'No data';
+    }
+
+    return `${attributes.averageTotalDistance.toFixed(1)} km`;
+  }
+
+  protected formatAverageTime(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageTotalTime == null) {
+      return 'No data';
+    }
+
+    return this.formatLogDuration(Math.round(attributes.averageTotalTime));
+  }
+
+  protected childFriendlinessSummary(attributes: TourComputedAttributes | undefined): string {
+    return [
+      `${this.formatAverageDifficulty(attributes)} difficulty`,
+      this.formatAverageTime(attributes),
+      this.formatAverageDistance(attributes)
+    ].join(' · ');
   }
 }
