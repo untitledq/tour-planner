@@ -187,6 +187,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/RouteResponse'
 
+  /api/tours/{tourId}/export:
+    get:
+      summary: Export a tour as XML
+      description: Exports a tour including all associated tour logs as XML
+      security: [ { bearerAuth: [ ] } ]
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: XML export of the tour
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/TourExport'
+
+  /api/tours/import:
+    post:
+      summary: Import a tour from XML
+      description: Imports a tour including associated tour logs from XML
+      security: [ { bearerAuth: [ ] } ]
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TourExport'
+      responses:
+        '200':
+          description: Imported tour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tour'
+
   /api/tours/{tourId}/image:
     post:
       summary: Upload or replace the image of a tour
@@ -331,6 +365,37 @@ paths:
                 items:
                   $ref: '#/components/schemas/TourLog'
 
+  /api/search:
+    get:
+      summary: Search tours and tour logs
+      security: [ { bearerAuth: [ ] } ]
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search query text
+
+        - name: scope
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ all, tours, logs ]
+            default: all
+          description: Restrict search scope
+
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+
   /api/users/me/favorites/{tourId}:
     post:
       summary: Add tour to favorites
@@ -426,38 +491,29 @@ components:
 
     AuthResponse:
       type: object
-      description: Response returned after registration
       properties:
-        id:
+        userId:
           type: string
           format: uuid
-          description: UUID of the created user
         username:
           type: string
-          description: Username of the created user
-        createdAt:
+        created_at:
           type: string
           format: date-time
-          description: Creation timestamp
         token:
           type: string
-          description: JWT token for authentication
 
     LoginResponse:
       type: object
-      description: Response returned after login
       properties:
         token:
           type: string
-          description: JWT token for authentication
-        expiresAt:
+        expires_at:
           type: string
           format: date-time
-          description: Expiration timestamp of the token
-        sessionId:
+        session_id:
           type: string
           format: uuid
-          description: UUID of the login session
 
     Tour:
       type: object
@@ -613,6 +669,24 @@ components:
           type: string
           description: Comment or notes about the tour
 
+    SearchResult:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [ TOUR, TOUR_LOG ]
+        id:
+          type: string
+          format: uuid
+        tourId:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        snippet:
+          type: string
+
     Route:
       type: object
       description: Raw route object
@@ -671,3 +745,72 @@ components:
         hasImage:
           type: boolean
           description: Indicates whether the image exists
+
+    TourExport:
+      type: object
+      xml:
+        name: tour
+      description: XML export/import representation of a tour including logs
+      properties:
+        exportedAt:
+          type: string
+          format: date-time
+          description: Export timestamp
+        id:
+          type: string
+          format: uuid
+          description: Original tour ID
+        createdBy:
+          type: string
+          format: uuid
+          description: Original creator ID
+        name:
+          type: string
+        description:
+          type: string
+        imagePath:
+          type: string
+        startName:
+          type: string
+        endName:
+          type: string
+        tourType:
+          type: string
+          enum: [ BIKE, HIKE, RUNNING, VACATION ]
+        logs:
+          type: array
+          description: Exported tour logs
+          xml:
+            name: logs
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/TourLogExport'
+
+    TourLogExport:
+      type: object
+      xml:
+        name: log
+      description: XML export/import representation of a tour log
+      properties:
+        id:
+          type: string
+          format: uuid
+        tourId:
+          type: string
+          format: uuid
+        createdBy:
+          type: string
+          format: uuid
+        dateTime:
+          type: string
+          format: date-time
+        rating:
+          type: integer
+        difficulty:
+          type: integer
+        totalDistance:
+          type: integer
+        totalTime:
+          type: integer
+        comment:
+          type: string
