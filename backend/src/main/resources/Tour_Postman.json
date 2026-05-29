@@ -205,6 +205,131 @@
               ]
             },
             {
+              "name": "Download Tour XML",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/{{tour_id}}/export",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "{{tour_id}}", "export"]
+                }
+              }
+            },
+            {
+              "name": "Import Tour XML",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/xml" },
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/import",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "import"]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "<?xml version='1.0' encoding='UTF-8'?>\n<tour>\n  <exportedAt>2026-05-28T20:22:28.676Z</exportedAt>\n  <id>00000000-0000-0000-0000-000000000000</id>\n  <createdBy>00000000-0000-0000-0000-000000000000</createdBy>\n  <name>Imported Vienna Walk</name>\n  <description>Import test tour</description>\n  <imagePath></imagePath>\n  <tourType>RUNNING</tourType>\n  <startName>Stephansplatz</startName>\n  <endName>Prater</endName>\n\n  <logs>\n    <log>\n      <id>00000000-0000-0000-0000-000000000001</id>\n      <tourId>00000000-0000-0000-0000-000000000000</tourId>\n      <createdBy>00000000-0000-0000-0000-000000000000</createdBy>\n      <dateTime>2026-03-29T15:00:00Z</dateTime>\n      <rating>5</rating>\n      <difficulty>3</difficulty>\n      <totalDistance>12</totalDistance>\n      <totalTime>95</totalTime>\n      <comment>Amazing tour!</comment>\n    </log>\n  </logs>\n</tour>"
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "pm.environment.set(\"imported_tour_id\", jsonData.id);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Imported Tour By ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/{{imported_tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "{{imported_tour_id}}"]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var jsonData = pm.response.json();",
+                      "",
+                      "pm.test(\"Imported tour name matches\", function () {",
+                      "    pm.expect(jsonData.name).to.eql(\"Imported Vienna Walk\");",
+                      "});",
+                      "",
+                      "pm.test(\"Imported tour type matches\", function () {",
+                      "    pm.expect(jsonData.tourType).to.eql(\"RUNNING\");",
+                      "});",
+                      "",
+                      "pm.test(\"Imported tour has valid id\", function () {",
+                      "    pm.expect(jsonData.id).to.not.be.undefined;",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Imported Tour Logs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tour-logs/tour/{{imported_tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tour-logs", "tour", "{{imported_tour_id}}"]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var jsonData = pm.response.json();",
+                      "",
+                      "pm.test(\"Imported logs exist\", function () {",
+                      "    pm.expect(jsonData.length).to.be.above(0);",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Get All Tour Logs",
               "request": {
                 "method": "GET",
@@ -446,6 +571,20 @@
                   "raw": "http://localhost:8080/api/tours/{{tour_id}}",
                   "host": ["http://localhost:8080"],
                   "path": ["api", "tours", "{{tour_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Imported Tour",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/{{imported_tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "{{imported_tour_id}}"]
                 }
               }
             }

@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.service.dto;
+package at.fhtw.swen.tourplanner.service.dto.ors.geocode;
 
 import java.util.List;
 

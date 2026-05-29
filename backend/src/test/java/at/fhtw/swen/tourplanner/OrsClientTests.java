@@ -18,7 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class OrsClientTests {
 
-    private final Logger logger = LoggerService.getInstance().getLogger(getClass());
+    private final Logger logger =
+            LoggerService.getInstance().getLogger(getClass());
 
     @Autowired
     private GeocodingServiceClient geocodingServiceClient;
@@ -26,7 +27,6 @@ public class OrsClientTests {
     @Autowired
     private RouteServiceClient routeServiceClient;
 
-    // Environment variable checks
     @Value("${DB_PORT:NOT_FOUND}")
     private String dbPort;
 
@@ -71,7 +71,6 @@ public class OrsClientTests {
 
         assertNotNull(coordinate);
 
-        // Vienna should roughly match these ranges
         assertTrue(coordinate.longitude() > 16.0);
         assertTrue(coordinate.longitude() < 17.0);
 
@@ -105,15 +104,32 @@ public class OrsClientTests {
 
         List<List<Double>> coordinates = route.coordinates();
 
-        logger.info(
-                "Route contains {} coordinate entries",
-                coordinates.size()
-        );
-
         assertNotNull(coordinates);
         assertFalse(coordinates.isEmpty());
 
-        assertEquals(2, coordinates.size());
+        logger.info(
+                "Route geometry contains {} coordinate points",
+                coordinates.size()
+        );
+
+        // Route should contain many geometry points
+        assertTrue(
+                coordinates.size() > 10,
+                "Expected multiple route geometry points"
+        );
+
+        // Leaflet format:
+        // [latitude, longitude]
+
+        List<Double> firstPoint = coordinates.getFirst();
+
+        assertEquals(2, firstPoint.size());
+
+        logger.info(
+                "First route point: latitude={}, longitude={}",
+                firstPoint.get(0),
+                firstPoint.get(1)
+        );
     }
 
     @Test
@@ -135,10 +151,17 @@ public class OrsClientTests {
                 route.duration()
         );
 
+        logger.info(
+                "Walking route geometry contains {} coordinate points",
+                route.coordinates().size()
+        );
+
         assertNotNull(route);
 
         assertTrue(route.distance() > 0);
         assertTrue(route.duration() > 0);
+
+        assertTrue(route.coordinates().size() > 10);
     }
 
     @Test
