@@ -63,18 +63,18 @@ public class TourExportServiceImpl implements TourExportService {
                         .map(this::mapTourLogToExportDto)
                         .toList();
 
-        TourExportDto exportDto = new TourExportDto(
-                Instant.now(),
-                tour.getId(),
-                tour.getCreatedBy(),
-                tour.getName(),
-                tour.getDescription(),
-                tour.getImagePath(),
-                tour.getTourType(),
-                tour.getStartName(),
-                tour.getEndName(),
-                logDtos
-        );
+        TourExportDto exportDto = new TourExportDto();
+
+        exportDto.setExportedAt(Instant.now());
+        exportDto.setId(tour.getId());
+        exportDto.setCreatedBy(tour.getCreatedBy());
+        exportDto.setName(tour.getName());
+        exportDto.setDescription(tour.getDescription());
+        exportDto.setImagePath(tour.getImagePath());
+        exportDto.setTourType(tour.getTourType());
+        exportDto.setStartName(tour.getStartName());
+        exportDto.setEndName(tour.getEndName());
+        exportDto.setLogs(logDtos);
 
         try {
 
@@ -128,18 +128,19 @@ public class TourExportServiceImpl implements TourExportService {
         Tour tour = new Tour(
                 newTourId,
                 userId,
-                dto.name(),
-                dto.description(),
-                dto.imagePath(),
-                dto.tourType(),
-                dto.startName(),
-                dto.endName()
+                dto.getName(),
+                dto.getDescription(),
+                dto.getImagePath(),
+                dto.getTourType(),
+                dto.getStartName(),
+                dto.getEndName()
         );
 
         tourRepository.save(tour);
 
-        if (dto.logs() != null) {
-            dto.logs().forEach(logDto -> {
+        if (dto.getLogs() != null) {
+
+            dto.getLogs().forEach(logDto -> {
 
                 TourLog log = new TourLog(
                         UUIDv7.randomUUID(),

@@ -252,6 +252,84 @@
               ]
             },
             {
+              "name": "Get Imported Tour By ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tours/{{imported_tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tours", "{{imported_tour_id}}"]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var jsonData = pm.response.json();",
+                      "",
+                      "pm.test(\"Imported tour name matches\", function () {",
+                      "    pm.expect(jsonData.name).to.eql(\"Imported Vienna Walk\");",
+                      "});",
+                      "",
+                      "pm.test(\"Imported tour type matches\", function () {",
+                      "    pm.expect(jsonData.tourType).to.eql(\"RUNNING\");",
+                      "});",
+                      "",
+                      "pm.test(\"Imported tour has valid id\", function () {",
+                      "    pm.expect(jsonData.id).to.not.be.undefined;",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Imported Tour Logs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/tour-logs/tour/{{imported_tour_id}}",
+                  "host": ["http://localhost:8080"],
+                  "path": ["api", "tour-logs", "tour", "{{imported_tour_id}}"]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var jsonData = pm.response.json();",
+                      "",
+                      "pm.test(\"Imported logs exist\", function () {",
+                      "    pm.expect(jsonData.length).to.be.above(0);",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
               "name": "Get All Tour Logs",
               "request": {
                 "method": "GET",
