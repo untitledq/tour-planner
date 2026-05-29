@@ -44,6 +44,7 @@ public class TourExportServiceImpl implements TourExportService {
         this.xmlMapper = XmlMapper.builder()
                 .addModule(new JavaTimeModule())
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .enable(com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
                 .build();
     }
 
