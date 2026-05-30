@@ -49,10 +49,12 @@ export interface TourWithFavoriteResponse extends TourResponse {
   favorite: boolean;
 }
 
+export type RouteCoordinate = [number, number];
+
 export interface TourRouteResponse {
   distance: number;
   duration: number;
-  coordinates: number[][];
+  coordinates: RouteCoordinate[];
 }
 
 export interface TourListResponse {
