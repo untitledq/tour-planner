@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import at.fhtw.swen.tourplanner.service.GeocodingServiceClient;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.CoordinateDto;
@@ -7,6 +8,7 @@ import at.fhtw.swen.tourplanner.service.dto.RouteDto;
 import at.fhtw.swen.tourplanner.service.dto.ors.route.OrsRoute;
 import at.fhtw.swen.tourplanner.service.dto.ors.route.OrsRouteRequest;
 import at.fhtw.swen.tourplanner.service.dto.ors.route.OrsRouteResponse;
+import at.fhtw.swen.tourplanner.service.mapper.OrsProfileMapper;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -119,7 +121,17 @@ public class RouteServiceClientImpl implements RouteServiceClient {
             return "driving-car";
         }
 
-        return switch (tourType.toLowerCase()) {
+        String normalizedTourType = tourType.trim();
+
+        try {
+            return OrsProfileMapper.toOrsProfile(
+                    TourType.valueOf(normalizedTourType.toUpperCase())
+            );
+        } catch (IllegalArgumentException ignored) {
+            logger.warn("Unknown tour type '{}', falling back to legacy profile mapping", tourType);
+        }
+
+        return switch (normalizedTourType.toLowerCase()) {
             case "walking" -> "foot-walking";
             case "bike" -> "cycling-regular";
             case "car" -> "driving-car";

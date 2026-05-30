@@ -55,6 +55,20 @@
         <div class="tour-details-sections">
           <div class="tour-details-map-shell">
             <div class="tour-details-map" #mapContainer></div>
+            @if (routeMapState() !== 'ready') {
+              <div class="tour-details-map-state">
+                @if (routeMapState() === 'loading') {
+                  <span class="pi pi-spin pi-spinner" aria-hidden="true"></span>
+                  <strong>Loading route...</strong>
+                } @else if (routeMapState() === 'error') {
+                  <span class="pi pi-exclamation-triangle" aria-hidden="true"></span>
+                  <strong>{{ routeLoadError() }}</strong>
+                } @else {
+                  <span class="pi pi-map" aria-hidden="true"></span>
+                  <strong>No route coordinates available.</strong>
+                }
+              </div>
+            }
           </div>
           <div class="tour-details-top-row">
             <section class="tour-details-card tour-details-card--statistics">
@@ -67,18 +81,20 @@
                 <p class="tour-details-route-state">Loading route details...</p>
               } @else if (routeLoadError()) {
                 <p class="tour-details-route-state">{{ routeLoadError() }}</p>
-              } @else if (routeDetails(); as route) {
+              } @else if (routeMetrics(); as metrics) {
                 <div class="tour-details-grid">
                   <div class="tour-details-item">
                     <span>Distance</span>
-                    <strong>{{ formatDistance(route.distance) }}</strong>
+                    <strong>{{ metrics.distance }}</strong>
                   </div>
 
                   <div class="tour-details-item">
                     <span>Est. Time</span>
-                    <strong>{{ formatDuration(route.duration) }}</strong>
+                    <strong>{{ metrics.duration }}</strong>
                   </div>
                 </div>
+              } @else {
+                <p class="tour-details-route-state">No route details are available yet.</p>
               }
             </section>
 
