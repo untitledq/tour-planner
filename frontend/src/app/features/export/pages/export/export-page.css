@@ -1,39 +1,220 @@
 :host {
   display: block;
   background: #ffffff;
-  color: #1f2937;
+  color: #111827;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .export-content {
   padding: 2rem;
+  background: #ffffff;
 }
 
 .export-shell {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   padding-left: 2rem;
-  border-radius: 1rem;
 }
 
 .export-header {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 h1 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.7rem;
+  color: #111827;
   font-size: 2rem;
   font-weight: 800;
 }
 
-h2 {
+.export-description {
   margin: 0;
+  color: #374151;
   font-size: 1.05rem;
-  font-weight: 400;
-  color: #1f2937;
+  line-height: 1.5;
+}
+
+.export-panel,
+.export-action-panel {
+  border: 1px solid #d1d5db;
+  border-radius: 0.95rem;
+  background: #ffffff;
+  padding: 1.3rem;
+}
+
+.export-panel {
+  margin-bottom: 1rem;
+}
+
+.export-search {
+  margin-bottom: 1rem;
+}
+
+.export-search-field {
+  width: 100%;
+}
+
+:host ::ng-deep .export-search-field .p-iconfield {
+  width: 100%;
+}
+
+:host ::ng-deep .export-search-field .p-inputtext {
+  width: 100%;
+  min-height: 2.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.6rem;
+  background: #ffffff;
+  color: #111827;
+  padding-block: 0.75rem;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .export-search-field .p-inputtext:focus {
+  outline: 2px solid rgba(255, 138, 51, 0.18);
+  outline-offset: 0;
+  border-color: #ff8a33;
+  box-shadow: none;
+}
+
+.export-empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.75rem;
+  background: #f9fafb;
+  padding: 1.15rem;
+}
+
+.export-empty-state strong {
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.export-empty-state p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.export-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.export-tour {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 6rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.85rem;
+  background: #ffffff;
+  color: #111827;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.export-tour:hover,
+.export-tour--selected {
+  border-color: #ff8a33;
+  background: #ff8a33;
+  color: #ffffff;
+  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.04);
+}
+
+.export-tour span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.export-tour strong {
+  color: #111827;
+  font-size: 1.08rem;
+}
+
+.export-tour small {
+  color: #6b7280;
+  overflow-wrap: anywhere;
+}
+
+.export-tour:hover strong,
+.export-tour:hover small,
+.export-tour--selected strong,
+.export-tour--selected small {
+  color: #ffffff;
+}
+
+.export-tour i {
+  display: none;
+  color: #ffffff;
+}
+
+.export-tour--selected i {
+  display: inline-flex;
+}
+
+.export-action-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.export-action-panel h2 {
+  margin: 0 0 0.35rem;
+  color: #111827;
+  font-size: 1.25rem;
+}
+
+.export-action-panel p {
+  margin: 0;
+  color: #6b7280;
+  overflow-wrap: anywhere;
+}
+
+:host ::ng-deep .export-action.p-button {
+  min-width: 9rem;
+  border-radius: 0.6rem;
+  border: 1px solid #ff8a33;
+  background: #ff8a33;
+  color: #ffffff;
+  padding: 0.65rem 1.2rem;
+  font-weight: 600;
+}
+
+:host ::ng-deep .export-action.p-button:hover {
+  border-color: #f27316;
+  background: #f27316;
+  color: #ffffff;
+}
+
+.export-message {
+  margin: 1rem 0 0;
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+}
+
+.export-message--error {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
 }
 
 @media (max-width: 900px) {
@@ -47,5 +228,16 @@ h2 {
 
   .export-header {
     flex-direction: column;
+  }
+
+  .export-action-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  .export-list {
+    grid-template-columns: 1fr;
   }
 }

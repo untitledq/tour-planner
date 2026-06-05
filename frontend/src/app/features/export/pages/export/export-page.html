@@ -1,12 +1,98 @@
-<app-shell title="[Placeholder]" (logoutClick)="logout()">
+<app-shell title="Export" (logoutClick)="logout()">
   <section class="export-content">
     <div class="export-shell">
-      <div class="export-header">
+      <header class="export-header">
         <div>
           <h1>Export</h1>
-          <h2>Prepare your tour data for download and external sharing.</h2>
+          <p class="export-description">Choose a tour and download its XML package.</p>
         </div>
-      </div>
+      </header>
+
+      <section class="export-panel">
+        <div class="export-search">
+          <p-iconfield class="export-search-field">
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              placeholder="Search tours..."
+              [formControl]="searchControl"
+            />
+          </p-iconfield>
+        </div>
+
+        @if (isLoadingTours()) {
+          <div class="export-empty-state">
+            <strong>Loading tours...</strong>
+            <p>The tour list is currently being fetched.</p>
+          </div>
+        } @else if (toursLoadError()) {
+          <div class="export-empty-state">
+            <strong>Could not load tours.</strong>
+            <p>{{ toursLoadError() }}</p>
+          </div>
+        } @else if (isSearchingTours()) {
+          <div class="export-empty-state">
+            <strong>Searching tours...</strong>
+            <p>The backend search is looking for matching tours.</p>
+          </div>
+        } @else if (toursSearchError()) {
+          <div class="export-empty-state">
+            <strong>Could not search tours.</strong>
+            <p>{{ toursSearchError() }}</p>
+          </div>
+        } @else if (!filteredTours().length) {
+          <div class="export-empty-state">
+            <strong>No tours found.</strong>
+            <p>Try a different search term.</p>
+          </div>
+        } @else {
+          <div class="export-list">
+            @for (tour of visibleTours(); track tour.id) {
+              <button
+                type="button"
+                class="export-tour"
+                [class.export-tour--selected]="selectedTour()?.id === tour.id"
+                (click)="selectTour(tour)"
+              >
+                <span>
+                  <strong>{{ tour.name }}</strong>
+                  <small>ID: {{ tour.id }}</small>
+                </span>
+                <i class="pi pi-check" aria-hidden="true"></i>
+              </button>
+            }
+          </div>
+
+          <app-pagination
+            [first]="first()"
+            [rows]="rows"
+            [totalRecords]="filteredTours().length"
+            currentPageReportTemplate="{first} - {last} of {totalRecords}"
+            (pageChange)="onPageChange($event)"
+          />
+        }
+      </section>
+
+      <section class="export-action-panel">
+        <div>
+          <h2>{{ selectedTour()?.name || 'No tour selected' }}</h2>
+          <p>{{ selectedTour()?.id || 'Select a tour from the list.' }}</p>
+        </div>
+
+        <p-button
+          label="Export XML"
+          icon="pi pi-download"
+          styleClass="export-action"
+          [disabled]="!selectedTour() || isExporting()"
+          [loading]="isExporting()"
+          (onClick)="exportSelectedTour()"
+        />
+      </section>
+
+      @if (exportError()) {
+        <p class="export-message export-message--error">{{ exportError() }}</p>
+      }
     </div>
   </section>
 </app-shell>
