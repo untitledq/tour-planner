@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ import {
   TourSortOption,
   TourResponse,
   TourWithFavoriteResponse,
-  TourRouteResponse
+  TourRouteResponse,
 } from '../models/tour.models';
 
 @Injectable({ providedIn: 'root' })
@@ -22,19 +22,21 @@ export class TourApiService {
 
   list(sort: TourSortOption = 'POPULARITY_DESC'): Observable<TourListResponse[]> {
     return this.http.get<TourListResponse[]>(this.apiUrl, {
-      params: this.sortParams(sort)
+      params: this.sortParams(sort),
     });
   }
 
   listFavorites(sort: TourSortOption = 'POPULARITY_DESC'): Observable<TourFilteredListResponse[]> {
     return this.http.get<TourFilteredListResponse[]>(`${this.apiUrl}/favorites`, {
-      params: this.sortParams(sort)
+      params: this.sortParams(sort),
     });
   }
 
-  listNotFavorites(sort: TourSortOption = 'POPULARITY_DESC'): Observable<TourFilteredListResponse[]> {
+  listNotFavorites(
+    sort: TourSortOption = 'POPULARITY_DESC',
+  ): Observable<TourFilteredListResponse[]> {
     return this.http.get<TourFilteredListResponse[]>(`${this.apiUrl}/not-favorites`, {
-      params: this.sortParams(sort)
+      params: this.sortParams(sort),
     });
   }
 
@@ -58,6 +60,20 @@ export class TourApiService {
     return this.http.get<TourRouteResponse>(`${this.apiUrl}/${id}/route`);
   }
 
+  exportTour(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${id}/export`, {
+      responseType: 'blob',
+    });
+  }
+
+  importTourXml(xml: string): Observable<TourResponse> {
+    return this.http.post<TourResponse>(`${this.apiUrl}/import`, xml, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/xml',
+      }),
+    });
+  }
+
   uploadImage(id: string, file: File): Observable<TourResponse> {
     const formData = new FormData();
     formData.append('file', file);
@@ -67,7 +83,7 @@ export class TourApiService {
 
   downloadImage(id: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${id}/image`, {
-      responseType: 'blob'
+      responseType: 'blob',
     });
   }
 
@@ -89,12 +105,11 @@ export class TourApiService {
       name: tour.name,
       tourType: 'tourType' in tour ? tour.tourType : undefined,
       isFavorite: false,
-      computedAttributes: tour.computedAttributes
+      computedAttributes: tour.computedAttributes,
     };
   }
 
   private sortParams(sort: TourSortOption): HttpParams {
     return new HttpParams().set('sort', sort);
   }
-
 }
