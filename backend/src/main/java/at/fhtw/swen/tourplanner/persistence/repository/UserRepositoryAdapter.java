@@ -6,6 +6,7 @@ import at.fhtw.swen.tourplanner.persistence.exception.UserNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -17,18 +18,12 @@ public class UserRepositoryAdapter {
         this.userRepository = userRepository;
     }
 
-    public User findById(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(() ->
-                        new UserNotFoundException(
-                                "User with id " + id + " not found"));
+    public Optional<User> findById(UUID id) {
+        return userRepository.findById(id);
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() ->
-                        new UserNotFoundException(
-                                "User with username '" + username + "' not found"));
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public User save(User user) {
@@ -45,7 +40,10 @@ public class UserRepositoryAdapter {
     }
 
     public void deleteById(UUID id) {
-        User user = findById(id);
+        User user = findById(id)
+                .orElseThrow(() ->
+                        new UserNotFoundException(
+                                "User with id " + id + " not found"));
         userRepository.delete(user);
     }
 
