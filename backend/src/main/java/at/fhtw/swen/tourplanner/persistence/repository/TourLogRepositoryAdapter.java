@@ -1,7 +1,7 @@
 package at.fhtw.swen.tourplanner.persistence.repository;
 
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
-import at.fhtw.swen.tourplanner.persistence.exceptions.TourLogNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.exception.TourLogNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

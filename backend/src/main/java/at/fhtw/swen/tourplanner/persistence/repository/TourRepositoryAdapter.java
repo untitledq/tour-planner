@@ -1,11 +1,12 @@
 package at.fhtw.swen.tourplanner.persistence.repository;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.exceptions.TourAlreadyExistsException;
-import at.fhtw.swen.tourplanner.persistence.exceptions.TourNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.exception.TourAlreadyExistsException;
+import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -21,15 +22,15 @@ public class TourRepositoryAdapter {
         return tourRepository.findAllByCreatedBy(createdBy);
     }
 
-    public Tour findByIdAndCreatedBy(UUID id, UUID createdBy) {
-        return tourRepository.findByIdAndCreatedBy(id, createdBy)
-                .orElseThrow(() ->
-                        new TourNotFoundException(
-                                "Tour with id " + id + " not found for user " + createdBy));
+    public Optional<Tour> findByIdAndCreatedBy(UUID id, UUID createdBy) {
+        return tourRepository.findByIdAndCreatedBy(id, createdBy);
     }
 
     public void deleteByIdAndCreatedBy(UUID id, UUID createdBy) {
-        Tour tour = findByIdAndCreatedBy(id, createdBy);
+        Tour tour = findByIdAndCreatedBy(id, createdBy)
+                .orElseThrow(() ->
+                        new TourNotFoundException(
+                                "Tour with id " + id + " not found for user " + createdBy));
         tourRepository.delete(tour);
     }
 

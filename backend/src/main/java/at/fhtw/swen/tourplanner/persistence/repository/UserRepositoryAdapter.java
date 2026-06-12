@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.persistence.repository;
 
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.exceptions.UserAlreadyExistsException;
-import at.fhtw.swen.tourplanner.persistence.exceptions.UserNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.exception.UserAlreadyExistsException;
+import at.fhtw.swen.tourplanner.persistence.exception.UserNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

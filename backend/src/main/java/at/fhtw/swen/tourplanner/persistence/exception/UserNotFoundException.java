@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.persistence.exceptions;
+package at.fhtw.swen.tourplanner.persistence.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {

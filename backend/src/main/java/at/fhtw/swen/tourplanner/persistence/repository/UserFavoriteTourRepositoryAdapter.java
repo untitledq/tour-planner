@@ -2,7 +2,7 @@ package at.fhtw.swen.tourplanner.persistence.repository;
 
 import at.fhtw.swen.tourplanner.persistence.entity.UserFavoriteTour;
 import at.fhtw.swen.tourplanner.persistence.entity.UserFavoriteTourId;
-import at.fhtw.swen.tourplanner.persistence.exceptions.UserFavoriteTourNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.exception.UserFavoriteTourNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
