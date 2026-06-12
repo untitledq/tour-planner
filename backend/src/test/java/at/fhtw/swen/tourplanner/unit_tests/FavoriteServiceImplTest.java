@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner;
+package at.fhtw.swen.tourplanner.unit_tests;
 
 import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;

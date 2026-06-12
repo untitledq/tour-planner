@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner;
+package at.fhtw.swen.tourplanner.unit_tests;
 
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
