@@ -10,6 +10,7 @@ import at.fhtw.swen.tourplanner.service.dto.TourSortOption;
 import at.fhtw.swen.tourplanner.service.dto.export.TourExportDto;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -45,7 +46,7 @@ public class TourController {
 
     @PostMapping
     public TourDto create(
-            @RequestBody TourDto req,
+            @Valid @RequestBody TourDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
 
@@ -214,7 +215,7 @@ public class TourController {
     @PutMapping("/{id}")
     public TourDto update(
             @PathVariable UUID id,
-            @RequestBody TourDto req,
+            @Valid @RequestBody TourDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
 

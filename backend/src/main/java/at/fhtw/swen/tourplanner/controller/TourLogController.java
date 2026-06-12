@@ -4,6 +4,7 @@ import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
 import at.fhtw.swen.tourplanner.service.TourLogService;
 import at.fhtw.swen.tourplanner.util.LoggerService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,8 +24,6 @@ public class TourLogController {
         this.service = service;
         this.logger = LoggerService.getInstance().getLogger(getClass());
     }
-
-
 
     // Get all tour logs for authenticated user
     @GetMapping
@@ -64,7 +63,7 @@ public class TourLogController {
     // Create new tour log
     @PostMapping
     public ResponseEntity<TourLogDto> create(
-            @RequestBody TourLogDto req,
+            @Valid @RequestBody TourLogDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
@@ -77,7 +76,7 @@ public class TourLogController {
     @PutMapping("/{id}")
     public ResponseEntity<TourLogDto> update(
             @PathVariable UUID id,
-            @RequestBody TourLogDto req,
+            @Valid @RequestBody TourLogDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();

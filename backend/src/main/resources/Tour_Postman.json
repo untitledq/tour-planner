@@ -74,7 +74,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Vienna Walk\",\n  \"description\": \"Nice tour through Vienna\",\n  \"tourType\": \"BIKE\",\n  \"startName\": \"Stephansplatz\",\n  \"endName\": \"Prater\"\n}"
+                  "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000000\",\n  \"createdBy\": \"00000000-0000-0000-0000-000000000000\",\n  \"name\": \"Vienna Walk\",\n  \"description\": \"Nice tour through Vienna\",\n  \"tourType\": \"BIKE\",\n  \"startName\": \"Stephansplatz\",\n  \"endName\": \"Prater\"\n}"
                 }
               },
               "event": [
@@ -132,7 +132,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Vienna Walk UPDATED\",\n  \"description\": \"Updated description\",\n  \"tourType\": \"RUNNING\",\n  \"startName\": \"Karlsplatz\",\n  \"endName\": \"Donauinsel\"\n}"
+                  "raw": "{\n  \"id\": \"{{tour_id}}\",\n  \"createdBy\": \"{{tour_id}}\",\n  \"name\": \"Vienna Walk UPDATED\",\n  \"description\": \"Updated description\",\n  \"tourType\": \"RUNNING\",\n  \"startName\": \"Karlsplatz\",\n  \"endName\": \"Donauinsel\"\n}"
                 }
               }
             },
@@ -159,7 +159,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"tourId\": \"{{tour_id}}\",\n  \"dateTime\": \"2026-03-29T15:00:00Z\",\n  \"rating\": 5,\n  \"difficulty\": 3,\n  \"totalDistance\": 12,\n  \"totalTime\": 95,\n  \"comment\": \"Amazing tour!\"\n}"
+                  "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000001\",\n  \"tourId\": \"{{tour_id}}\",\n  \"dateTime\": \"2026-03-29T15:00:00Z\",\n  \"rating\": 5,\n  \"difficulty\": 3,\n  \"totalDistance\": 12,\n  \"totalTime\": 95,\n  \"comment\": \"Amazing tour!\"\n}"
                 }
               },
               "event": [
@@ -189,7 +189,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"tourId\": \"{{tour_id}}\",\n  \"dateTime\": \"2026-03-29T15:00:00Z\",\n  \"rating\": 3,\n  \"difficulty\": 1,\n  \"totalDistance\": 20,\n  \"totalTime\": 135,\n  \"comment\": \"Also nice!\"\n}"
+                  "raw": "{\n  \"id\": \"00000000-0000-0000-0000-000000000002\",\n  \"tourId\": \"{{tour_id}}\",\n  \"dateTime\": \"2026-03-29T15:00:00Z\",\n  \"rating\": 3,\n  \"difficulty\": 1,\n  \"totalDistance\": 20,\n  \"totalTime\": 135,\n  \"comment\": \"Also nice!\"\n}"
                 }
               },
               "event": [
