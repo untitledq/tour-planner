@@ -1,9 +1,12 @@
 package at.fhtw.swen.tourplanner.unit_tests;
 
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.repository.UserRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.UserRepositoryAdapter;
 import at.fhtw.swen.tourplanner.security.core.PasswordHasher;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
+import at.fhtw.swen.tourplanner.service.exception.UserDeletionException;
+import at.fhtw.swen.tourplanner.service.exception.UserRegistrationException;
+import at.fhtw.swen.tourplanner.service.exception.UserValidationException;
 import at.fhtw.swen.tourplanner.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +18,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-        import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserRepositoryAdapter userRepositoryAdapter;
 
     @Mock
     private PasswordHasher passwordHasher;
@@ -33,10 +36,10 @@ class UserServiceImplTest {
     @Test
     void register_shouldCreateUser_whenInputIsValid() {
 
-        when(userRepository.existsByUsername("john")).thenReturn(false);
+        when(userRepositoryAdapter.existsByUsername("john")).thenReturn(false);
         when(passwordHasher.hash("password")).thenReturn("hashedPassword");
 
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+        when(userRepositoryAdapter.save(any(User.class))).thenAnswer(invocation -> {
             return invocation.<User>getArgument(0); // just return persisted entity
         });
 
@@ -51,25 +54,25 @@ class UserServiceImplTest {
         assertEquals("hashedPassword", result.passwordHash());
         assertEquals("john@test.com", result.email());
 
-        verify(userRepository).existsByUsername("john");
+        verify(userRepositoryAdapter).existsByUsername("john");
         verify(passwordHasher).hash("password");
-        verify(userRepository).save(any(User.class));
+        verify(userRepositoryAdapter).save(any(User.class));
     }
 
     // USERNAME ALREADY EXISTS
     @Test
     void register_shouldThrow_whenUsernameAlreadyExists() {
 
-        when(userRepository.existsByUsername("john")).thenReturn(true);
+        when(userRepositoryAdapter.existsByUsername("john")).thenReturn(true);
 
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
+        UserRegistrationException ex = assertThrows(
+                UserRegistrationException.class,
                 () -> userService.register("john", "password", "mail@test.com")
         );
 
-        assertEquals("username already exists", ex.getMessage());
+        assertEquals("Username already exists", ex.getMessage());
 
-        verify(userRepository, never()).save(any());
+        verify(userRepositoryAdapter, never()).save(any());
         verify(passwordHasher, never()).hash(any());
     }
 
@@ -77,10 +80,10 @@ class UserServiceImplTest {
     @Test
     void register_shouldThrow_whenCredentialsAreInvalid() {
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(UserValidationException.class,
                 () -> userService.register("", "password", "mail"));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(UserValidationException.class,
                 () -> userService.register("john", "", "mail"));
     }
 
@@ -90,11 +93,11 @@ class UserServiceImplTest {
 
         UUID userId = UUID.randomUUID();
 
-        when(userRepository.existsById(userId)).thenReturn(true);
+        when(userRepositoryAdapter.existsById(userId)).thenReturn(true);
 
         userService.deleteUser(userId);
 
-        verify(userRepository).deleteById(userId);
+        verify(userRepositoryAdapter).deleteById(userId);
     }
 
     // DELETE USER NOT FOUND
@@ -103,28 +106,28 @@ class UserServiceImplTest {
 
         UUID userId = UUID.randomUUID();
 
-        when(userRepository.existsById(userId)).thenReturn(false);
+        when(userRepositoryAdapter.existsById(userId)).thenReturn(false);
 
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
+        UserDeletionException ex = assertThrows(
+                UserDeletionException.class,
                 () -> userService.deleteUser(userId)
         );
 
         assertEquals("User not found", ex.getMessage());
 
-        verify(userRepository, never()).deleteById(any());
+        verify(userRepositoryAdapter, never()).deleteById(any());
     }
 
     // VERIFY PASSWORD IS HASHED
     @Test
     void register_shouldStoreHashedPassword() {
 
-        when(userRepository.existsByUsername("john")).thenReturn(false);
+        when(userRepositoryAdapter.existsByUsername("john")).thenReturn(false);
         when(passwordHasher.hash("plain")).thenReturn("hashed");
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
 
-        when(userRepository.save(captor.capture()))
+        when(userRepositoryAdapter.save(captor.capture()))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         userService.register("john", "plain", "mail@test.com");

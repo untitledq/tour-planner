@@ -39,6 +39,10 @@ public class UserRepositoryAdapter {
         return userRepository.existsByUsername(username);
     }
 
+    public boolean existsById(UUID uuid) {
+        return userRepository.existsById(uuid);
+    }
+
     public void deleteById(UUID id) {
         User user = findById(id)
                 .orElseThrow(() ->
