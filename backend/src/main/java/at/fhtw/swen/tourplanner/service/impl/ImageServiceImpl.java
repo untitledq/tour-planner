@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.service.impl.unchecked;
+package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.ImageStorageProperties;

@@ -4,7 +4,7 @@ import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
 import at.fhtw.swen.tourplanner.service.exception.TourImageMissingException;
-import at.fhtw.swen.tourplanner.service.impl.unchecked.ImageServiceImpl;
+import at.fhtw.swen.tourplanner.service.impl.ImageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;

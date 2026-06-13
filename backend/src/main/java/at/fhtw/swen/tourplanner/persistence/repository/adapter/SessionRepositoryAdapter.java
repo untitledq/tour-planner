@@ -51,7 +51,7 @@ public class SessionRepositoryAdapter {
         sessionRepository.revokeByJti(jti);
     }
 
-    public void deleteExpiredAndRevoked(Instant now) {
+    public void deleteExpiredSessions(Instant now) {
         sessionRepository.deleteByRevokedTrueOrExpiresAtBefore(now);
     }
 

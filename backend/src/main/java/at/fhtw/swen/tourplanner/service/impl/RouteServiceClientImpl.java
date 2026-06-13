@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.service.impl.unchecked;
+package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.service.GeocodingServiceClient;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
