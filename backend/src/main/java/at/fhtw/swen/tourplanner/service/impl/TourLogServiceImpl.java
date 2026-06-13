@@ -1,9 +1,9 @@
-package at.fhtw.swen.tourplanner.service.impl.unchecked;
+package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.service.mapper.TourLogMapper;
-import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
 import at.fhtw.swen.tourplanner.service.TourLogService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.springframework.stereotype.Service;
@@ -15,29 +15,27 @@ import java.util.UUID;
 @Service
 public class TourLogServiceImpl implements TourLogService {
 
-    private final TourLogRepository repository;
+    private final TourLogRepositoryAdapter tourLogRepositoryAdapter;
 
-    public TourLogServiceImpl(TourLogRepository repository) {
-        this.repository = repository;
+    public TourLogServiceImpl(TourLogRepositoryAdapter tourLogRepositoryAdapter) {
+        this.tourLogRepositoryAdapter = tourLogRepositoryAdapter;
     }
 
     @Override
     public List<TourLogDto> findAllByUser(UUID userId) {
-        List<TourLog> logs = repository.findAllByCreatedBy(userId);
+        List<TourLog> logs = tourLogRepositoryAdapter.findAllByCreatedBy(userId);
         return TourLogMapper.toListResponseList(logs);
     }
 
     @Override
     public TourLogDto findByIdAndUser(UUID id, UUID userId) {
-        TourLog entity = repository.findByIdAndCreatedBy(id, userId)
-                .orElseThrow(() -> new RuntimeException("Tour Log not found or access denied"));
-
+        TourLog entity = tourLogRepositoryAdapter.findByIdAndCreatedBy(id, userId);
         return TourLogMapper.toResponse(entity);
     }
 
     @Override
     public List<TourLogDto> findAllByTourAndUser(UUID tourId, UUID userId) {
-        List<TourLog> logs = repository.findAllByTourIdAndCreatedBy(tourId, userId);
+        List<TourLog> logs = tourLogRepositoryAdapter.findAllByTourIdAndCreatedBy(tourId, userId);
         return TourLogMapper.toListResponseList(logs);
     }
 
@@ -49,16 +47,14 @@ public class TourLogServiceImpl implements TourLogService {
                 req
         );
 
-        repository.save(entity);
+        tourLogRepositoryAdapter.save(entity);
         return TourLogMapper.toResponse(entity);
     }
 
     @Override
     @Transactional
     public TourLogDto update(UUID id, TourLogDto req, UUID userId) {
-        TourLog entity = repository.findByIdAndCreatedBy(id, userId)
-                .orElseThrow(() -> new RuntimeException("Tour Log not found or access denied"));
-
+        TourLog entity = tourLogRepositoryAdapter.findByIdAndCreatedBy(id, userId);
         TourLogMapper.updateEntity(req, entity);
         return TourLogMapper.toResponse(entity);
     }
@@ -66,9 +62,6 @@ public class TourLogServiceImpl implements TourLogService {
     @Override
     @Transactional
     public void deleteByUser(UUID id, UUID userId) {
-        if (repository.findByIdAndCreatedBy(id, userId).isEmpty()) {
-            throw new RuntimeException("Tour Log not found or access denied");
-        }
-        repository.deleteByIdAndCreatedBy(id, userId);
+        tourLogRepositoryAdapter.deleteByIdAndCreatedBy(id, userId);
     }
 }
