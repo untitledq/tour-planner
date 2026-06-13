@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.persistence.repository;
+package at.fhtw.swen.tourplanner.persistence.repository.search;
 
 public record SearchResultRow(
         String type,

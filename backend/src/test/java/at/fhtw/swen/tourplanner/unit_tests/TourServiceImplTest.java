@@ -1,13 +1,13 @@
-package at.fhtw.swen.tourplanner;
+package at.fhtw.swen.tourplanner.unit_tests;
 
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourType;
-import at.fhtw.swen.tourplanner.persistence.repository.RouteRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.RouteRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserFavoriteTourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.service.impl.TourServiceImpl;
@@ -26,10 +26,10 @@ import static org.mockito.Mockito.*;
 
 class TourServiceImplTest {
 
-    private TourRepository tourRepository;
-    private RouteRepository routeRepository;
-    private TourLogRepository tourLogRepository;
-    private UserFavoriteTourRepository favoriteRepository;
+    private TourRepositoryAdapter tourRepositoryAdapter;
+    private RouteRepositoryAdapter routeRepositoryAdapter;
+    private TourLogRepositoryAdapter tourLogRepositoryAdapter;
+    private UserFavoriteTourRepositoryAdapter userFavoriteTourRepositoryAdapter;
     private RouteServiceClient routeClient;
 
     private TourServiceImpl service;
@@ -38,17 +38,17 @@ class TourServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        tourRepository = mock(TourRepository.class);
-        routeRepository = mock(RouteRepository.class);
-        tourLogRepository = mock(TourLogRepository.class);
-        favoriteRepository = mock(UserFavoriteTourRepository.class);
+        tourRepositoryAdapter = mock(TourRepositoryAdapter.class);
+        routeRepositoryAdapter = mock(RouteRepositoryAdapter.class);
+        tourLogRepositoryAdapter = mock(TourLogRepositoryAdapter.class);
+        userFavoriteTourRepositoryAdapter = mock(UserFavoriteTourRepositoryAdapter.class);
         routeClient = mock(RouteServiceClient.class);
 
         service = new TourServiceImpl(
-                tourRepository,
-                routeRepository,
-                tourLogRepository,
-                favoriteRepository,
+                tourRepositoryAdapter,
+                routeRepositoryAdapter,
+                tourLogRepositoryAdapter,
+                userFavoriteTourRepositoryAdapter,
                 routeClient
         );
 
@@ -67,17 +67,17 @@ class TourServiceImplTest {
 
         when(tour.getId()).thenReturn(tourId);
 
-        when(tourRepository.save(any(Tour.class)))
+        when(tourRepositoryAdapter.save(any(Tour.class)))
                 .thenAnswer(inv -> inv.getArgument(0));
 
-        when(routeRepository.findByTourId(any()))
+        when(routeRepositoryAdapter.findByTourId(any()))
                 .thenReturn(Optional.empty());
 
         var result = service.create(userId, dto, tourId);
 
         assertNotNull(result);
         verify(routeClient).calculateRoute(any(), any(), any());
-        verify(routeRepository).save(any(Route.class));
+        verify(routeRepositoryAdapter).save(any(Route.class));
     }
 
     @Test
@@ -85,10 +85,10 @@ class TourServiceImplTest {
         Tour tour = mock(Tour.class);
         when(tour.getId()).thenReturn(UUID.randomUUID());
 
-        when(tourRepository.findAllByCreatedBy(userId))
+        when(tourRepositoryAdapter.findAllByCreatedBy(userId))
                 .thenReturn(List.of(tour));
 
-        when(tourLogRepository.findAllByCreatedBy(userId))
+        when(tourLogRepositoryAdapter.findAllByCreatedBy(userId))
                 .thenReturn(List.of());
 
         List<TourListResponse> result =
@@ -105,16 +105,16 @@ class TourServiceImplTest {
         when(tour.getId()).thenReturn(tourId);
         when(tour.getName()).thenReturn("Tour A");
 
-        when(tourRepository.findById(tourId))
+        when(tourRepositoryAdapter.findById(tourId))
                 .thenReturn(Optional.of(tour));
 
-        when(favoriteRepository.existsByUserIdAndTourId(userId, tourId))
+        when(userFavoriteTourRepositoryAdapter.existsByUserIdAndTourId(userId, tourId))
                 .thenReturn(true);
 
         var result = service.findByIdAndUserWithFavorite(tourId, userId);
 
         assertNotNull(result);
-        verify(favoriteRepository).existsByUserIdAndTourId(userId, tourId);
+        verify(userFavoriteTourRepositoryAdapter).existsByUserIdAndTourId(userId, tourId);
     }
 
     @Test
@@ -127,7 +127,7 @@ class TourServiceImplTest {
         when(tour.getEndName()).thenReturn("B");
         when(tour.getId()).thenReturn(tourId);
 
-        when(tourRepository.findByIdAndCreatedBy(tourId, userId))
+        when(tourRepositoryAdapter.findByIdAndCreatedBy(tourId, userId))
                 .thenReturn(Optional.of(tour));
 
         TourDto dto = mock(TourDto.class);
@@ -149,11 +149,11 @@ class TourServiceImplTest {
         UUID tourId = UUID.randomUUID();
 
         Tour tour = mock(Tour.class);
-        when(tourRepository.findByIdAndCreatedBy(tourId, userId))
+        when(tourRepositoryAdapter.findByIdAndCreatedBy(tourId, userId))
                 .thenReturn(Optional.of(tour));
 
         service.deleteByUser(tourId, userId);
 
-        verify(tourRepository).deleteByIdAndCreatedBy(tourId, userId);
+        verify(tourRepositoryAdapter).deleteByIdAndCreatedBy(tourId, userId);
     }
 }

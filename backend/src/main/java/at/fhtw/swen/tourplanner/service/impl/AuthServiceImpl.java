@@ -2,13 +2,15 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Session;
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
+import at.fhtw.swen.tourplanner.persistence.exception.UserNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.SessionRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserRepositoryAdapter;
 import at.fhtw.swen.tourplanner.security.core.PasswordHasher;
 import at.fhtw.swen.tourplanner.security.core.TokenPayload;
 import at.fhtw.swen.tourplanner.security.core.TokenService;
-import at.fhtw.swen.tourplanner.persistence.repository.UserRepository;
 import at.fhtw.swen.tourplanner.service.AuthService;
 import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
+import at.fhtw.swen.tourplanner.service.exception.UserAuthenticationException;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,37 +25,41 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordHasher passwordHasher;
     private final TokenService tokenService;
-    private final SessionRepository sessionRepository;
-    private final UserRepository userRepository;
+    private final SessionRepositoryAdapter sessionRepositoryAdapter;
+    private final UserRepositoryAdapter userRepositoryAdapter;
     private final long expirationMinutes;
 
     public AuthServiceImpl(
             PasswordHasher passwordHasher,
             TokenService tokenService,
-            SessionRepository sessionRepository,
-            UserRepository userRepository,
+            SessionRepositoryAdapter sessionRepositoryAdapter,
+            UserRepositoryAdapter userRepositoryAdapter,
             @Value("${security.jwt.expiration-minutes}") long expirationMinutes
     ) {
         this.passwordHasher = passwordHasher;
         this.tokenService = tokenService;
-        this.sessionRepository = sessionRepository;
-        this.userRepository = userRepository;
+        this.sessionRepositoryAdapter = sessionRepositoryAdapter;
+        this.userRepositoryAdapter = userRepositoryAdapter;
         this.expirationMinutes = expirationMinutes;
     }
 
     @Override
     public LoginResponse login(String username, String rawPassword) {
-
         if (username == null || username.isBlank() ||
                 rawPassword == null || rawPassword.isBlank()) {
-            throw new SecurityException("Invalid credentials");
+            throw new UserAuthenticationException("Invalid credentials");
         }
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new SecurityException("Invalid credentials"));
+        User user;
+        try {
+            user = userRepositoryAdapter.findByUsername(username)
+                    .orElseThrow(() -> new UserAuthenticationException("Invalid credentials"));
+        } catch (UserNotFoundException e) {
+            throw new UserAuthenticationException("Invalid credentials");
+        }
 
         if (passwordHasher.invalid(rawPassword, user.getPasswordHash())) {
-            throw new SecurityException("Invalid credentials");
+            throw new UserAuthenticationException("Invalid credentials");
         }
 
         UUID sessionId = UUIDv7.randomUUID();
@@ -75,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
                 false
         );
 
-        sessionRepository.save(session);
+        sessionRepositoryAdapter.save(session);
 
         return new LoginResponse(token, expiresAt, sessionId);
     }
@@ -88,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         TokenPayload payload = tokenService.parseAndValidate(token);
-        sessionRepository.revokeByJti(payload.sessionId());
+        sessionRepositoryAdapter.revokeByJti(payload.sessionId());
     }
 
     @Override

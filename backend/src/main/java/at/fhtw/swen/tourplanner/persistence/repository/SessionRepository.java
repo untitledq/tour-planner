@@ -22,4 +22,6 @@ public interface SessionRepository extends JpaRepository<Session, UUID> {
         WHERE s.jti = :jti
     """)
     void revokeByJti(UUID jti);
+
+    boolean existsByJti(UUID jti);
 }

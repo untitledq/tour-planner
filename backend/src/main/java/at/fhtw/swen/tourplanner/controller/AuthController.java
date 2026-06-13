@@ -8,6 +8,8 @@ import at.fhtw.swen.tourplanner.service.AuthService;
 import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
 import at.fhtw.swen.tourplanner.security.spring.CurrentUserService;
+import at.fhtw.swen.tourplanner.service.exception.UserAuthenticationException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/user/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthResponse register(@RequestBody RegisterRequest request) {
+    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
 
         UserDto user = userService.register(
                 request.username(),
@@ -53,7 +55,7 @@ public class AuthController {
     }
 
     @PostMapping("/user/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(
                 request.username(),
                 request.password()
@@ -65,7 +67,7 @@ public class AuthController {
     public void logout(@RequestHeader("Authorization") String authHeader) {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new SecurityException("Missing token");
+            throw new UserAuthenticationException("Missing bearer token");
         }
 
         String token = authHeader.substring(7);

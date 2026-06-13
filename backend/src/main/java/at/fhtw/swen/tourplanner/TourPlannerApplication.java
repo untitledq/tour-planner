@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner;
 
+import at.fhtw.swen.tourplanner.config.CorsProperties;
 import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import org.jspecify.annotations.NonNull;
@@ -9,7 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@EnableConfigurationProperties(ImageStorageProperties.class)
+
+@EnableConfigurationProperties({ImageStorageProperties.class, CorsProperties.class})
 @SpringBootApplication
 public class TourPlannerApplication implements CommandLineRunner {
 
