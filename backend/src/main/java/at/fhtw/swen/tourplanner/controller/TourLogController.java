@@ -71,7 +71,7 @@ public class TourLogController {
     @PutMapping("/{id}")
     public ResponseEntity<TourLogDto> update(
             @PathVariable UUID id,
-            @Valid @RequestBody TourLogDto req,
+            @RequestBody TourLogDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();

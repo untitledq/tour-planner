@@ -4,9 +4,7 @@ import at.fhtw.swen.tourplanner.persistence.exception.RouteNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.exception.TourAlreadyExistsException;
 import at.fhtw.swen.tourplanner.persistence.exception.TourLogNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
-import at.fhtw.swen.tourplanner.service.exception.RouteCalculationException;
-import at.fhtw.swen.tourplanner.service.exception.TourExportException;
-import at.fhtw.swen.tourplanner.service.exception.TourImportException;
+import at.fhtw.swen.tourplanner.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,13 +61,43 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(TourImageNotFoundException.class)
+    public ResponseEntity<?> handleTourImageNotFound(
+            TourImageNotFoundException ex
+    ) {
+        return build(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage()
+        );
+    }
+
+    @ExceptionHandler(TourImageMissingException.class)
+    public ResponseEntity<?> handleTourImageMissing(
+            TourImageMissingException ex
+    ) {
+        return build(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage()
+        );
+    }
+
+    @ExceptionHandler(TourImageStorageException.class)
+    public ResponseEntity<?> handleTourImageStorage(
+            TourImageStorageException ex
+    ) {
+        return build(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage()
+        );
+    }
+
     //----------------------------------------------------------------------------------
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntime(RuntimeException ex) {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
-    
+
     //----------------------------------------------------------------------------------
 
     private ResponseEntity<?> build(HttpStatus status, String message) {
