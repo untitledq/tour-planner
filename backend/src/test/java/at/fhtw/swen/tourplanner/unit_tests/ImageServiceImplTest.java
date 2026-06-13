@@ -3,7 +3,7 @@ package at.fhtw.swen.tourplanner.unit_tests;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
-import at.fhtw.swen.tourplanner.service.impl.ImageServiceImpl;
+import at.fhtw.swen.tourplanner.service.impl.unchecked.ImageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;

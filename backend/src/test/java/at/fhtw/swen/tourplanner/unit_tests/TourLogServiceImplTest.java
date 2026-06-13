@@ -3,7 +3,7 @@ package at.fhtw.swen.tourplanner.unit_tests;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
 import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
-import at.fhtw.swen.tourplanner.service.impl.TourLogServiceImpl;
+import at.fhtw.swen.tourplanner.service.impl.unchecked.TourLogServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

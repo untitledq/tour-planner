@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.service.impl;
+package at.fhtw.swen.tourplanner.service.impl.unchecked;
 
 import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
 import org.springframework.scheduling.annotation.Scheduled;

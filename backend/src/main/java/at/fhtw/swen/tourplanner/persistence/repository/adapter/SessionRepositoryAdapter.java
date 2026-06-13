@@ -1,8 +1,9 @@
-package at.fhtw.swen.tourplanner.persistence.repository;
+package at.fhtw.swen.tourplanner.persistence.repository.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Session;
 import at.fhtw.swen.tourplanner.persistence.exception.SessionAlreadyExistsException;
 import at.fhtw.swen.tourplanner.persistence.exception.SessionNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.repository.SessionRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;

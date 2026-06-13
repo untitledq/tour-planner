@@ -1,7 +1,7 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.repository.UserRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserRepositoryAdapter;
 import at.fhtw.swen.tourplanner.security.core.PasswordHasher;
 import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;

@@ -2,7 +2,7 @@ package at.fhtw.swen.tourplanner.unit_tests;
 
 import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
-import at.fhtw.swen.tourplanner.service.impl.FavoriteServiceImpl;
+import at.fhtw.swen.tourplanner.service.impl.unchecked.FavoriteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

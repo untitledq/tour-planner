@@ -10,7 +10,7 @@ import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
-import at.fhtw.swen.tourplanner.service.impl.TourServiceImpl;
+import at.fhtw.swen.tourplanner.service.impl.unchecked.TourServiceImpl;
 import at.fhtw.swen.tourplanner.service.dto.TourSortOption;
 import at.fhtw.swen.tourplanner.service.dto.RouteDto;
 import org.junit.jupiter.api.BeforeEach;

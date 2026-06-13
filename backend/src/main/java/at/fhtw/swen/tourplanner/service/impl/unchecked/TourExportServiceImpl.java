@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.service.impl;
+package at.fhtw.swen.tourplanner.service.impl.unchecked;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;

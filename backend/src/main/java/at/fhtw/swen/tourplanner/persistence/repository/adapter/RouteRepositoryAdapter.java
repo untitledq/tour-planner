@@ -1,7 +1,8 @@
-package at.fhtw.swen.tourplanner.persistence.repository;
+package at.fhtw.swen.tourplanner.persistence.repository.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.exception.RouteNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.repository.RouteRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

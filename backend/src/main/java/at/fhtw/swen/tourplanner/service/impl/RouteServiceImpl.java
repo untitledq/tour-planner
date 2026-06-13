@@ -2,8 +2,8 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.repository.RouteRepositoryAdapter;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.RouteRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.RouteService;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.RouteDto;
@@ -11,7 +11,6 @@ import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

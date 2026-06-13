@@ -7,7 +7,7 @@ import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.service.dto.export.TourExportDto;
 import at.fhtw.swen.tourplanner.service.dto.export.TourLogExportDto;
-import at.fhtw.swen.tourplanner.service.impl.TourExportServiceImpl;
+import at.fhtw.swen.tourplanner.service.impl.unchecked.TourExportServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
