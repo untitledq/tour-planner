@@ -40,14 +40,13 @@ public class TourRepositoryAdapter {
             throw new TourAlreadyExistsException(
                     "Tour with id " + tour.getId() + " already exists");
         }
-
         return tourRepository.save(tour);
     }
 
     public Tour save(Tour tour) {
         return tourRepository.save(tour);
     }
-    
+
     public List<Tour> findAllCreatedAndFavoritesBy(UUID userId) {
         return tourRepository.findAllCreatedAndFavoritesBy(userId);
     }

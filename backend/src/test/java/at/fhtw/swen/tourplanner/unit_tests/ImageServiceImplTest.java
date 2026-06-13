@@ -1,8 +1,9 @@
 package at.fhtw.swen.tourplanner.unit_tests;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
+import at.fhtw.swen.tourplanner.service.exception.TourImageMissingException;
 import at.fhtw.swen.tourplanner.service.impl.unchecked.ImageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 class ImageServiceImplTest {
 
-    private TourRepository tourRepository;
+    private TourRepositoryAdapter tourRepositoryAdapter;
     private ImageServiceImpl service;
 
     private UUID tourId;
@@ -28,14 +29,18 @@ class ImageServiceImplTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        tourRepository = mock(TourRepository.class);
+
+        tourRepositoryAdapter = mock(TourRepositoryAdapter.class);
 
         ImageStorageProperties props = mock(ImageStorageProperties.class);
 
         tempDir = Files.createTempDirectory("tour-images-test");
         when(props.getBaseDir()).thenReturn(tempDir.toString());
 
-        service = new ImageServiceImpl(props, tourRepository);
+        service = new ImageServiceImpl(
+                props,
+                tourRepositoryAdapter
+        );
 
         tourId = UUID.randomUUID();
         userId = UUID.randomUUID();
@@ -43,28 +48,34 @@ class ImageServiceImplTest {
 
     @Test
     void download_shouldReturnResource_whenImageExists() throws Exception {
+
         Tour tour = mock(Tour.class);
 
         Path file = Files.createTempFile(tempDir, "img", ".jpg");
         Files.writeString(file, "data");
 
         when(tour.getImagePath()).thenReturn(file.toString());
-        when(tourRepository.findByIdAndCreatedBy(tourId, userId))
+
+        when(tourRepositoryAdapter.findByIdAndCreatedBy(tourId, userId))
                 .thenReturn(Optional.of(tour));
 
         Resource resource = service.downloadTourImage(tourId, userId);
 
         assertNotNull(resource);
         assertTrue(resource.exists());
+
+        verify(tourRepositoryAdapter)
+                .findByIdAndCreatedBy(tourId, userId);
     }
 
     @Test
     void download_shouldThrow_whenNoImagePath() {
+
         Tour tour = mock(Tour.class);
 
         when(tour.getImagePath()).thenReturn(null);
 
-        when(tourRepository.findByIdAndCreatedBy(tourId, userId))
+        when(tourRepositoryAdapter.findByIdAndCreatedBy(tourId, userId))
                 .thenReturn(Optional.of(tour));
 
         RuntimeException ex = assertThrows(
@@ -72,6 +83,10 @@ class ImageServiceImplTest {
                 () -> service.downloadTourImage(tourId, userId)
         );
 
-        assertEquals("No image uploaded", ex.getMessage());
+        assertTrue(ex instanceof TourImageMissingException);
+        assertEquals("No image uploaded for tour " + tourId, ex.getMessage());
+
+        verify(tourRepositoryAdapter)
+                .findByIdAndCreatedBy(tourId, userId);
     }
 }
