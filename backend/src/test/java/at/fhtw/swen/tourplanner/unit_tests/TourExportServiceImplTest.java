@@ -3,17 +3,17 @@ package at.fhtw.swen.tourplanner.unit_tests;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
 import at.fhtw.swen.tourplanner.persistence.entity.TourType;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
+import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.dto.export.TourExportDto;
 import at.fhtw.swen.tourplanner.service.dto.export.TourLogExportDto;
-import at.fhtw.swen.tourplanner.service.impl.unchecked.TourExportServiceImpl;
+import at.fhtw.swen.tourplanner.service.impl.TourExportServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,8 +22,8 @@ import static org.mockito.Mockito.*;
 
 class TourExportServiceImplTest {
 
-    private TourRepository tourRepository;
-    private TourLogRepository tourLogRepository;
+    private TourRepositoryAdapter tourRepositoryAdapter;
+    private TourLogRepositoryAdapter tourLogRepositoryAdapter;
     private TourExportServiceImpl service;
 
     private UUID tourId;
@@ -31,10 +31,13 @@ class TourExportServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        tourRepository = mock(TourRepository.class);
-        tourLogRepository = mock(TourLogRepository.class);
+        tourRepositoryAdapter = mock(TourRepositoryAdapter.class);
+        tourLogRepositoryAdapter = mock(TourLogRepositoryAdapter.class);
 
-        service = new TourExportServiceImpl(tourRepository, tourLogRepository);
+        service = new TourExportServiceImpl(
+                tourRepositoryAdapter,
+                tourLogRepositoryAdapter
+        );
 
         tourId = UUID.randomUUID();
         userId = UUID.randomUUID();
@@ -42,6 +45,7 @@ class TourExportServiceImplTest {
 
     @Test
     void export_shouldReturnXml_whenTourExists() {
+
         Tour tour = mock(Tour.class);
 
         when(tour.getId()).thenReturn(tourId);
@@ -53,8 +57,11 @@ class TourExportServiceImplTest {
         when(tour.getStartName()).thenReturn("Start");
         when(tour.getEndName()).thenReturn("End");
 
-        when(tourRepository.findById(tourId)).thenReturn(Optional.of(tour));
-        when(tourLogRepository.findByTourId(tourId)).thenReturn(List.of());
+        when(tourRepositoryAdapter.findById(tourId))
+                .thenReturn(java.util.Optional.of(tour));
+
+        when(tourLogRepositoryAdapter.findByTourId(tourId))
+                .thenReturn(List.of());
 
         String xml = service.exportTour(tourId);
 
@@ -62,12 +69,13 @@ class TourExportServiceImplTest {
         assertTrue(xml.contains("Vienna Tour"));
         assertTrue(xml.contains("BIKE"));
 
-        verify(tourRepository).findById(tourId);
-        verify(tourLogRepository).findByTourId(tourId);
+        verify(tourRepositoryAdapter).findById(tourId);
+        verify(tourLogRepositoryAdapter).findByTourId(tourId);
     }
 
     @Test
     void import_shouldCreateTour_andLogs_whenLogsPresent() {
+
         TourExportDto dto = new TourExportDto();
         dto.setName("Imported Tour");
         dto.setDescription("desc");
@@ -77,6 +85,7 @@ class TourExportServiceImplTest {
         dto.setEndName("B");
 
         TourLogExportDto log = mock(TourLogExportDto.class);
+
         when(log.dateTime()).thenReturn(Instant.now());
         when(log.rating()).thenReturn(5);
         when(log.difficulty()).thenReturn(2);
@@ -86,33 +95,26 @@ class TourExportServiceImplTest {
 
         dto.setLogs(List.of(log));
 
-        Tour savedTour = mock(Tour.class);
-        when(savedTour.getId()).thenReturn(tourId);
-        when(savedTour.getName()).thenReturn("Imported Tour");
-        when(savedTour.getDescription()).thenReturn("desc");
-        when(savedTour.getImagePath()).thenReturn("img.jpg");
-        when(savedTour.getTourType()).thenReturn(TourType.BIKE);
-        when(savedTour.getStartName()).thenReturn("A");
-        when(savedTour.getEndName()).thenReturn("B");
-
-        when(tourRepository.save(any(Tour.class))).thenReturn(savedTour);
+        when(tourRepositoryAdapter.save(any(Tour.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
         var result = service.importTour(userId, dto);
 
         assertNotNull(result);
         assertEquals("Imported Tour", result.getName());
 
-        verify(tourRepository).save(any(Tour.class));
-        verify(tourLogRepository, atLeastOnce()).save(any(TourLog.class));
+        verify(tourRepositoryAdapter).save(any(Tour.class));
+        verify(tourLogRepositoryAdapter, atLeastOnce()).save(any(TourLog.class));
     }
 
     @Test
     void import_shouldWork_whenNoLogsProvided() {
+
         TourExportDto dto = new TourExportDto();
         dto.setName("No Logs Tour");
         dto.setTourType(TourType.HIKE);
 
-        when(tourRepository.save(any(Tour.class)))
+        when(tourRepositoryAdapter.save(any(Tour.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         var result = service.importTour(userId, dto);
@@ -120,14 +122,16 @@ class TourExportServiceImplTest {
         assertNotNull(result);
         assertEquals("No Logs Tour", result.getName());
 
-        verify(tourLogRepository, never()).save(any());
+        verify(tourLogRepositoryAdapter, never()).save(any());
     }
 
     @Test
     void export_shouldThrow_whenTourMissing() {
-        when(tourRepository.findById(tourId)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class,
+        when(tourRepositoryAdapter.findById(tourId))
+                .thenReturn(java.util.Optional.empty());
+
+        assertThrows(TourNotFoundException.class,
                 () -> service.exportTour(tourId));
     }
 }

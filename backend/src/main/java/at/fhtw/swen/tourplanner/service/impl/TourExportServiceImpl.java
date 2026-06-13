@@ -1,13 +1,16 @@
-package at.fhtw.swen.tourplanner.service.impl.unchecked;
+package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
+import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.TourExportService;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.service.dto.export.TourExportDto;
 import at.fhtw.swen.tourplanner.service.dto.export.TourLogExportDto;
+import at.fhtw.swen.tourplanner.service.exception.TourExportException;
+import at.fhtw.swen.tourplanner.service.exception.TourImportException;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,19 +30,16 @@ public class TourExportServiceImpl implements TourExportService {
     private final Logger logger =
             LoggerService.getInstance().getLogger(getClass());
 
-    private final TourRepository tourRepository;
-
-    private final TourLogRepository tourLogRepository;
-
+    private final TourRepositoryAdapter tourRepositoryAdapter;
+    private final TourLogRepositoryAdapter tourLogRepositoryAdapter;
     private final XmlMapper xmlMapper;
 
     public TourExportServiceImpl(
-            TourRepository tourRepository,
-            TourLogRepository tourLogRepository
+            TourRepositoryAdapter tourRepositoryAdapter,
+            TourLogRepositoryAdapter tourLogRepositoryAdapter
     ) {
-
-        this.tourRepository = tourRepository;
-        this.tourLogRepository = tourLogRepository;
+        this.tourRepositoryAdapter = tourRepositoryAdapter;
+        this.tourLogRepositoryAdapter = tourLogRepositoryAdapter;
 
         this.xmlMapper = XmlMapper.builder()
                 .addModule(new JavaTimeModule())
@@ -53,13 +53,13 @@ public class TourExportServiceImpl implements TourExportService {
 
         logger.info("Exporting tour with id={}", tourId);
 
-        Tour tour = tourRepository.findById(tourId)
-                .orElseThrow(() -> new RuntimeException(
-                        "Tour not found"
+        Tour tour = tourRepositoryAdapter.findById(tourId)
+                .orElseThrow(() -> new TourNotFoundException(
+                        "Tour not found for export: " + tourId
                 ));
 
         List<TourLogExportDto> logDtos =
-                tourLogRepository.findByTourId(tourId)
+                tourLogRepositoryAdapter.findByTourId(tourId)
                         .stream()
                         .map(this::mapTourLogToExportDto)
                         .toList();
@@ -78,15 +78,11 @@ public class TourExportServiceImpl implements TourExportService {
         exportDto.setLogs(logDtos);
 
         try {
-
             String xml = xmlMapper
                     .writerWithDefaultPrettyPrinter()
                     .writeValueAsString(exportDto);
 
-            logger.info(
-                    "Successfully exported tour id={}",
-                    tourId
-            );
+            logger.info("Successfully exported tour id={}", tourId);
 
             return xml;
 
@@ -98,16 +94,14 @@ public class TourExportServiceImpl implements TourExportService {
                     exception
             );
 
-            throw new RuntimeException(
-                    "Failed to export tour as XML"
+            throw new TourExportException(
+                    "Failed to export tour as XML for id: " + tourId,
+                    exception
             );
         }
     }
 
-    private TourLogExportDto mapTourLogToExportDto(
-            TourLog log
-    ) {
-
+    private TourLogExportDto mapTourLogToExportDto(TourLog log) {
         return new TourLogExportDto(
                 log.getId(),
                 log.getTourId(),
@@ -126,47 +120,54 @@ public class TourExportServiceImpl implements TourExportService {
 
         UUID newTourId = UUIDv7.randomUUID();
 
-        Tour tour = new Tour(
-                newTourId,
-                userId,
-                dto.getName(),
-                dto.getDescription(),
-                dto.getImagePath(),
-                dto.getTourType(),
-                dto.getStartName(),
-                dto.getEndName()
-        );
+        try {
+            Tour tour = new Tour(
+                    newTourId,
+                    userId,
+                    dto.getName(),
+                    dto.getDescription(),
+                    dto.getImagePath(),
+                    dto.getTourType(),
+                    dto.getStartName(),
+                    dto.getEndName()
+            );
 
-        tourRepository.save(tour);
+            tourRepositoryAdapter.save(tour);
 
-        if (dto.getLogs() != null) {
+            if (dto.getLogs() != null) {
+                dto.getLogs().forEach(logDto -> {
 
-            dto.getLogs().forEach(logDto -> {
+                    TourLog log = new TourLog(
+                            UUIDv7.randomUUID(),
+                            newTourId,
+                            userId,
+                            logDto.dateTime(),
+                            logDto.rating(),
+                            logDto.difficulty(),
+                            logDto.totalDistance(),
+                            logDto.totalTime(),
+                            logDto.comment()
+                    );
 
-                TourLog log = new TourLog(
-                        UUIDv7.randomUUID(),
-                        newTourId,
-                        userId,
-                        logDto.dateTime(),
-                        logDto.rating(),
-                        logDto.difficulty(),
-                        logDto.totalDistance(),
-                        logDto.totalTime(),
-                        logDto.comment()
-                );
+                    tourLogRepositoryAdapter.save(log);
+                });
+            }
 
-                tourLogRepository.save(log);
-            });
+            return new TourDto(
+                    tour.getId().toString(),
+                    tour.getName(),
+                    tour.getDescription(),
+                    tour.getImagePath(),
+                    tour.getTourType(),
+                    tour.getStartName(),
+                    tour.getEndName()
+            );
+
+        } catch (Exception e) {
+            throw new TourImportException(
+                    "Failed to import tour: " + dto.getName(),
+                    e
+            );
         }
-
-        return new TourDto(
-                tour.getId().toString(),
-                tour.getName(),
-                tour.getDescription(),
-                tour.getImagePath(),
-                tour.getTourType(),
-                tour.getStartName(),
-                tour.getEndName()
-        );
     }
 }
