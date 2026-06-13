@@ -18,6 +18,14 @@ spring:
   jackson:
     serialization:
       indent_output: true
+  security:
+    user:
+      name: disabled
+      password: disabled
+
+cors:
+  allowed-origins:
+    - http://localhost:4200
 
 server:
   port: 8080
