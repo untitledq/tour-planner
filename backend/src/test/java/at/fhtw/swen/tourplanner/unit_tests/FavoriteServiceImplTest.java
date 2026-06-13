@@ -1,20 +1,24 @@
 package at.fhtw.swen.tourplanner.unit_tests;
 
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
-import at.fhtw.swen.tourplanner.service.impl.unchecked.FavoriteServiceImpl;
+import at.fhtw.swen.tourplanner.persistence.entity.Tour;
+import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserFavoriteTourRepositoryAdapter;
+import at.fhtw.swen.tourplanner.service.impl.FavoriteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class FavoriteServiceImplTest {
 
-    private UserFavoriteTourRepository favoriteRepository;
-    private TourRepository tourRepository;
+    private UserFavoriteTourRepositoryAdapter favoriteRepositoryAdapter;
+    private TourRepositoryAdapter tourRepositoryAdapter;
     private FavoriteServiceImpl service;
 
     private UUID userId;
@@ -22,10 +26,13 @@ class FavoriteServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        favoriteRepository = mock(UserFavoriteTourRepository.class);
-        tourRepository = mock(TourRepository.class);
+        favoriteRepositoryAdapter = mock(UserFavoriteTourRepositoryAdapter.class);
+        tourRepositoryAdapter = mock(TourRepositoryAdapter.class);
 
-        service = new FavoriteServiceImpl(favoriteRepository, tourRepository);
+        service = new FavoriteServiceImpl(
+                favoriteRepositoryAdapter,
+                tourRepositoryAdapter
+        );
 
         userId = UUID.randomUUID();
         tourId = UUID.randomUUID();
@@ -33,27 +40,55 @@ class FavoriteServiceImplTest {
 
     @Test
     void addFavorite_shouldSave_whenNotExisting() {
-        when(tourRepository.existsById(tourId)).thenReturn(true);
-        when(favoriteRepository.existsByUserIdAndTourId(userId, tourId))
+
+        Tour tour = mock(Tour.class);
+
+        when(tourRepositoryAdapter.findById(tourId))
+                .thenReturn(Optional.ofNullable(tour));
+
+        when(favoriteRepositoryAdapter.existsByUserIdAndTourId(userId, tourId))
                 .thenReturn(false);
 
         service.addFavorite(userId, tourId);
 
-        verify(favoriteRepository).save(any());
+        verify(favoriteRepositoryAdapter).save(any());
     }
 
     @Test
     void addFavorite_shouldThrow_whenTourMissing() {
-        when(tourRepository.existsById(tourId)).thenReturn(false);
 
-        assertThrows(RuntimeException.class,
-                () -> service.addFavorite(userId, tourId));
+        when(tourRepositoryAdapter.findById(tourId))
+                .thenThrow(new TourNotFoundException(
+                        "Tour with id " + tourId + " not found"));
+
+        assertThrows(
+                TourNotFoundException.class,
+                () -> service.addFavorite(userId, tourId)
+        );
     }
 
     @Test
     void removeFavorite_shouldCallRepository() {
+
         service.removeFavorite(userId, tourId);
 
-        verify(favoriteRepository).deleteByUserIdAndTourId(userId, tourId);
+        verify(favoriteRepositoryAdapter)
+                .deleteByUserIdAndTourId(userId, tourId);
+    }
+
+    @Test
+    void addFavorite_shouldNotSave_whenAlreadyFavorite() {
+
+        Tour tour = mock(Tour.class);
+
+        when(tourRepositoryAdapter.findById(tourId))
+                .thenReturn(Optional.ofNullable(tour));
+
+        when(favoriteRepositoryAdapter.existsByUserIdAndTourId(userId, tourId))
+                .thenReturn(true);
+
+        service.addFavorite(userId, tourId);
+
+        verify(favoriteRepositoryAdapter, never()).save(any());
     }
 }
