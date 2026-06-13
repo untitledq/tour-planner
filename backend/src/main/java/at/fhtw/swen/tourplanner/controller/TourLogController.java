@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.controller;
 
-import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
 import at.fhtw.swen.tourplanner.service.TourLogService;
+import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -25,7 +25,6 @@ public class TourLogController {
         this.logger = LoggerService.getInstance().getLogger(getClass());
     }
 
-    // Get all tour logs for authenticated user
     @GetMapping
     public ResponseEntity<List<TourLogDto>> all(
             @AuthenticationPrincipal JwtUserDetails userDetails
@@ -36,7 +35,6 @@ public class TourLogController {
         return ResponseEntity.ok(service.findAllByUser(userId));
     }
 
-    // Get a single tour log by ID
     @GetMapping("/{id}")
     public ResponseEntity<TourLogDto> getById(
             @PathVariable UUID id,
@@ -48,7 +46,6 @@ public class TourLogController {
         return ResponseEntity.ok(service.findByIdAndUser(id, userId));
     }
 
-    // Get all logs for a specific tour of the authenticated user
     @GetMapping("/tour/{tourId}")
     public ResponseEntity<List<TourLogDto>> getByTourId(
             @PathVariable UUID tourId,
@@ -60,7 +57,6 @@ public class TourLogController {
         return ResponseEntity.ok(service.findAllByTourAndUser(tourId, userId));
     }
 
-    // Create new tour log
     @PostMapping
     public ResponseEntity<TourLogDto> create(
             @Valid @RequestBody TourLogDto req,
@@ -72,11 +68,10 @@ public class TourLogController {
         return ResponseEntity.ok(service.create(req, userId));
     }
 
-    // Update tour log
     @PutMapping("/{id}")
     public ResponseEntity<TourLogDto> update(
             @PathVariable UUID id,
-            @RequestBody TourLogDto req,
+            @Valid @RequestBody TourLogDto req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
@@ -85,7 +80,6 @@ public class TourLogController {
         return ResponseEntity.ok(service.update(id, req, userId));
     }
 
-    // Delete tour log
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable UUID id,
