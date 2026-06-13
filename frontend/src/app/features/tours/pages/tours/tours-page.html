@@ -7,11 +7,7 @@
           <p class="tours-description">Manage, edit and analyze your created tours.</p>
         </div>
 
-        <p-button
-          label="+ New Tour"
-          styleClass="tours-new-tour-button"
-          (onClick)="openNewTour()"
-        />
+        <p-button label="+ New Tour" styleClass="tours-new-tour-button" (onClick)="openNewTour()" />
       </header>
 
       <section class="tours-filter-bar">
@@ -33,7 +29,7 @@
           (onClick)="submitSearch()"
         />
 
-        <label class="tours-filter-select">
+        <label class="tours-filter-select tours-filter-select--favorite">
           <span class="tours-filter-select__wrap">
             <select [formControl]="filterControl">
               <option value="all">All</option>
@@ -43,7 +39,7 @@
           </span>
         </label>
 
-        <label class="tours-filter-select">
+        <label class="tours-filter-select tours-filter-select--sort">
           <span class="tours-filter-select__wrap">
             <select [formControl]="sortControl">
               @for (option of sortOptions; track option.value) {
@@ -81,15 +77,23 @@
                           @if (popularityBadgeLabel(tour.computedAttributes?.popularity)) {
                             <span
                               class="tour-card__badge tour-card__badge--popular"
-                              [class.tour-card__badge--very-popular]="tour.computedAttributes?.popularity === 'VERY_POPULAR'"
+                              [class.tour-card__badge--very-popular]="
+                                tour.computedAttributes?.popularity === 'VERY_POPULAR'
+                              "
                             >
                               {{ popularityBadgeLabel(tour.computedAttributes?.popularity) }}
                             </span>
                           }
 
-                          @if (childFriendlinessBadgeLabel(tour.computedAttributes?.childFriendliness)) {
+                          @if (
+                            childFriendlinessBadgeLabel(tour.computedAttributes?.childFriendliness)
+                          ) {
                             <span class="tour-card__badge tour-card__badge--child-friendly">
-                              {{ childFriendlinessBadgeLabel(tour.computedAttributes?.childFriendliness) }}
+                              {{
+                                childFriendlinessBadgeLabel(
+                                  tour.computedAttributes?.childFriendliness
+                                )
+                              }}
                             </span>
                           }
                         </div>
@@ -173,7 +177,11 @@
   <app-confirm-dialog
     [visible]="showDeleteDialog()"
     title="Delete tour"
-    [message]="'Do you really want to delete ' + (selectedTourForDelete()?.name || 'this tour') + '? This action cannot be undone.'"
+    [message]="
+      'Do you really want to delete ' +
+      (selectedTourForDelete()?.name || 'this tour') +
+      '? This action cannot be undone.'
+    "
     confirmLabel="Delete"
     cancelLabel="Cancel"
     (confirm)="confirmDeleteTour()"

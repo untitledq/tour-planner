@@ -21,6 +21,7 @@
 }
 
 .tour-details-map-shell {
+  position: relative;
   border: 1px solid #d1d5db;
   border-radius: 0.95rem;
   overflow: hidden;
@@ -30,6 +31,32 @@
 .tour-details-map {
   width: 100%;
   height: 360px;
+}
+
+.tour-details-map-state {
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.86);
+  color: #374151;
+  text-align: center;
+}
+
+.tour-details-map-state .pi {
+  color: #ea580c;
+  font-size: 1.35rem;
+}
+
+.tour-details-map-state strong {
+  max-width: 24rem;
+  font-size: 0.98rem;
+  line-height: 1.45;
 }
 
 .tour-details-header {
