@@ -62,6 +62,7 @@ h1 {
 
 .tours-filter-bar {
   display: grid;
+  grid-template-areas: 'search search-button favorite-filter sort';
   grid-template-columns: minmax(0, 32rem) auto minmax(12rem, 15rem) minmax(13rem, 16rem);
   align-items: end;
   gap: 1rem;
@@ -72,7 +73,14 @@ h1 {
 }
 
 .tours-search {
+  grid-area: search;
   width: 100%;
+}
+
+:host ::ng-deep .tours-filter-bar > p-button {
+  grid-area: search-button;
+  display: block;
+  min-width: 0;
 }
 
 :host ::ng-deep .tours-search .p-iconfield {
@@ -115,6 +123,15 @@ h1 {
 
 .tours-filter-select {
   display: flex;
+  min-width: 0;
+}
+
+.tours-filter-select--favorite {
+  grid-area: favorite-filter;
+}
+
+.tours-filter-select--sort {
+  grid-area: sort;
 }
 
 .tours-filter-select__wrap {
@@ -345,6 +362,19 @@ h1 {
   line-height: 1.5;
 }
 
+@media (max-width: 1200px) {
+  .tours-filter-bar {
+    grid-template-areas:
+      'search search-button'
+      'favorite-filter sort';
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+  }
+
+  :host ::ng-deep .tours-search-button.p-button {
+    width: 100%;
+  }
+}
+
 @media (max-width: 900px) {
   .tours-content {
     padding: 1.25rem;
@@ -359,11 +389,12 @@ h1 {
   }
 
   .tours-filter-bar {
+    grid-template-areas:
+      'search'
+      'search-button'
+      'favorite-filter'
+      'sort';
     grid-template-columns: 1fr;
-  }
-
-  :host ::ng-deep .tours-search-button.p-button {
-    width: 100%;
   }
 }
 
