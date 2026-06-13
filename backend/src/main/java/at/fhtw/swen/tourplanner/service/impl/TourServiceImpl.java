@@ -1,6 +1,10 @@
-package at.fhtw.swen.tourplanner.service.impl.unchecked;
+package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.RouteRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserFavoriteTourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
@@ -8,10 +12,6 @@ import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
-import at.fhtw.swen.tourplanner.persistence.repository.RouteRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
 import at.fhtw.swen.tourplanner.service.TourService;
 import at.fhtw.swen.tourplanner.service.dto.ChildFriendliness;
 import at.fhtw.swen.tourplanner.service.dto.Popularity;
@@ -32,28 +32,28 @@ import java.util.stream.Collectors;
 @Service
 public class TourServiceImpl implements TourService {
 
-    private final TourRepository repository;
-    private final RouteRepository routeRepository;
-    private final TourLogRepository tourLogRepository;
-    private final UserFavoriteTourRepository favoriteRepository;
+    private final TourRepositoryAdapter tourRepositoryAdapter;
+    private final RouteRepositoryAdapter routeRepositoryAdapter;
+    private final TourLogRepositoryAdapter tourLogRepositoryAdapter;
+    private final UserFavoriteTourRepositoryAdapter userFavoriteTourRepositoryAdapter;
     private final RouteServiceClient routeClient;
 
-    public TourServiceImpl(TourRepository repository,
-                           RouteRepository routeRepository,
-                           TourLogRepository tourLogRepository,
-                           UserFavoriteTourRepository favoriteRepository,
+    public TourServiceImpl(TourRepositoryAdapter tourRepositoryAdapter,
+                           RouteRepositoryAdapter routeRepositoryAdapter,
+                           TourLogRepositoryAdapter tourLogRepositoryAdapter,
+                           UserFavoriteTourRepositoryAdapter userFavoriteTourRepositoryAdapter,
                            RouteServiceClient routeClient) {
-        this.repository = repository;
-        this.routeRepository = routeRepository;
-        this.tourLogRepository = tourLogRepository;
-        this.favoriteRepository = favoriteRepository;
+        this.tourRepositoryAdapter = tourRepositoryAdapter;
+        this.routeRepositoryAdapter = routeRepositoryAdapter;
+        this.tourLogRepositoryAdapter = tourLogRepositoryAdapter;
+        this.userFavoriteTourRepositoryAdapter = userFavoriteTourRepositoryAdapter;
         this.routeClient = routeClient;
     }
 
     @Override
     public TourDto create(UUID userId, TourDto req, UUID id) {
         Tour tour = TourMapper.fromCreateRequest(id, userId, req);
-        repository.save(tour);
+        tourRepositoryAdapter.create(tour);
 
         createOrUpdateRoute(tour);
 
@@ -62,7 +62,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public List<TourListResponse> findAllByUser(UUID userId, TourSortOption sort) {
-        List<Tour> tours = repository.findAllByCreatedBy(userId);
+        List<Tour> tours = tourRepositoryAdapter.findAllByCreatedBy(userId);
         Map<UUID, TourComputedAttributesDto> attributesByTourId = getComputedAttributesByTourId(userId);
 
         return sortTours(tours, attributesByTourId, sort).stream()
@@ -72,7 +72,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public List<TourTypeListResponse> findAllFavByUser(UUID userId, TourSortOption sort) {
-        List<Tour> tours = repository.findAllCreatedAndFavoritesBy(userId);
+        List<Tour> tours = tourRepositoryAdapter.findAllCreatedAndFavoritesBy(userId);
         Map<UUID, TourComputedAttributesDto> attributesByTourId = getComputedAttributesByTourId(userId);
 
         return sortTours(tours, attributesByTourId, sort).stream()
@@ -82,7 +82,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public List<TourTypeListResponse> findAllNotFavByUser(UUID userId, TourSortOption sort) {
-        List<Tour> tours = repository.findAllCreatedButNotFavoritesBy(userId);
+        List<Tour> tours = tourRepositoryAdapter.findAllCreatedButNotFavoritesBy(userId);
         Map<UUID, TourComputedAttributesDto> attributesByTourId = getComputedAttributesByTourId(userId);
 
         return sortTours(tours, attributesByTourId, sort).stream()
@@ -92,7 +92,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourDto findByIdAndUser(UUID id, UUID userId) {
-        Tour tour = repository.findByIdAndCreatedBy(id, userId)
+        Tour tour = tourRepositoryAdapter.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
         return TourMapper.toResponse(tour, computeAttributes(tour.getId(), userId));
@@ -100,17 +100,17 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourWithFavoriteDto findByIdAndUserWithFavorite(UUID tourId, UUID userId) {
-        Tour tour = repository.findById(tourId)
+        Tour tour = tourRepositoryAdapter.findById(tourId)
                 .orElseThrow(() -> new RuntimeException("Tour not found"));
 
-        boolean isFavorite = favoriteRepository.existsByUserIdAndTourId(userId, tourId);
+        boolean isFavorite = userFavoriteTourRepositoryAdapter.existsByUserIdAndTourId(userId, tourId);
 
         return TourMapper.toWithFavoriteResponse(tour, computeAttributes(tour.getId(), userId), isFavorite);
     }
 
     @Override
     public TourDto update(UUID id, UUID userId, TourDto tourDto) {
-        Tour tour = repository.findByIdAndCreatedBy(id, userId)
+        Tour tour = tourRepositoryAdapter.findByIdAndCreatedBy(id, userId)
                 .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
 
         boolean routeRelevantChanged = !Objects.equals(tour.getTourType(), tourDto.getTourType()) ||
@@ -118,7 +118,7 @@ public class TourServiceImpl implements TourService {
                         !Objects.equals(tour.getEndName(), tourDto.getEndName());
 
         TourMapper.updateEntity(tourDto, tour);
-        repository.save(tour);
+        tourRepositoryAdapter.save(tour);
 
         if (routeRelevantChanged) {
             createOrUpdateRoute(tour);
@@ -130,10 +130,10 @@ public class TourServiceImpl implements TourService {
     @Override
     @Transactional
     public void deleteByUser(UUID id, UUID userId) {
-        if (repository.findByIdAndCreatedBy(id, userId).isEmpty()) {
+        if (tourRepositoryAdapter.findByIdAndCreatedBy(id, userId).isEmpty()) {
             throw new RuntimeException("Tour not found or access denied");
         }
-        repository.deleteByIdAndCreatedBy(id, userId);
+        tourRepositoryAdapter.deleteByIdAndCreatedBy(id, userId);
     }
 
     private void createOrUpdateRoute(Tour tour) {
@@ -144,7 +144,7 @@ public class TourServiceImpl implements TourService {
                 String.valueOf(tour.getTourType())
         );
 
-        Route route = routeRepository.findByTourId(tour.getId())
+        Route route = routeRepositoryAdapter.findByTourId(tour.getId())
                 .orElseGet(() -> {
                     Route r = new Route();
                     r.setId(UUID.randomUUID());
@@ -156,11 +156,11 @@ public class TourServiceImpl implements TourService {
         route.setDuration(routeResponse.duration());
         route.setCoordinates(routeResponse.coordinates());
 
-        routeRepository.save(route);
+        routeRepositoryAdapter.save(route);
     }
 
     private Map<UUID, TourComputedAttributesDto> getComputedAttributesByTourId(UUID userId) {
-        return tourLogRepository.findAllByCreatedBy(userId).stream()
+        return tourLogRepositoryAdapter.findAllByCreatedBy(userId).stream()
                 .collect(Collectors.groupingBy(
                         TourLog::getTourId,
                         Collectors.collectingAndThen(Collectors.toList(), this::computeAttributes)
@@ -168,7 +168,7 @@ public class TourServiceImpl implements TourService {
     }
 
     private TourComputedAttributesDto computeAttributes(UUID tourId, UUID userId) {
-        return computeAttributes(tourLogRepository.findAllByTourIdAndCreatedBy(tourId, userId));
+        return computeAttributes(tourLogRepositoryAdapter.findAllByTourIdAndCreatedBy(tourId, userId));
     }
 
     private TourComputedAttributesDto computeAttributes(List<TourLog> logs) {

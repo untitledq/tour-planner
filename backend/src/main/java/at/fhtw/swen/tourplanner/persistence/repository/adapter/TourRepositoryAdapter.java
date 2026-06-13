@@ -35,7 +35,7 @@ public class TourRepositoryAdapter {
         tourRepository.delete(tour);
     }
 
-    public Tour save(Tour tour) {
+    public Tour create(Tour tour) {
         if (tour.getId() != null && tourRepository.existsById(tour.getId())) {
             throw new TourAlreadyExistsException(
                     "Tour with id " + tour.getId() + " already exists");
@@ -44,11 +44,19 @@ public class TourRepositoryAdapter {
         return tourRepository.save(tour);
     }
 
+    public Tour save(Tour tour) {
+        return tourRepository.save(tour);
+    }
+    
     public List<Tour> findAllCreatedAndFavoritesBy(UUID userId) {
         return tourRepository.findAllCreatedAndFavoritesBy(userId);
     }
 
     public List<Tour> findAllCreatedButNotFavoritesBy(UUID userId) {
         return tourRepository.findAllCreatedButNotFavoritesBy(userId);
+    }
+
+    public Optional<Tour> findById(UUID tourId) {
+        return tourRepository.findById(tourId);
     }
 }

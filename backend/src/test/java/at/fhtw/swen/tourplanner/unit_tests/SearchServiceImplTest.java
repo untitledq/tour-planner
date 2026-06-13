@@ -4,10 +4,10 @@ import at.fhtw.swen.tourplanner.controller.response.SearchResultResponse;
 import at.fhtw.swen.tourplanner.controller.response.enums.SearchResultType;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.persistence.repository.search.SearchRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.search.SearchResultRow;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.service.impl.SearchServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,8 @@ import static org.mockito.Mockito.*;
 class SearchServiceImplTest {
 
     private SearchRepository searchRepository;
-    private TourRepository tourRepository;
-    private TourLogRepository tourLogRepository;
+    private TourRepositoryAdapter tourRepositoryAdapter;
+    private TourLogRepositoryAdapter tourLogRepositoryAdapter;
 
     private SearchServiceImpl searchService;
 
@@ -31,13 +31,13 @@ class SearchServiceImplTest {
     @BeforeEach
     void setUp() {
         searchRepository = mock(SearchRepository.class);
-        tourRepository = mock(TourRepository.class);
-        tourLogRepository = mock(TourLogRepository.class);
+        tourRepositoryAdapter = mock(TourRepositoryAdapter.class);
+        tourLogRepositoryAdapter = mock(TourLogRepositoryAdapter.class);
 
         searchService = new SearchServiceImpl(
                 searchRepository,
-                tourRepository,
-                tourLogRepository
+                tourRepositoryAdapter,
+                tourLogRepositoryAdapter
         );
 
         userId = UUID.randomUUID();
@@ -93,10 +93,10 @@ class SearchServiceImplTest {
         when(log.getTotalDistance()).thenReturn(3);
         when(log.getTotalTime()).thenReturn(60);
 
-        when(tourRepository.findAllByCreatedBy(userId))
+        when(tourRepositoryAdapter.findAllByCreatedBy(userId))
                 .thenReturn(List.of(tour));
 
-        when(tourLogRepository.findAllByCreatedBy(userId))
+        when(tourLogRepositoryAdapter.findAllByCreatedBy(userId))
                 .thenReturn(List.of(log));
 
         when(searchRepository.search(any(), any(), anyBoolean(), anyBoolean()))
@@ -133,7 +133,7 @@ class SearchServiceImplTest {
         when(tour.getId()).thenReturn(tourId);
         when(tour.getName()).thenReturn("Tour A");
 
-        when(tourRepository.findAllByCreatedBy(userId))
+        when(tourRepositoryAdapter.findAllByCreatedBy(userId))
                 .thenReturn(List.of(tour));
 
         TourLog log = mock(TourLog.class);
@@ -142,7 +142,7 @@ class SearchServiceImplTest {
         when(log.getTotalDistance()).thenReturn(10);
         when(log.getTotalTime()).thenReturn(100);
 
-        when(tourLogRepository.findAllByCreatedBy(userId))
+        when(tourLogRepositoryAdapter.findAllByCreatedBy(userId))
                 .thenReturn(List.of(log));
 
         List<SearchResultResponse> result =

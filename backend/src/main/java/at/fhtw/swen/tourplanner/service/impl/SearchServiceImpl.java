@@ -4,10 +4,10 @@ import at.fhtw.swen.tourplanner.controller.response.SearchResultResponse;
 import at.fhtw.swen.tourplanner.controller.response.enums.SearchResultType;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.persistence.repository.search.SearchRepository;
 import at.fhtw.swen.tourplanner.persistence.repository.search.SearchResultRow;
-import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import at.fhtw.swen.tourplanner.service.SearchService;
 import at.fhtw.swen.tourplanner.service.dto.ChildFriendliness;
 import at.fhtw.swen.tourplanner.service.dto.Popularity;
@@ -26,17 +26,17 @@ import java.util.stream.Collectors;
 @Service
 public class SearchServiceImpl implements SearchService {
     private final SearchRepository searchRepository;
-    private final TourRepository tourRepository;
-    private final TourLogRepository tourLogRepository;
+    private final TourRepositoryAdapter tourRepositoryAdapter;
+    private final TourLogRepositoryAdapter tourLogRepositoryAdapter;
 
     public SearchServiceImpl(
             SearchRepository searchRepository,
-            TourRepository tourRepository,
-            TourLogRepository tourLogRepository
+            TourRepositoryAdapter tourRepositoryAdapter,
+            TourLogRepositoryAdapter tourLogRepositoryAdapter
     ) {
         this.searchRepository = searchRepository;
-        this.tourRepository = tourRepository;
-        this.tourLogRepository = tourLogRepository;
+        this.tourRepositoryAdapter = tourRepositoryAdapter;
+        this.tourLogRepositoryAdapter = tourLogRepositoryAdapter;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class SearchServiceImpl implements SearchService {
             return List.of();
         }
 
-        List<Tour> tours = tourRepository.findAllByCreatedBy(userId);
+        List<Tour> tours = tourRepositoryAdapter.findAllByCreatedBy(userId);
         Map<UUID, TourComputedAttributesDto> attributesByTourId = getComputedAttributesByTourId(userId);
 
         return tours.stream()
@@ -170,7 +170,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private Map<UUID, TourComputedAttributesDto> getComputedAttributesByTourId(UUID userId) {
-        return tourLogRepository.findAllByCreatedBy(userId).stream()
+        return tourLogRepositoryAdapter.findAllByCreatedBy(userId).stream()
                 .collect(Collectors.groupingBy(
                         TourLog::getTourId,
                         Collectors.collectingAndThen(Collectors.toList(), this::computeAttributes)
