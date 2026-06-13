@@ -1,8 +1,10 @@
-package at.fhtw.swen.tourplanner.controller;
+package at.fhtw.swen.tourplanner.controller.exception;
 
+import at.fhtw.swen.tourplanner.persistence.exception.RouteNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.exception.TourAlreadyExistsException;
 import at.fhtw.swen.tourplanner.persistence.exception.TourLogNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.service.exception.RouteCalculationException;
 import at.fhtw.swen.tourplanner.service.exception.TourExportException;
 import at.fhtw.swen.tourplanner.service.exception.TourImportException;
 import org.springframework.http.HttpStatus;
@@ -36,15 +38,39 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handleRuntime(RuntimeException ex) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-    }
-
     @ExceptionHandler(TourLogNotFoundException.class)
     public ResponseEntity<?> handleTourLogNotFound(TourLogNotFoundException ex) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage());
     }
+
+    @ExceptionHandler(RouteCalculationException.class)
+    public ResponseEntity<?> handleRouteCalculation(
+            RouteCalculationException ex
+    ) {
+        return build(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage()
+        );
+    }
+
+    @ExceptionHandler(RouteNotFoundException.class)
+    public ResponseEntity<?> handleRouteNotFound(
+            RouteNotFoundException ex
+    ) {
+        return build(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage()
+        );
+    }
+
+    //----------------------------------------------------------------------------------
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntime(RuntimeException ex) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+    
+    //----------------------------------------------------------------------------------
 
     private ResponseEntity<?> build(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(

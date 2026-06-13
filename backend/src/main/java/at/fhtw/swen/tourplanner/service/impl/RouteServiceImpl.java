@@ -8,6 +8,7 @@ import at.fhtw.swen.tourplanner.service.RouteService;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.RouteDto;
 import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.service.exception.RouteCalculationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +48,9 @@ public class RouteServiceImpl implements RouteService {
                     );
 
                     if (dto == null) {
-                        throw new RuntimeException("Failed to calculate route");
+                        throw new RouteCalculationException(
+                                "Failed to calculate route"
+                        );
                     }
 
                     Route newRoute = new Route(

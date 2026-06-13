@@ -28,9 +28,17 @@ public class RouteController {
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
-        logger.info("GET /api/tours/{}/route called by user {}", tourId, userId);
 
-        RouteDto response = routeService.getRouteForTour(tourId, userId);
+        logger.info(
+                "GET /api/tours/{}/route called by user {}",
+                tourId,
+                userId
+        );
+
+        RouteDto response = routeService.getRouteForTour(
+                tourId,
+                userId
+        );
 
         return ResponseEntity.ok(response);
     }
