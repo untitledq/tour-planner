@@ -2,7 +2,7 @@
 
 **Lehrveranstaltung:** SWEN2, SS 2026  
 **Projektteam:** Michael Stangl, Wenhao Wen  
-**Dokumentstand:** 13. Juni 2026  
+**Dokumentstand:** 14. Juni 2026  
 **Repository:** [gitlab.com/mic_ed/tour_planner](https://gitlab.com/mic_ed/tour_planner)
 
 ## Abdeckung der Bewertungspunkte
@@ -112,12 +112,12 @@ an injizierte API-Services.
 ### 2.3 Backend-Schichten und Verantwortlichkeiten
 
 | Paket                    | Schicht            | Aufgabe                                                                               |
-| ------------------------ | ------------------ | ------------------------------------------------------------------------------------- |
+| ------------------------ | ------------------ |---------------------------------------------------------------------------------------|
 | `controller`             | Presentation Layer | REST-Endpunkte, Request-Parameter, Authentifizierungsinformationen und HTTP-Antworten |
 | `service`                | Business Layer     | Geschäftslogik, Interfaces, DTOs und Mapper                                           |
 | `service.impl`           | Business Layer     | Tour-, Log-, Such-, Routing-, Bild-, Auth- und Import/Export-Logik                    |
 | `persistence.entity`     | Data Access Layer  | JPA-Entitäten und Datenbankabbildung                                                  |
-| `persistence.repository` | Data Access Layer  | Spring-Data-Repositories und parametrisierte Volltextsuche                            |
+| `persistence.repository` | Data Access Layer  | Spring-Data-Repositories, zugehörige Adapter und parametrisierte Volltextsuche        |
 | `security`               | Querschnitt        | JWT-Erzeugung, Filter, Security Context und BCrypt                                    |
 | `util`                   | Querschnitt        | Logger-Verwaltung und UUIDv7                                                          |
 
@@ -191,9 +191,7 @@ classDiagram
     User "1" --> "0..*" TourLog
 ```
 
-Ein detaillierter, aus dem Backend erzeugter Klassenentwurf liegt zusätzlich in
-[`backend/docs/diagram.puml`](../backend/docs/diagram.puml). Das Datenbankschema
-ist in [`backend/docs/db.puml`](../backend/docs/db.puml) dokumentiert.
+Das Datenbankschema ist in [`backend/docs/db.puml`](../backend/docs/db.puml) dokumentiert.
 
 ### 2.5 Wichtige technische Abläufe
 
@@ -605,19 +603,33 @@ Der Schwerpunkt liegt auf Business-Logik und technischen Integrationspunkten.
 Repositories und externe Clients werden in Unit-Tests gemockt. Dadurch sind die
 Tests schnell und prüfen gezielt Entscheidungen der Service-Schicht.
 
-Im Repository befinden sich **33 mit `@Test` markierte Tests in acht Testklassen**.
+Im Repository befinden sich **29** mit `@Test` markierte Unit-Tests in sieben Testklassen**.
 
 | Testklasse                  | Anzahl | Begründung                                                                                        |
-| --------------------------- | -----: | ------------------------------------------------------------------------------------------------- |
+| --------------------------- |-------:| ------------------------------------------------------------------------------------------------- |
 | `UserServiceImplTest`       |      6 | Registrierung, Duplikate, ungültige Daten, Löschen und Passwort-Hashing sind sicherheitskritisch. |
 | `TourServiceImplTest`       |      5 | Tour-CRUD, Favoritenstatus und Neuberechnung der Route betreffen den Kern-Use-Case.               |
 | `TourLogServiceImplTest`    |      3 | Logs sind Grundlage der berechneten Attribute und müssen benutzerbezogen persistiert werden.      |
 | `SearchServiceImplTest`     |      5 | Normalisierung, Scopes, computed attributes und Deduplizierung sind fehleranfällige Logik.        |
 | `TourExportServiceImplTest` |      4 | XML-Serialisierung sowie Import von Tour und Logs dürfen keine Daten verlieren.                   |
-| `FavoriteServiceImplTest`   |      3 | Unique Feature: Hinzufügen, Entfernen und Verhalten bei fehlender Tour.                           |
+| `FavoriteServiceImplTest`   |      4 | Unique Feature: Hinzufügen, Entfernen und Verhalten bei fehlender Tour.                           |
 | `ImageServiceImplTest`      |      2 | Dateisystemzugriff und fehlende Bilder benötigen kontrolliertes Fehlerverhalten.                  |
+| **Gesamt**                  | **29** | Mehr als die geforderten 20 Tests.                                                                |
+
+![Testrun.png](Testrun.png)
+
+Weiters existiert eine Testklasse für den Integrationstest des ORS-Clients
+
+| Testklasse                  | Anzahl | Begründung                                                                                        |
+| --------------------------- |-------:| ------------------------------------------------------------------------------------------------- |
 | `OrsClientTests`            |      5 | Prüft Konfiguration, Geocoding, Routing, Geometrie und ungültige Orte gegen die echte API.        |
-| **Gesamt**                  | **33** | Mehr als die geforderten 20 Tests.                                                                |
+
+![OrsTestrun.png](OrsTestrun.png)
+
+Sämtliche API-Endpoints sind darüber hinaus mit dem 32 requests und 10 test-scripts umfassenden Tour_Postman.json testbar.
+
+![PostmanTestrun.png](PostmanTestrun.png)
+
 
 ### 7.2 Warum diese Bereiche kritisch sind
 
@@ -631,7 +643,7 @@ Im Repository befinden sich **33 mit `@Test` markierte Tests in acht Testklassen
 
 ### 7.3 Abgrenzung und Verbesserungspotenzial
 
-Die Mockito-Tests sind Unit-Tests. `OrsClientTests` sind dagegen Integrationstests,
+Die Mockito-Tests sind Unit-Tests. `OrsClientTests` und `Postman` sind dagegen Integrationstests,
 weil sie `ORS_API_KEY`, Netzwerkzugriff und die reale API benötigen.
 
 Sinnvolle nächste Verbesserungen:
@@ -641,12 +653,6 @@ Sinnvolle nächste Verbesserungen:
 - Repository-Tests mit Testcontainers/PostgreSQL für die echte Volltextsuche
 - Angular-Tests für Guards, Formulare und API-State-Handling
 - gemeinsame Tests für die Grenzwerte von Popularität und Kinderfreundlichkeit
-
-Zum Dokumentationszeitpunkt konnten die Tests in der verwendeten Windows-
-Arbeitsumgebung nicht über `mvnw.cmd` gestartet werden, weil der lokale Maven
-Wrapper bereits beim Bootstrap abbricht. Die Anzahl und Testinhalte wurden daher
-statisch aus dem Repository geprüft. Vor der Abgabe muss ein erfolgreicher Lauf
-mit `backend/mvnw test` auf der Präsentationsmaschine protokolliert werden.
 
 ## 8. Unique Feature: Favoriten
 
@@ -693,22 +699,21 @@ Dadurch kann jeder Benutzer unabhängig eigene Favoriten verwalten.
 ## 9. Zeitaufzeichnung
 
 Es wurde während der Entwicklung keine separate stundengenaue Zeiterfassung im
-Repository geführt. Um keine nicht belegbaren Stunden zu erfinden, dokumentiert
-diese Sektion die aus Git objektiv rekonstruierbare Entwicklungszeit.
+Repository geführt.
 
-### 9.1 Nachweisbare Git-Zeitdaten
+### 9.1 Git-Zeitdaten
 
 | Kennzahl                         |                            Wert |
-| -------------------------------- | ------------------------------: |
+|----------------------------------|--------------------------------:|
 | Erster Commit                    |                   18. März 2026 |
-| Letzter ausgewerteter Commit     |                   13. Juni 2026 |
-| Entwicklungszeitraum             |                 88 Kalendertage |
-| Commits insgesamt                |                             213 |
-| Tage mit mindestens einem Commit |                              34 |
-| `miced`                          | 119 Commits an 18 aktiven Tagen |
-| `Wenhao` und `Wenhao Wen`        |  94 Commits an 26 aktiven Tagen |
+| Letzter ausgewerteter Commit     |                   14. Juni 2026 |
+| Entwicklungszeitraum             |                 89 Kalendertage |
+| Commits insgesamt                |                             223 |
+| Tage mit mindestens einem Commit |                              35 |
+| `miced`                          | 129 Commits an 21 aktiven Tagen |
+| `Wenhao Wen`                     |  94 Commits an 26 aktiven Tagen |
 
-Commits und aktive Tage sind **keine Personenstunden**, zeigen aber Zeitraum,
+Commits und aktive Tage sind keine Personenstunden, zeigen aber Zeitraum,
 Kontinuität und Teambeiträge nachvollziehbar. Für eine geforderte Stundenabrechnung
 müssen beide Teammitglieder vor Abgabe ihre tatsächlich geleisteten Stunden
 ergänzen.
@@ -716,22 +721,23 @@ ergänzen.
 ### 9.2 Rekonstruierte Projektphasen
 
 | Zeitraum      | Schwerpunkt                                                                         |
-| ------------- | ----------------------------------------------------------------------------------- |
+|---------------|-------------------------------------------------------------------------------------|
 | 18.-24. März  | Projektsetup, PostgreSQL, erste End-to-End-Verbindung, Login und Registrierung      |
 | 26.-31. März  | Frontend-Struktur, Auth Guards, Tourdatenmodell und Create-Tour-Flow                |
 | 1.-9. April   | Tour-Liste, Details, Leaflet-Prototyp, Bildhandling, Favoriten und Tour-Log-CRUD    |
 | 16.-27. April | Backend-Refactoring, Service-Interfaces, Security Context und Hibernate-Anpassungen |
 | 3.-24. Mai    | Konfiguration, Volltextsuche, computed attributes und Suchintegration               |
 | 23.-30. Mai   | ORS-Routing, Routengeometrie, XML-Import/Export, OpenAPI und Unit-Tests             |
-| 5.-13. Juni   | Import/Export-Frontend, Responsive Design und Abschlussprüfung                      |
+| 5.-8. Juni    | Import/Export-Frontend, Responsive Design                                           |
+| 9.-14. Juni   | Backend-Validation, ExceptionHandling, CORS-Config und Abschlussprüfung             |
 
 ### 9.3 Ergänzung für die finale Abgabe
 
-| Teammitglied   | Tatsächliche Stunden | Bestätigung |
-| -------------- | -------------------: | ----------- |
-| Michael Stangl |     noch einzutragen | offen       |
-| Wenhao Wen     |     noch einzutragen | offen       |
-| **Gesamt**     | **noch einzutragen** | offen       |
+| Teammitglied   | Tatsächliche Stunden |
+| -------------- |---------------------:|
+| Michael Stangl |                   93 |
+| Wenhao Wen     |     noch einzutragen |
+| **Gesamt**     | **noch einzutragen** |
 
 ## 10. Git und Entwicklungsprozess
 
@@ -801,15 +807,13 @@ Such-, Import/Export- und ORS-Abläufe.
 Das Projekt erfüllt den wesentlichen Funktionsumfang, besitzt aber noch technische
 Verbesserungsmöglichkeiten:
 
-1. Backend-DTOs sollten mit Bean Validation und Controller mit `@Valid` abgesichert werden.
-2. Fachliche Exceptions sollten generische `RuntimeException` ersetzen.
-3. Die Berechnung der computed attributes sollte aus Tour- und Search-Service in einen gemeinsamen Service verschoben werden.
-4. Der Export sollte zusätzlich prüfen, ob die Tour dem angemeldeten Benutzer gehört.
-5. ORS-Integrationstests sollten von normalen Unit-Tests getrennt werden.
-6. Angular-Unit-Tests fehlen derzeit weitgehend.
-7. CORS-Origin, OpenStreetMap-Tile-URL und weitere umgebungsabhängige Werte könnten externalisiert werden.
-8. Die Tour-Log-Listenansicht könnte zusätzlich Kommentar, Distanz und Dauer direkt anzeigen.
-9. Der Maven Wrapper und die plattformspezifischen Frontend-Abhängigkeiten müssen vor der Präsentation auf der Zielmaschine geprüft werden.
+
+1. Die Berechnung der computed attributes sollte aus Tour- und Search-Service in einen gemeinsamen Service verschoben werden.
+2. Der Export sollte zusätzlich prüfen, ob die Tour dem angemeldeten Benutzer gehört.
+3. Angular-Unit-Tests fehlen derzeit weitgehend.
+4. OpenStreetMap-Tile-URL und weitere umgebungsabhängige Werte könnten externalisiert werden.
+5. Die Tour-Log-Listenansicht könnte zusätzlich Kommentar, Distanz und Dauer direkt anzeigen.
+6. Der Maven Wrapper und die plattformspezifischen Frontend-Abhängigkeiten müssen vor der Präsentation auf der Zielmaschine geprüft werden.
 
 ## 13. Fazit
 
@@ -823,7 +827,7 @@ Controller, Services und Repositories, die abstrahierten externen Clients sowie 
 featureorientierte Angular-Struktur. Das Favoritensystem erweitert die
 Pflichtfunktionen um ein benutzerspezifisches, durchgängiges Unique Feature.
 
-Dieses Protokoll beschreibt den Stand des Repositories vom 13. Juni 2026. Die noch
+Dieses Protokoll beschreibt den Stand des Repositories vom 14. Juni 2026. Die noch
 offene stundengenaue Zeiterfassung und ein erfolgreicher Testlauf auf der
 Präsentationsmaschine müssen vor der finalen Abgabe ergänzt beziehungsweise
 dokumentiert werden.
