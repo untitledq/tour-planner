@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.controller.exception.RouteNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.entity.TourType;
 import at.fhtw.swen.tourplanner.service.GeocodingServiceClient;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
@@ -97,7 +98,7 @@ public class RouteServiceClientImpl implements RouteServiceClient {
                 || response.routes() == null
                 || response.routes().isEmpty()) {
             logger.error("ORS returned no routes");
-            throw new RuntimeException("No route found");
+            throw new RouteNotFoundException("No route found");
         }
 
         OrsRoute route = response.routes().getFirst();
