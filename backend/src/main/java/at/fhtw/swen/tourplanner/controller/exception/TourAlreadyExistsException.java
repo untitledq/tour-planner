@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.persistence.exception;
+package at.fhtw.swen.tourplanner.controller.exception;
 
 public class TourAlreadyExistsException extends RuntimeException {
     public TourAlreadyExistsException(String message) {

@@ -1,7 +1,7 @@
 package at.fhtw.swen.tourplanner.persistence.repository.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
-import at.fhtw.swen.tourplanner.persistence.exception.TourLogNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.TourLogNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.repository.TourLogRepository;
 import org.springframework.stereotype.Repository;
 
@@ -50,9 +50,5 @@ public class TourLogRepositoryAdapter {
                 .orElseThrow(() ->
                         new TourLogNotFoundException(
                                 "Tour log with id " + id + " not found"));
-    }
-
-    public List<TourLog> findAll() {
-        return tourLogRepository.findAll();
     }
 }

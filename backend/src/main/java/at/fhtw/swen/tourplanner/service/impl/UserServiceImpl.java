@@ -5,9 +5,9 @@ import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserRepositoryAda
 import at.fhtw.swen.tourplanner.security.core.PasswordHasher;
 import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
-import at.fhtw.swen.tourplanner.service.exception.UserDeletionException;
-import at.fhtw.swen.tourplanner.service.exception.UserRegistrationException;
-import at.fhtw.swen.tourplanner.service.exception.UserValidationException;
+import at.fhtw.swen.tourplanner.controller.exception.UserDeletionException;
+import at.fhtw.swen.tourplanner.controller.exception.UserRegistrationException;
+import at.fhtw.swen.tourplanner.controller.exception.UserValidationException;
 import at.fhtw.swen.tourplanner.service.mapper.UserMapper;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;

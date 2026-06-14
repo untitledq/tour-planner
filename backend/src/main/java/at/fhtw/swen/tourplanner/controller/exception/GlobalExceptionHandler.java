@@ -1,7 +1,5 @@
 package at.fhtw.swen.tourplanner.controller.exception;
 
-import at.fhtw.swen.tourplanner.persistence.exception.*;
-import at.fhtw.swen.tourplanner.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

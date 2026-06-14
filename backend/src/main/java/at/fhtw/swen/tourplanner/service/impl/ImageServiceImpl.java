@@ -1,14 +1,14 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
-import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.TourNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.service.ImageService;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
-import at.fhtw.swen.tourplanner.service.exception.TourImageMissingException;
-import at.fhtw.swen.tourplanner.service.exception.TourImageNotFoundException;
-import at.fhtw.swen.tourplanner.service.exception.TourImageStorageException;
+import at.fhtw.swen.tourplanner.controller.exception.TourImageMissingException;
+import at.fhtw.swen.tourplanner.controller.exception.TourImageNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.TourImageStorageException;
 import at.fhtw.swen.tourplanner.service.mapper.TourMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
