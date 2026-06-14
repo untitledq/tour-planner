@@ -113,6 +113,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(GeocodingException.class)
+    public ResponseEntity<?> handleGeocoding(GeocodingException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     // Bean Validation (@Valid)
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

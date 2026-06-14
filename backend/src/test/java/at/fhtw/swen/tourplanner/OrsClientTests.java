@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner;
 
+import at.fhtw.swen.tourplanner.controller.exception.GeocodingException;
 import at.fhtw.swen.tourplanner.service.GeocodingServiceClient;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.CoordinateDto;
@@ -166,14 +167,11 @@ public class OrsClientTests {
 
     @Test
     void geocode_invalidLocation_shouldThrowException() {
-
         logger.info("Testing invalid geocoding request");
 
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> geocodingServiceClient.geocode(
-                        "asdhjasdhjasdhjkasdhjk"
-                )
+        GeocodingException exception = assertThrows(
+                GeocodingException.class,
+                () -> geocodingServiceClient.geocode("asdhjasdhjasdhjkasdhjk")
         );
 
         logger.info(

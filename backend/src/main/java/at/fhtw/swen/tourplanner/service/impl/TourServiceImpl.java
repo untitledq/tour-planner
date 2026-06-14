@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.controller.exception.TourNotFoundException;
 import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.RouteRepositoryAdapter;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
@@ -93,7 +94,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourDto findByIdAndUser(UUID id, UUID userId) {
         Tour tour = tourRepositoryAdapter.findByIdAndCreatedBy(id, userId)
-                .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
+                .orElseThrow(() -> new TourNotFoundException("Tour not found or access denied"));
 
         return TourMapper.toResponse(tour, computeAttributes(tour.getId(), userId));
     }
@@ -101,7 +102,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourWithFavoriteDto findByIdAndUserWithFavorite(UUID tourId, UUID userId) {
         Tour tour = tourRepositoryAdapter.findById(tourId)
-                .orElseThrow(() -> new RuntimeException("Tour not found"));
+                .orElseThrow(() -> new TourNotFoundException("Tour not found"));
 
         boolean isFavorite = userFavoriteTourRepositoryAdapter.existsByUserIdAndTourId(userId, tourId);
 
@@ -111,7 +112,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourDto update(UUID id, UUID userId, TourDto tourDto) {
         Tour tour = tourRepositoryAdapter.findByIdAndCreatedBy(id, userId)
-                .orElseThrow(() -> new RuntimeException("Tour not found or access denied"));
+                .orElseThrow(() -> new TourNotFoundException("Tour not found or access denied"));
 
         boolean routeRelevantChanged = !Objects.equals(tour.getTourType(), tourDto.getTourType()) ||
                         !Objects.equals(tour.getStartName(), tourDto.getStartName()) ||
@@ -131,7 +132,7 @@ public class TourServiceImpl implements TourService {
     @Transactional
     public void deleteByUser(UUID id, UUID userId) {
         if (tourRepositoryAdapter.findByIdAndCreatedBy(id, userId).isEmpty()) {
-            throw new RuntimeException("Tour not found or access denied");
+            throw new TourNotFoundException("Tour not found or access denied");
         }
         tourRepositoryAdapter.deleteByIdAndCreatedBy(id, userId);
     }
