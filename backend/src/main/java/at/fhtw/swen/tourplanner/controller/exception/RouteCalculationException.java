@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.service.exception;
+package at.fhtw.swen.tourplanner.controller.exception;
 
 public class RouteCalculationException extends RuntimeException {
 

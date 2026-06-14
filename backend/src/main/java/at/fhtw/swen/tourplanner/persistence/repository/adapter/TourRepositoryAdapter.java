@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.persistence.repository.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.exception.TourAlreadyExistsException;
-import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.TourAlreadyExistsException;
+import at.fhtw.swen.tourplanner.controller.exception.TourNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
 import org.springframework.stereotype.Repository;
 

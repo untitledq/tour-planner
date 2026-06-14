@@ -3,7 +3,7 @@ package at.fhtw.swen.tourplanner.unit_tests;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.ImageStorageProperties;
-import at.fhtw.swen.tourplanner.service.exception.TourImageMissingException;
+import at.fhtw.swen.tourplanner.controller.exception.TourImageMissingException;
 import at.fhtw.swen.tourplanner.service.impl.ImageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,7 +83,7 @@ class ImageServiceImplTest {
                 () -> service.downloadTourImage(tourId, userId)
         );
 
-        assertTrue(ex instanceof TourImageMissingException);
+        assertInstanceOf(TourImageMissingException.class, ex);
         assertEquals("No image uploaded for tour " + tourId, ex.getMessage());
 
         verify(tourRepositoryAdapter)

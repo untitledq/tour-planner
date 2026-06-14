@@ -2,15 +2,15 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
 import at.fhtw.swen.tourplanner.persistence.entity.TourLog;
-import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.TourNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourLogRepositoryAdapter;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.TourExportService;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.service.dto.export.TourExportDto;
 import at.fhtw.swen.tourplanner.service.dto.export.TourLogExportDto;
-import at.fhtw.swen.tourplanner.service.exception.TourExportException;
-import at.fhtw.swen.tourplanner.service.exception.TourImportException;
+import at.fhtw.swen.tourplanner.controller.exception.TourExportException;
+import at.fhtw.swen.tourplanner.controller.exception.TourImportException;
 import at.fhtw.swen.tourplanner.util.LoggerService;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import com.fasterxml.jackson.core.JsonProcessingException;

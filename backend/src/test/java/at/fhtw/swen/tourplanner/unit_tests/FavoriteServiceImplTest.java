@@ -1,7 +1,7 @@
 package at.fhtw.swen.tourplanner.unit_tests;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.TourNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserFavoriteTourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.impl.FavoriteServiceImpl;

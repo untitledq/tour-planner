@@ -8,7 +8,7 @@ import at.fhtw.swen.tourplanner.service.AuthService;
 import at.fhtw.swen.tourplanner.service.UserService;
 import at.fhtw.swen.tourplanner.service.dto.UserDto;
 import at.fhtw.swen.tourplanner.security.spring.CurrentUserService;
-import at.fhtw.swen.tourplanner.service.exception.UserAuthenticationException;
+import at.fhtw.swen.tourplanner.controller.exception.UserAuthenticationException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.persistence.exception;
+package at.fhtw.swen.tourplanner.controller.exception;
 
 public class TourNotFoundException extends RuntimeException {
     public TourNotFoundException(String message) {

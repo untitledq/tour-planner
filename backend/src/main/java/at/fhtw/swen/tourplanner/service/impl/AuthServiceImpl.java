@@ -2,7 +2,7 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Session;
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.exception.UserNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.UserNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.SessionRepositoryAdapter;
 import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserRepositoryAdapter;
 import at.fhtw.swen.tourplanner.security.core.PasswordHasher;
@@ -10,7 +10,7 @@ import at.fhtw.swen.tourplanner.security.core.TokenPayload;
 import at.fhtw.swen.tourplanner.security.core.TokenService;
 import at.fhtw.swen.tourplanner.service.AuthService;
 import at.fhtw.swen.tourplanner.controller.response.LoginResponse;
-import at.fhtw.swen.tourplanner.service.exception.UserAuthenticationException;
+import at.fhtw.swen.tourplanner.controller.exception.UserAuthenticationException;
 import at.fhtw.swen.tourplanner.util.UUIDv7;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

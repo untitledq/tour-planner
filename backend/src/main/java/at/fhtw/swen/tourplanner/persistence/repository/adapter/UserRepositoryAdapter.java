@@ -1,12 +1,11 @@
 package at.fhtw.swen.tourplanner.persistence.repository.adapter;
 
 import at.fhtw.swen.tourplanner.persistence.entity.User;
-import at.fhtw.swen.tourplanner.persistence.exception.UserAlreadyExistsException;
-import at.fhtw.swen.tourplanner.persistence.exception.UserNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.UserAlreadyExistsException;
+import at.fhtw.swen.tourplanner.controller.exception.UserNotFoundException;
 import at.fhtw.swen.tourplanner.persistence.repository.UserRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,9 +49,5 @@ public class UserRepositoryAdapter {
                         new UserNotFoundException(
                                 "User with id " + id + " not found"));
         userRepository.delete(user);
-    }
-
-    public List<User> findAll() {
-        return userRepository.findAll();
     }
 }
