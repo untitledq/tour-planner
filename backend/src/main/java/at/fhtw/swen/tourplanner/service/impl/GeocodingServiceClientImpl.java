@@ -1,9 +1,10 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
+import at.fhtw.swen.tourplanner.controller.exception.GeocodingException;
 import at.fhtw.swen.tourplanner.service.GeocodingServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.CoordinateDto;
-import at.fhtw.swen.tourplanner.service.dto.OrsFeature;
-import at.fhtw.swen.tourplanner.service.dto.OrsGeocodeResponse;
+import at.fhtw.swen.tourplanner.service.dto.ors.geocode.OrsFeature;
+import at.fhtw.swen.tourplanner.service.dto.ors.geocode.OrsGeocodeResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -36,9 +37,7 @@ public class GeocodingServiceClientImpl implements GeocodingServiceClient {
         if (response == null
                 || response.features() == null
                 || response.features().isEmpty()) {
-            throw new RuntimeException(
-                    "No geocoding result for: " + location
-            );
+            throw new GeocodingException("No geocoding result for: " + location);
         }
 
         OrsFeature feature = response.features().getFirst();

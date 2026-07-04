@@ -3,6 +3,7 @@ package at.fhtw.swen.tourplanner.service;
 import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
 import at.fhtw.swen.tourplanner.service.dto.TourDto;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
+import at.fhtw.swen.tourplanner.service.dto.TourSortOption;
 import at.fhtw.swen.tourplanner.service.dto.TourWithFavoriteDto;
 
 import java.util.List;
@@ -11,11 +12,11 @@ import java.util.UUID;
 public interface TourService {
     TourDto create(UUID userId, TourDto tourDto, UUID id);
 
-    List<TourListResponse> findAllByUser(UUID userId);
+    List<TourListResponse> findAllByUser(UUID userId, TourSortOption sort);
 
-    List<TourTypeListResponse> findAllFavByUser(UUID userId);
+    List<TourTypeListResponse> findAllFavByUser(UUID userId, TourSortOption sort);
 
-    List<TourTypeListResponse> findAllNotFavByUser(UUID userId);
+    List<TourTypeListResponse> findAllNotFavByUser(UUID userId, TourSortOption sort);
 
     TourDto findByIdAndUser(UUID id, UUID userId);
 

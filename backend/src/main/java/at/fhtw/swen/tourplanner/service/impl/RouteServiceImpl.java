@@ -2,11 +2,13 @@ package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.Route;
 import at.fhtw.swen.tourplanner.persistence.entity.Tour;
-import at.fhtw.swen.tourplanner.persistence.repository.RouteRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.RouteRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.RouteService;
 import at.fhtw.swen.tourplanner.service.RouteServiceClient;
 import at.fhtw.swen.tourplanner.service.dto.RouteDto;
+import at.fhtw.swen.tourplanner.controller.exception.TourNotFoundException;
+import at.fhtw.swen.tourplanner.controller.exception.RouteCalculationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,32 +17,41 @@ import java.util.UUID;
 @Service
 public class RouteServiceImpl implements RouteService {
 
-    private final RouteRepository routeRepository;
-    private final TourRepository tourRepository;
+    private final RouteRepositoryAdapter routeRepositoryAdapter;
+    private final TourRepositoryAdapter tourRepositoryAdapter;
     private final RouteServiceClient routeClient;
 
-    public RouteServiceImpl(RouteRepository routeRepository,
-                            TourRepository tourRepository,
+    public RouteServiceImpl(RouteRepositoryAdapter routeRepositoryAdapter,
+                            TourRepositoryAdapter tourRepositoryAdapter,
                             RouteServiceClient routeClient) {
-        this.routeRepository = routeRepository;
-        this.tourRepository = tourRepository;
+        this.routeRepositoryAdapter = routeRepositoryAdapter;
+        this.tourRepositoryAdapter = tourRepositoryAdapter;
         this.routeClient = routeClient;
     }
 
     @Override
     @Transactional(readOnly = true)
     public RouteDto getRouteForTour(UUID tourId, UUID userId) {
+        if (tourId == null || userId == null) {
+            throw new IllegalArgumentException("Tour ID and User ID must not be null");
+        }
 
-        Tour tour = tourRepository.findByIdAndCreatedBy(tourId, userId)
-                .orElseThrow(() -> new RuntimeException("Tour not found"));
+        Tour tour = tourRepositoryAdapter.findByIdAndCreatedBy(tourId, userId)
+                .orElseThrow(() -> new TourNotFoundException("Tour not found with ID: " + tourId));
 
-        Route route = routeRepository.findByTourId(tour.getId())
+        Route route = routeRepositoryAdapter.findByTourId(tour.getId())
                 .orElseGet(() -> {
                     RouteDto dto = routeClient.calculateRoute(
                             tour.getStartName(),
                             tour.getEndName(),
                             tour.getTourType().name()
                     );
+
+                    if (dto == null) {
+                        throw new RouteCalculationException(
+                                "Failed to calculate route"
+                        );
+                    }
 
                     Route newRoute = new Route(
                             UUID.randomUUID(),
@@ -50,7 +61,7 @@ public class RouteServiceImpl implements RouteService {
                             dto.coordinates()
                     );
 
-                    return routeRepository.save(newRoute);
+                    return routeRepositoryAdapter.save(newRoute);
                 });
 
         return new RouteDto(

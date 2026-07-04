@@ -1,12 +1,85 @@
-<app-shell title="[Placeholder]" (logoutClick)="logout()">
+<app-shell title="Import" (logoutClick)="logout()">
   <section class="import-content">
     <div class="import-shell">
-      <div class="import-header">
+      <header class="import-header">
         <div>
           <h1>Import</h1>
-          <h2>Bring external tour data into your workspace and continue editing it.</h2>
+          <p class="import-description">
+            Drop an exported XML tour file and import it into your workspace.
+          </p>
         </div>
-      </div>
+      </header>
+
+      <section class="import-panel">
+        <label
+          class="import-dropzone"
+          [class.import-dropzone--active]="isDraggingFile()"
+          (dragover)="onFileDragOver($event)"
+          (dragleave)="onFileDragLeave($event)"
+          (drop)="onFileDrop($event)"
+        >
+          <input
+            type="file"
+            accept=".xml,application/xml,text/xml"
+            (change)="onFileInputChange($event)"
+          />
+          <span class="pi pi-upload" aria-hidden="true"></span>
+          <strong>Drop XML file here</strong>
+          <small>or click to browse</small>
+        </label>
+
+        @if (selectedFileDetails()) {
+          <div class="import-file">
+            <span class="pi pi-file" aria-hidden="true"></span>
+            <div>
+              <strong>{{ selectedFileDetails() }}</strong>
+              <p>Ready to import.</p>
+            </div>
+            <button
+              type="button"
+              class="import-clear-file"
+              aria-label="Remove selected file"
+              (click)="clearSelectedFile()"
+            >
+              <span class="pi pi-times" aria-hidden="true"></span>
+            </button>
+          </div>
+        } @else {
+          <div class="import-empty-state">
+            <strong>No file selected.</strong>
+            <p>Only XML files are accepted.</p>
+          </div>
+        }
+
+        <div class="import-name-row">
+          <div class="import-name-field">
+            <label for="importTourName">New tour name</label>
+            <input
+              id="importTourName"
+              pInputText
+              type="text"
+              placeholder="Keep XML name"
+              [formControl]="tourNameControl"
+              [disabled]="!selectedFile() || isImporting()"
+            />
+          </div>
+
+          <p-button
+            label="Import XML"
+            icon="pi pi-file-import"
+            styleClass="import-action"
+            [disabled]="!selectedFile() || isImporting()"
+            [loading]="isImporting()"
+            (onClick)="importSelectedFile()"
+          />
+        </div>
+      </section>
+
+      @if (importError()) {
+        <p class="import-message import-message--error">{{ importError() }}</p>
+      } @else if (importSuccess()) {
+        <p class="import-message import-message--success">{{ importSuccess() }}</p>
+      }
     </div>
   </section>
 </app-shell>

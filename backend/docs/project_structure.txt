@@ -1,7 +1,6 @@
 .
 ├── compose.yaml
 ├── docs
-│   ├── code2file.txt
 │   ├── contend.txt
 │   ├── db.json
 │   ├── db.puml
@@ -26,6 +25,7 @@
 ├── init.sql
 ├── logs
 │   ├── tourplanner.2026-04-16.0.log
+│   ├── tourplanner.2026-04-17.0.log
 │   └── tourplanner.log
 ├── .mvn
 │   └── wrapper
@@ -42,6 +42,8 @@
     │   │               └── tourplanner
     │   │                   ├── controller
     │   │                   │   ├── AuthController.java
+    │   │                   │   ├── exception
+    │   │                   │   │   └── GlobalExceptionHandler.java
     │   │                   │   ├── FavoriteController.java
     │   │                   │   ├── ImageDownloadController.java
     │   │                   │   ├── ImageUploadController.java
@@ -50,10 +52,14 @@
     │   │                   │   │   └── RegisterRequest.java
     │   │                   │   ├── response
     │   │                   │   │   ├── AuthResponse.java
+    │   │                   │   │   ├── enums
+    │   │                   │   │   │   └── SearchResultType.java
     │   │                   │   │   ├── LoginResponse.java
+    │   │                   │   │   ├── SearchResultResponse.java
     │   │                   │   │   ├── TourListResponse.java
     │   │                   │   │   └── TourTypeListResponse.java
     │   │                   │   ├── RouteController.java
+    │   │                   │   ├── SearchController.java
     │   │                   │   ├── TourController.java
     │   │                   │   └── TourLogController.java
     │   │                   ├── persistence
@@ -66,8 +72,28 @@
     │   │                   │   │   ├── UserFavoriteTourId.java
     │   │                   │   │   ├── UserFavoriteTour.java
     │   │                   │   │   └── User.java
+    │   │                   │   ├── exception
+    │   │                   │   │   ├── RouteNotFoundException.java
+    │   │                   │   │   ├── SessionAlreadyExistsException.java
+    │   │                   │   │   ├── SessionNotFoundException.java
+    │   │                   │   │   ├── TourAlreadyExistsException.java
+    │   │                   │   │   ├── TourLogNotFoundException.java
+    │   │                   │   │   ├── TourNotFoundException.java
+    │   │                   │   │   ├── UserAlreadyExistsException.java
+    │   │                   │   │   ├── UserFavoriteTourNotFoundException.java
+    │   │                   │   │   └── UserNotFoundException.java
     │   │                   │   └── repository
+    │   │                   │       ├── adapter
+    │   │                   │       │   ├── RouteRepositoryAdapter.java
+    │   │                   │       │   ├── SessionRepositoryAdapter.java
+    │   │                   │       │   ├── TourLogRepositoryAdapter.java
+    │   │                   │       │   ├── TourRepositoryAdapter.java
+    │   │                   │       │   ├── UserFavoriteTourRepositoryAdapter.java
+    │   │                   │       │   └── UserRepositoryAdapter.java
     │   │                   │       ├── RouteRepository.java
+    │   │                   │       ├── search
+    │   │                   │       │   ├── SearchRepository.java
+    │   │                   │       │   └── SearchResultRow.java
     │   │                   │       ├── SessionRepository.java
     │   │                   │       ├── TourLogRepository.java
     │   │                   │       ├── TourRepository.java
@@ -90,22 +116,54 @@
     │   │                   ├── service
     │   │                   │   ├── AuthService.java
     │   │                   │   ├── dto
+    │   │                   │   │   ├── ChildFriendliness.java
+    │   │                   │   │   ├── CoordinateDto.java
+    │   │                   │   │   ├── export
+    │   │                   │   │   │   ├── TourExportDto.java
+    │   │                   │   │   │   └── TourLogExportDto.java
+    │   │                   │   │   ├── ors
+    │   │                   │   │   │   ├── geocode
+    │   │                   │   │   │   │   ├── OrsFeature.java
+    │   │                   │   │   │   │   ├── OrsGeocodeResponse.java
+    │   │                   │   │   │   │   └── OrsPointGeometry.java
+    │   │                   │   │   │   └── route
+    │   │                   │   │   │       ├── OrsRoute.java
+    │   │                   │   │   │       ├── OrsRouteRequest.java
+    │   │                   │   │   │       ├── OrsRouteResponse.java
+    │   │                   │   │   │       └── OrsSummary.java
+    │   │                   │   │   ├── Popularity.java
     │   │                   │   │   ├── RouteDto.java
-    │   │                   │   │   ├── SessionDto.java
+    │   │                   │   │   ├── TourComputedAttributesDto.java
     │   │                   │   │   ├── TourDto.java
     │   │                   │   │   ├── TourLogDto.java
+    │   │                   │   │   ├── TourSortOption.java
     │   │                   │   │   ├── TourWithFavoriteDto.java
     │   │                   │   │   └── UserDto.java
+    │   │                   │   ├── exception
+    │   │                   │   │   ├── RouteCalculationException.java
+    │   │                   │   │   ├── TourExportException.java
+    │   │                   │   │   ├── TourImageMissingException.java
+    │   │                   │   │   ├── TourImageNotFoundException.java
+    │   │                   │   │   ├── TourImageStorageException.java
+    │   │                   │   │   ├── TourImportException.java
+    │   │                   │   │   ├── UserAuthenticationException.java
+    │   │                   │   │   ├── UserDeletionException.java
+    │   │                   │   │   ├── UserRegistrationException.java
+    │   │                   │   │   └── UserValidationException.java
     │   │                   │   ├── FavoriteService.java
+    │   │                   │   ├── GeocodingServiceClient.java
     │   │                   │   ├── ImageService.java
     │   │                   │   ├── ImageStorageProperties.java
     │   │                   │   ├── impl
     │   │                   │   │   ├── AuthServiceImpl.java
     │   │                   │   │   ├── FavoriteServiceImpl.java
+    │   │                   │   │   ├── GeocodingServiceClientImpl.java
     │   │                   │   │   ├── ImageServiceImpl.java
     │   │                   │   │   ├── RouteServiceClientImpl.java
     │   │                   │   │   ├── RouteServiceImpl.java
+    │   │                   │   │   ├── SearchServiceImpl.java
     │   │                   │   │   ├── SessionCleanupServiceImpl.java
+    │   │                   │   │   ├── TourExportServiceImpl.java
     │   │                   │   │   ├── TourLogServiceImpl.java
     │   │                   │   │   ├── TourServiceImpl.java
     │   │                   │   │   └── UserServiceImpl.java
@@ -116,7 +174,9 @@
     │   │                   │   │   └── UserMapper.java
     │   │                   │   ├── RouteServiceClient.java
     │   │                   │   ├── RouteService.java
+    │   │                   │   ├── SearchService.java
     │   │                   │   ├── SessionCleanupService.java
+    │   │                   │   ├── TourExportService.java
     │   │                   │   ├── TourLogService.java
     │   │                   │   ├── TourService.java
     │   │                   │   └── UserService.java
@@ -127,15 +187,24 @@
     │   └── resources
     │       ├── application.yaml
     │       ├── logback.xml
+    │       ├── newman.sh
     │       └── Tour_Postman.json
     └── test
         └── java
-            └── at
-                └── fhtw
-                    └── swen
-                        └── tourplanner
-                            ├── BackendApplicationTests.java
-                            └── devtools
-                                └── UpdateProjectStructure.java
+            ├── at
+            │   └── fhtw
+            │       └── swen
+            │           └── tourplanner
+            │               ├── OrsClientTests.java
+            │               └── unit_tests
+            │                   ├── FavoriteServiceImplTest.java
+            │                   ├── ImageServiceImplTest.java
+            │                   ├── SearchServiceImplTest.java
+            │                   ├── TourExportServiceImplTest.java
+            │                   ├── TourLogServiceImplTest.java
+            │                   ├── TourServiceImplTest.java
+            │                   └── UserServiceImplTest.java
+            └── devtools
+                └── UpdateProjectStructure.java
 
-37 directories, 102 files
+48 directories, 160 files

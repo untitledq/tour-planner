@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -8,9 +8,10 @@ import {
   TourFilteredListResponse,
   TourListItem,
   TourListResponse,
+  TourSortOption,
   TourResponse,
   TourWithFavoriteResponse,
-  TourRouteResponse
+  TourRouteResponse,
 } from '../models/tour.models';
 
 @Injectable({ providedIn: 'root' })
@@ -19,16 +20,24 @@ export class TourApiService {
   private readonly apiUrl = `${API_BASE_URL}/tours`;
   private readonly favoritesApiUrl = `${API_BASE_URL}/users/me/favorites`;
 
-  list(): Observable<TourListResponse[]> {
-    return this.http.get<TourListResponse[]>(this.apiUrl);
+  list(sort: TourSortOption = 'POPULARITY_DESC'): Observable<TourListResponse[]> {
+    return this.http.get<TourListResponse[]>(this.apiUrl, {
+      params: this.sortParams(sort),
+    });
   }
 
-  listFavorites(): Observable<TourFilteredListResponse[]> {
-    return this.http.get<TourFilteredListResponse[]>(`${this.apiUrl}/favorites`);
+  listFavorites(sort: TourSortOption = 'POPULARITY_DESC'): Observable<TourFilteredListResponse[]> {
+    return this.http.get<TourFilteredListResponse[]>(`${this.apiUrl}/favorites`, {
+      params: this.sortParams(sort),
+    });
   }
 
-  listNotFavorites(): Observable<TourFilteredListResponse[]> {
-    return this.http.get<TourFilteredListResponse[]>(`${this.apiUrl}/not-favorites`);
+  listNotFavorites(
+    sort: TourSortOption = 'POPULARITY_DESC',
+  ): Observable<TourFilteredListResponse[]> {
+    return this.http.get<TourFilteredListResponse[]>(`${this.apiUrl}/not-favorites`, {
+      params: this.sortParams(sort),
+    });
   }
 
   addFavorite(id: string): Observable<void> {
@@ -51,6 +60,20 @@ export class TourApiService {
     return this.http.get<TourRouteResponse>(`${this.apiUrl}/${id}/route`);
   }
 
+  exportTour(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${id}/export`, {
+      responseType: 'blob',
+    });
+  }
+
+  importTourXml(xml: string): Observable<TourResponse> {
+    return this.http.post<TourResponse>(`${this.apiUrl}/import`, xml, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/xml',
+      }),
+    });
+  }
+
   uploadImage(id: string, file: File): Observable<TourResponse> {
     const formData = new FormData();
     formData.append('file', file);
@@ -60,7 +83,7 @@ export class TourApiService {
 
   downloadImage(id: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${id}/image`, {
-      responseType: 'blob'
+      responseType: 'blob',
     });
   }
 
@@ -81,8 +104,12 @@ export class TourApiService {
       id: tour.id,
       name: tour.name,
       tourType: 'tourType' in tour ? tour.tourType : undefined,
-      isFavorite: false
+      isFavorite: false,
+      computedAttributes: tour.computedAttributes,
     };
   }
 
+  private sortParams(sort: TourSortOption): HttpParams {
+    return new HttpParams().set('sort', sort);
+  }
 }

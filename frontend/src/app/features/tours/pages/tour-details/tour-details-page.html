@@ -55,6 +55,20 @@
         <div class="tour-details-sections">
           <div class="tour-details-map-shell">
             <div class="tour-details-map" #mapContainer></div>
+            @if (routeMapState() !== 'ready') {
+              <div class="tour-details-map-state">
+                @if (routeMapState() === 'loading') {
+                  <span class="pi pi-spin pi-spinner" aria-hidden="true"></span>
+                  <strong>Loading route...</strong>
+                } @else if (routeMapState() === 'error') {
+                  <span class="pi pi-exclamation-triangle" aria-hidden="true"></span>
+                  <strong>{{ routeLoadError() }}</strong>
+                } @else {
+                  <span class="pi pi-map" aria-hidden="true"></span>
+                  <strong>No route coordinates available.</strong>
+                }
+              </div>
+            }
           </div>
           <div class="tour-details-top-row">
             <section class="tour-details-card tour-details-card--statistics">
@@ -67,18 +81,20 @@
                 <p class="tour-details-route-state">Loading route details...</p>
               } @else if (routeLoadError()) {
                 <p class="tour-details-route-state">{{ routeLoadError() }}</p>
-              } @else if (routeDetails(); as route) {
+              } @else if (routeMetrics(); as metrics) {
                 <div class="tour-details-grid">
                   <div class="tour-details-item">
                     <span>Distance</span>
-                    <strong>{{ formatDistance(route.distance) }}</strong>
+                    <strong>{{ metrics.distance }}</strong>
                   </div>
 
                   <div class="tour-details-item">
                     <span>Est. Time</span>
-                    <strong>{{ formatDuration(route.duration) }}</strong>
+                    <strong>{{ metrics.duration }}</strong>
                   </div>
                 </div>
+              } @else {
+                <p class="tour-details-route-state">No route details are available yet.</p>
               }
             </section>
 
@@ -90,11 +106,12 @@
               <div class="tour-statistics-overview">
                 <div class="tour-statistics-item">
                   <div class="tour-statistics-icon tour-statistics-icon--orange" aria-hidden="true">
-                    ☆
+                    <span class="pi pi-star"></span>
                   </div>
                   <div class="tour-statistics-copy">
                     <span>Popularity:</span>
-                    <strong>4 Stars</strong>
+                    <strong>{{ popularityLabel(selectedTour.computedAttributes?.popularity) }}</strong>
+                    <small>{{ selectedTour.computedAttributes?.logCount ?? 0 }} logs</small>
                   </div>
                 </div>
 
@@ -102,11 +119,14 @@
 
                 <div class="tour-statistics-item">
                   <div class="tour-statistics-icon tour-statistics-icon--green" aria-hidden="true">
-                    ☺
+                    <span class="pi pi-heart"></span>
                   </div>
                   <div class="tour-statistics-copy">
                     <span>Child-Friendly:</span>
-                    <strong>Medium</strong>
+                    <strong>
+                      {{ childFriendlinessLabel(selectedTour.computedAttributes?.childFriendliness) }}
+                    </strong>
+                    <small>{{ childFriendlinessSummary(selectedTour.computedAttributes) }}</small>
                   </div>
                 </div>
               </div>
@@ -138,6 +158,16 @@
               <div class="tour-details-item">
                 <span>To</span>
                 <strong>{{ selectedTour.endName }}</strong>
+              </div>
+
+              <div class="tour-details-item">
+                <span>Avg. Time</span>
+                <strong>{{ formatAverageTime(selectedTour.computedAttributes) }}</strong>
+              </div>
+
+              <div class="tour-details-item">
+                <span>Avg. Distance</span>
+                <strong>{{ formatAverageDistance(selectedTour.computedAttributes) }}</strong>
               </div>
 
               <div class="tour-details-item tour-details-item--wide">
@@ -206,11 +236,36 @@
                 <p>All recorded log entries that belong to this tour.</p>
               </div>
 
-              <p-button
-                label="+ New Tour Log"
-                styleClass="tour-details-new-log-button"
-                (onClick)="openCreateLog()"
-              />
+              <div class="tour-details-log-tools">
+                <form class="tour-details-log-search" (submit)="submitLogSearch(); $event.preventDefault()">
+                  <p-iconfield class="tour-details-log-search__field">
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input
+                      pInputText
+                      type="text"
+                      placeholder="Search logs..."
+                      [formControl]="logSearchControl"
+                      (keydown.enter)="submitLogSearch()"
+                    />
+                  </p-iconfield>
+
+                  <p-button
+                    label="Search"
+                    icon="pi pi-search"
+                    ariaLabel="Search tour logs"
+                    styleClass="tour-details-log-search-button"
+                    type="submit"
+                    [loading]="isSearchingLogs()"
+                    [disabled]="isSearchingLogs()"
+                  />
+                </form>
+
+                <p-button
+                  label="+ New Tour Log"
+                  styleClass="tour-details-new-log-button"
+                  (onClick)="openCreateLog()"
+                />
+              </div>
             </div>
 
             @if (isLoadingLogs()) {
@@ -223,14 +278,24 @@
                 <strong>Could not load tour logs.</strong>
                 <p>{{ logLoadError() }}</p>
               </div>
+            } @else if (logSearchError()) {
+              <div class="tour-details-log-placeholder">
+                <strong>Could not search tour logs.</strong>
+                <p>{{ logSearchError() }}</p>
+              </div>
             } @else if (!tourLogs().length) {
               <div class="tour-details-log-placeholder">
                 <strong>No logs for this tour yet.</strong>
                 <p>Create the first tour log to start tracking this specific route.</p>
               </div>
+            } @else if (!visibleTourLogs().length) {
+              <div class="tour-details-log-placeholder">
+                <strong>No matching logs found.</strong>
+                <p>Try a different search term or clear the search field and press Enter.</p>
+              </div>
             } @else {
               <div class="tour-details-log-list">
-                @for (log of tourLogs(); track log.id) {
+                @for (log of visibleTourLogs(); track log.id) {
                   <article class="tour-details-log-card">
                     <div class="tour-details-log-card__top">
                       <div>

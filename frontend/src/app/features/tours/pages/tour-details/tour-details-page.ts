@@ -1,11 +1,24 @@
-import { Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 import { finalize } from 'rxjs';
 import type * as Leaflet from 'leaflet';
 
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
+import { SearchApiService } from '../../../../core/services/search-api.service';
 import { AppShellComponent } from '../../../../shared/components/app-shell/app-shell';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { FavoriteToggleComponent } from '../../../../shared/components/favorite-toggle/favorite-toggle';
@@ -15,10 +28,13 @@ import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { TourLogResponse } from '../../../tour-logs/models/tour-log.models';
 import { TourLogApiService } from '../../../tour-logs/services/tour-log-api.service';
 import {
+  TourChildFriendliness,
+  TourComputedAttributes,
+  TourPopularity,
   TourResponse,
   TourRouteResponse,
   TourType,
-  TourWithFavoriteResponse
+  TourWithFavoriteResponse,
 } from '../../models/tour.models';
 import { TourApiService } from '../../services/tour-api.service';
 
@@ -26,15 +42,19 @@ import { TourApiService } from '../../services/tour-api.service';
   selector: 'app-tour-details-page',
   standalone: true,
   imports: [
+    ReactiveFormsModule,
     ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
     AppShellComponent,
     ConfirmDialogComponent,
     FavoriteToggleComponent,
     ImagePreviewDialogComponent,
-    PageBreadcrumbComponent
+    PageBreadcrumbComponent,
   ],
   templateUrl: './tour-details-page.html',
-  styleUrl: './tour-details-page.css'
+  styleUrl: './tour-details-page.css',
 })
 export class TourDetailsPage implements OnDestroy {
   @ViewChild('mapContainer')
@@ -60,9 +80,14 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly tourLoadError = signal('');
   protected readonly routeLoadError = signal('');
   protected readonly logLoadError = signal('');
+  protected readonly logSearchError = signal('');
   protected readonly tour = signal<TourResponse | null>(null);
   protected readonly routeDetails = signal<TourRouteResponse | null>(null);
   protected readonly tourLogs = signal<TourLogResponse[]>([]);
+  protected readonly matchingLogIds = signal<Set<string> | null>(null);
+  protected readonly logSearchTerm = signal('');
+  protected readonly isSearchingLogs = signal(false);
+  protected readonly logSearchControl = new FormControl('', { nonNullable: true });
   protected readonly showDeleteDialog = signal(false);
   protected readonly showDeleteLogDialog = signal(false);
   protected readonly isDeletingTour = signal(false);
@@ -77,8 +102,44 @@ export class TourDetailsPage implements OnDestroy {
   protected readonly canShowTourActions = computed(() => {
     return !this.isLoadingTour() && !this.tourLoadError() && this.tour() !== null;
   });
+  protected readonly routeMetrics = computed(() => {
+    const route = this.routeDetails();
+
+    if (!route || !Number.isFinite(route.distance) || !Number.isFinite(route.duration)) {
+      return null;
+    }
+
+    return {
+      distance: this.formatDistance(route.distance),
+      duration: this.formatDuration(route.duration),
+    };
+  });
+  protected readonly routeMapState = computed(() => {
+    if (this.isLoadingRoute()) {
+      return 'loading';
+    }
+
+    if (this.routeLoadError()) {
+      return 'error';
+    }
+
+    if (!this.routeDetails()?.coordinates?.length) {
+      return 'empty';
+    }
+
+    return 'ready';
+  });
+  protected readonly visibleTourLogs = computed(() => {
+    const matchingIds = this.matchingLogIds();
+
+    if (!this.logSearchTerm().trim() || matchingIds === null) {
+      return this.tourLogs();
+    }
+
+    return this.tourLogs().filter((log) => matchingIds.has(log.id));
+  });
   protected readonly breadcrumbItems = signal<MenuItem[]>([
-    { label: 'Tours', routerLink: '/tours' }
+    { label: 'Tours', routerLink: '/tours' },
   ]);
   protected isLoggingOut = false;
 
@@ -86,6 +147,7 @@ export class TourDetailsPage implements OnDestroy {
   private readonly authSession = inject(AuthSessionService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly searchApi = inject(SearchApiService);
   private readonly tourApi = inject(TourApiService);
   private readonly tourLogApi = inject(TourLogApiService);
 
@@ -107,13 +169,13 @@ export class TourDetailsPage implements OnDestroy {
           this.isFavorite.set(tour.favorite);
           this.breadcrumbItems.set([
             { label: 'Tours', routerLink: '/tours' },
-            { label: tour.name || tour.id }
+            { label: tour.name || tour.id },
           ]);
         },
         error: () => {
           this.tourLoadError.set('Tour details could not be loaded.');
           this.tour.set(null);
-        }
+        },
       });
 
     this.tourApi
@@ -122,12 +184,13 @@ export class TourDetailsPage implements OnDestroy {
       .subscribe({
         next: (route) => {
           this.routeDetails.set(route);
+          this.routeLoadError.set('');
           void this.ensureMapIsReady();
         },
         error: () => {
           this.routeLoadError.set('Route details could not be loaded.');
           this.routeDetails.set(null);
-        }
+        },
       });
 
     this.tourLogApi
@@ -138,14 +201,14 @@ export class TourDetailsPage implements OnDestroy {
           this.tourLogs.set(
             [...logs].sort((left, right) => {
               return new Date(right.dateTime).getTime() - new Date(left.dateTime).getTime();
-            })
+            }),
           );
           this.logLoadError.set('');
         },
         error: () => {
           this.logLoadError.set('Tour logs could not be loaded for this tour.');
           this.tourLogs.set([]);
-        }
+        },
       });
   }
 
@@ -178,12 +241,14 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     this.map = leaflet.map(container, {
-      zoomControl: true
+      zoomControl: true,
     });
 
-    leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
+    leaflet
+      .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+      })
+      .addTo(this.map);
 
     this.map.setView([48.2082, 16.3738], 13);
   }
@@ -196,7 +261,13 @@ export class TourDetailsPage implements OnDestroy {
       return;
     }
 
-    const latLngs = route.coordinates.map(([lat, lng]) => leaflet.latLng(lat, lng));
+    const latLngs = route.coordinates
+      .map(([lat, lng]) => leaflet.latLng(lat, lng))
+      .filter((latLng) => Number.isFinite(latLng.lat) && Number.isFinite(latLng.lng));
+
+    if (!latLngs.length) {
+      return;
+    }
 
     if (this.routeLayer) {
       this.map.removeLayer(this.routeLayer);
@@ -210,35 +281,39 @@ export class TourDetailsPage implements OnDestroy {
       this.map.removeLayer(this.endMarker);
     }
 
-    this.routeLayer = leaflet.polyline(latLngs, {
-      color: '#2f7d6b',
-      weight: 6,
-      smoothFactor: 1.5,
-    lineCap: 'round',
-    lineJoin: 'round'
-    }).addTo(this.map);
+    this.routeLayer = leaflet
+      .polyline(latLngs, {
+        color: '#2f7d6b',
+        weight: 6,
+        smoothFactor: 1.5,
+        lineCap: 'round',
+        lineJoin: 'round',
+      })
+      .addTo(this.map);
 
-    this.startMarker = leaflet.circleMarker(latLngs[0], {
-      radius: 9,
-      color: '#2563eb',
-      weight: 3,
-      fillColor: '#60a5fa',
-      fillOpacity: 1
-    })
+    this.startMarker = leaflet
+      .circleMarker(latLngs[0], {
+        radius: 9,
+        color: '#2563eb',
+        weight: 3,
+        fillColor: '#60a5fa',
+        fillOpacity: 1,
+      })
       .addTo(this.map)
       .bindPopup(`From: ${this.tour()?.startName ?? 'Start'}`);
-    this.endMarker = leaflet.circleMarker(latLngs[latLngs.length - 1], {
-      radius: 9,
-      color: '#ea580c',
-      weight: 3,
-      fillColor: '#fb923c',
-      fillOpacity: 1
-    })
+    this.endMarker = leaflet
+      .circleMarker(latLngs[latLngs.length - 1], {
+        radius: 9,
+        color: '#ea580c',
+        weight: 3,
+        fillColor: '#fb923c',
+        fillOpacity: 1,
+      })
       .addTo(this.map)
       .bindPopup(`To: ${this.tour()?.endName ?? 'End'}`);
 
     this.map.fitBounds(this.routeLayer.getBounds(), {
-      padding: [24, 24]
+      padding: [24, 24],
     });
 
     this.map.invalidateSize();
@@ -257,7 +332,7 @@ export class TourDetailsPage implements OnDestroy {
         error: () => {
           this.authSession.clearToken();
           void this.router.navigateByUrl('/login');
-        }
+        },
       });
   }
 
@@ -273,6 +348,40 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     void this.router.navigate(['/tours', selectedTour.id, 'logs', 'create']);
+  }
+
+  protected submitLogSearch(): void {
+    const selectedTour = this.tour();
+    const searchTerm = this.logSearchControl.value.trim();
+
+    this.logSearchTerm.set(searchTerm);
+    this.logSearchError.set('');
+
+    if (!selectedTour || !searchTerm) {
+      this.matchingLogIds.set(null);
+      return;
+    }
+
+    this.isSearchingLogs.set(true);
+
+    this.searchApi
+      .search(searchTerm, 'tour-logs')
+      .pipe(finalize(() => this.isSearchingLogs.set(false)))
+      .subscribe({
+        next: (results) => {
+          const matchingIds = new Set(
+            results
+              .filter((result) => result.type === 'TOUR_LOG' && result.tourId === selectedTour.id)
+              .map((result) => result.id),
+          );
+
+          this.matchingLogIds.set(matchingIds);
+        },
+        error: () => {
+          this.matchingLogIds.set(new Set());
+          this.logSearchError.set('Tour logs could not be searched.');
+        },
+      });
   }
 
   protected openEditTour(): void {
@@ -311,14 +420,12 @@ export class TourDetailsPage implements OnDestroy {
       ? this.tourApi.removeFavorite(selectedTour.id)
       : this.tourApi.addFavorite(selectedTour.id);
 
-    favoriteRequest
-      .pipe(finalize(() => this.isTogglingFavorite.set(false)))
-      .subscribe({
-        next: () => {
-          this.isFavorite.update((value) => !value);
-        },
-        error: () => {}
-      });
+    favoriteRequest.pipe(finalize(() => this.isTogglingFavorite.set(false))).subscribe({
+      next: () => {
+        this.isFavorite.update((value) => !value);
+      },
+      error: () => {},
+    });
   }
 
   protected uploadedImageName(path: string): string {
@@ -347,7 +454,7 @@ export class TourDetailsPage implements OnDestroy {
           this.previewImageUrl.set(previewUrl);
           this.showImagePreviewDialog.set(true);
         },
-        error: () => {}
+        error: () => {},
       });
   }
 
@@ -379,7 +486,7 @@ export class TourDetailsPage implements OnDestroy {
 
           URL.revokeObjectURL(downloadUrl);
         },
-        error: () => {}
+        error: () => {},
       });
   }
 
@@ -424,7 +531,7 @@ export class TourDetailsPage implements OnDestroy {
         },
         error: () => {
           this.showDeleteDialog.set(false);
-        }
+        },
       });
   }
 
@@ -443,11 +550,20 @@ export class TourDetailsPage implements OnDestroy {
       .subscribe({
         next: () => {
           this.tourLogs.update((logs) => logs.filter((log) => log.id !== selectedLog.id));
+          this.matchingLogIds.update((ids) => {
+            if (ids === null) {
+              return ids;
+            }
+
+            const nextIds = new Set(ids);
+            nextIds.delete(selectedLog.id);
+            return nextIds;
+          });
           this.closeDeleteLogDialog();
         },
         error: () => {
           this.closeDeleteLogDialog();
-        }
+        },
       });
   }
 
@@ -463,7 +579,6 @@ export class TourDetailsPage implements OnDestroy {
         return 'Vacation';
     }
   }
-  
 
   protected formatDistance(distanceInMeters: number): string {
     return `${(distanceInMeters / 1000).toFixed(1)} km`;
@@ -497,7 +612,7 @@ export class TourDetailsPage implements OnDestroy {
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     }).format(date);
   }
 
@@ -518,5 +633,65 @@ export class TourDetailsPage implements OnDestroy {
     }
 
     return `${hours} h ${minutes} min`;
+  }
+
+  protected popularityLabel(value: TourPopularity | undefined): string {
+    switch (value) {
+      case 'VERY_POPULAR':
+        return 'Very popular';
+      case 'POPULAR':
+        return 'Popular';
+      case 'LOW':
+        return 'Low';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  protected childFriendlinessLabel(value: TourChildFriendliness | undefined): string {
+    switch (value) {
+      case 'VERY_CHILD_FRIENDLY':
+        return 'Very child-friendly';
+      case 'CHILD_FRIENDLY':
+        return 'Child-friendly';
+      case 'MODERATE':
+        return 'Moderate';
+      case 'NOT_CHILD_FRIENDLY':
+        return 'Not child-friendly';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  protected formatAverageDifficulty(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageDifficulty == null) {
+      return 'No data';
+    }
+
+    return `${attributes.averageDifficulty.toFixed(1)}/5`;
+  }
+
+  protected formatAverageDistance(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageTotalDistance == null) {
+      return 'No data';
+    }
+
+    return `${attributes.averageTotalDistance.toFixed(1)} km`;
+  }
+
+  protected formatAverageTime(attributes: TourComputedAttributes | undefined): string {
+    if (attributes?.averageTotalTime == null) {
+      return 'No data';
+    }
+
+    return this.formatLogDuration(Math.round(attributes.averageTotalTime));
+  }
+
+  protected childFriendlinessSummary(attributes: TourComputedAttributes | undefined): string {
+    return [
+      `${this.formatAverageDifficulty(attributes)} difficulty`,
+      this.formatAverageTime(attributes),
+      this.formatAverageDistance(attributes),
+    ].join(' · ');
   }
 }

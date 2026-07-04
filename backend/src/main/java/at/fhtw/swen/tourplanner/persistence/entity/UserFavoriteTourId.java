@@ -21,4 +21,12 @@ public class UserFavoriteTourId implements Serializable {
     public int hashCode() {
         return Objects.hash(userId, tourId);
     }
+
+    public String getUserId() {
+        return userId.toString();
+    }
+
+    public String getTourId() {
+        return tourId.toString();
+    }
 }

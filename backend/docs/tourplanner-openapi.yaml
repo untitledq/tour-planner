@@ -70,7 +70,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TourCreateRequest'
       responses:
-        '201':
+        '200':
           description: Newly created tour
           content:
             application/json:
@@ -80,56 +80,49 @@ paths:
     get:
       summary: List all tours of the current user
       security: [ { bearerAuth: [] } ]
+      parameters:
+        - $ref: '#/components/parameters/TourSort'
       responses:
         '200':
-          description: A paginated list of tours
+          description: List of tours
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/ListResponse'
-                  - properties:
-                      data:
-                        type: array
-                        description: List of tours
-                        items:
-                          $ref: '#/components/schemas/TourListItem'
+                type: array
+                items:
+                  $ref: '#/components/schemas/TourListItem'
 
   /api/tours/favorites:
     get:
       summary: List all tours with type created by the current user that are marked as favorite
       security: [ { bearerAuth: [] } ]
+      parameters:
+        - $ref: '#/components/parameters/TourSort'
       responses:
         '200':
           description: List of favorite tours created by the user
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/ListResponse'
-                  - properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/TourTypeListItem'
+                type: array
+                items:
+                  $ref: '#/components/schemas/TourTypeListItem'
 
   /api/tours/not-favorites:
     get:
       summary: List all tours with type created by the current user that are NOT marked as favorite
       security: [ { bearerAuth: [] } ]
+      parameters:
+        - $ref: '#/components/parameters/TourSort'
       responses:
         '200':
           description: List of non-favorite tours created by the user
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/ListResponse'
-                  - properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/TourTypeListItem'
+                type: array
+                items:
+                  $ref: '#/components/schemas/TourTypeListItem'
 
   /api/tours/{tourId}:
     get:
@@ -137,13 +130,22 @@ paths:
       security: [ { bearerAuth: [] } ]
       parameters:
         - $ref: '#/components/parameters/TourId'
+        - name: withFavorite
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Return the tour with the current user's favorite status
       responses:
         '200':
-          description: Details of the tour including favorite status
+          description: Tour details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TourWithFavorite'
+                oneOf:
+                  - $ref: '#/components/schemas/Tour'
+                  - $ref: '#/components/schemas/TourWithFavorite'
 
     put:
       summary: Update a tour (recomputes route if names or transport changed)
@@ -162,7 +164,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TourWithFavorite'
+                $ref: '#/components/schemas/Tour'
 
     delete:
       summary: Delete a tour
@@ -170,7 +172,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/TourId'
       responses:
-        '204':
+        '200':
           description: Tour successfully deleted
 
   /api/tours/{tourId}/route:
@@ -186,6 +188,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RouteResponse'
+
+  /api/tours/{tourId}/export:
+    get:
+      summary: Export a tour as XML
+      description: Exports a tour including all associated tour logs as XML
+      security: [ { bearerAuth: [ ] } ]
+      parameters:
+        - $ref: '#/components/parameters/TourId'
+      responses:
+        '200':
+          description: XML export of the tour
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/TourExport'
+
+  /api/tours/import:
+    post:
+      summary: Import a tour from XML
+      description: Imports a tour including associated tour logs from XML
+      security: [ { bearerAuth: [ ] } ]
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TourExport'
+      responses:
+        '200':
+          description: Imported tour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tour'
 
   /api/tours/{tourId}/image:
     post:
@@ -213,7 +249,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageUploadResponse'
+                $ref: '#/components/schemas/Tour'
         '400':
           description: Invalid file
         '404':
@@ -229,16 +265,11 @@ paths:
         '200':
           description: Image file
           content:
-            image/jpeg:
+            application/octet-stream:
               schema:
                 type: string
                 format: binary
-                description: JPEG image file
-            image/png:
-              schema:
-                type: string
-                format: binary
-                description: PNG image file
+                description: Stored image file
         '404':
           description: Image not found
 
@@ -253,7 +284,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TourLogCreateRequest'
       responses:
-        '201':
+        '200':
           description: Newly created tour log
           content:
             application/json:
@@ -331,6 +362,37 @@ paths:
                 items:
                   $ref: '#/components/schemas/TourLog'
 
+  /api/search:
+    get:
+      summary: Search tours and tour logs
+      security: [ { bearerAuth: [ ] } ]
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search query text
+
+        - name: scope
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ all, tours, tour-log, tour-logs, logs ]
+            default: all
+          description: Restrict search scope
+
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+
   /api/users/me/favorites/{tourId}:
     post:
       summary: Add tour to favorites
@@ -377,25 +439,25 @@ components:
         type: string
         format: uuid
 
-  schemas:
+    TourSort:
+      name: sort
+      in: query
+      required: false
+      description: Sort option for tour lists
+      schema:
+        type: string
+        default: POPULARITY_DESC
+        enum:
+          - POPULARITY_DESC
+          - POPULARITY_ASC
+          - CHILD_FRIENDLINESS_DESC
+          - CHILD_FRIENDLINESS_ASC
+          - NAME_ASC
+          - NAME_DESC
+          - NEWEST_FIRST
+          - OLDEST_FIRST
 
-    ListResponse:
-      type: object
-      description: Generic paginated response
-      properties:
-        data:
-          type: array
-          description: List of items
-          items: {}
-        total:
-          type: integer
-          description: Total number of items
-        page:
-          type: integer
-          description: Current page number
-        size:
-          type: integer
-          description: Number of items per page
+  schemas:
 
     RegisterRequest:
       type: object
@@ -426,38 +488,29 @@ components:
 
     AuthResponse:
       type: object
-      description: Response returned after registration
       properties:
-        id:
+        userId:
           type: string
           format: uuid
-          description: UUID of the created user
         username:
           type: string
-          description: Username of the created user
-        createdAt:
+        created_at:
           type: string
           format: date-time
-          description: Creation timestamp
         token:
           type: string
-          description: JWT token for authentication
 
     LoginResponse:
       type: object
-      description: Response returned after login
       properties:
         token:
           type: string
-          description: JWT token for authentication
-        expiresAt:
+        expires_at:
           type: string
           format: date-time
-          description: Expiration timestamp of the token
-        sessionId:
+        session_id:
           type: string
           format: uuid
-          description: UUID of the login session
 
     Tour:
       type: object
@@ -483,16 +536,19 @@ components:
           type: string
           enum: [BIKE, HIKE, RUNNING, VACATION]
           description: Type of transport used for the tour
-        hasImage:
-          type: boolean
-          description: Indicates if a tour image exists
+        imagePath:
+          type: string
+          nullable: true
+          description: Stored image path or filename
+        computedAttributes:
+          $ref: '#/components/schemas/TourComputedAttributes'
 
     TourWithFavorite:
       allOf:
         - $ref: '#/components/schemas/Tour'
         - type: object
           properties:
-            isFavorite:
+            favorite:
               type: boolean
               description: Indicates if this tour is a favorite of the current user
 
@@ -517,6 +573,10 @@ components:
           type: string
           enum: [ BIKE, HIKE, RUNNING, VACATION ]
           description: Type of transport used for the tour
+        imagePath:
+          type: string
+          nullable: true
+          description: Stored image path or filename
 
     TourListItem:
       type: object
@@ -529,6 +589,8 @@ components:
         name:
           type: string
           description: Name of the tour
+        computedAttributes:
+          $ref: '#/components/schemas/TourComputedAttributes'
 
     TourTypeListItem:
       type: object
@@ -543,7 +605,36 @@ components:
           description: Name of the tour
         tourType:
           type: string
+          enum: [ BIKE, HIKE, RUNNING, VACATION ]
           description: Type of transport used for the tour
+        computedAttributes:
+          $ref: '#/components/schemas/TourComputedAttributes'
+
+    TourComputedAttributes:
+      type: object
+      description: Attributes computed from tour logs
+      properties:
+        logCount:
+          type: integer
+          description: Number of logs for the tour
+        averageDifficulty:
+          type: number
+          nullable: true
+          description: Average difficulty from logs
+        averageTotalDistance:
+          type: number
+          nullable: true
+          description: Average total distance from logs in kilometers
+        averageTotalTime:
+          type: number
+          nullable: true
+          description: Average total time from logs in minutes
+        popularity:
+          type: string
+          enum: [ UNKNOWN, LOW, POPULAR, VERY_POPULAR ]
+        childFriendliness:
+          type: string
+          enum: [ UNKNOWN, NOT_CHILD_FRIENDLY, MODERATE, CHILD_FRIENDLY, VERY_CHILD_FRIENDLY ]
 
     TourLog:
       type: object
@@ -553,6 +644,10 @@ components:
           type: string
           format: uuid
           description: Unique ID of the log
+        tourId:
+          type: string
+          format: uuid
+          description: ID of the tour this log belongs to
         dateTime:
           type: string
           format: date-time
@@ -575,9 +670,13 @@ components:
 
     TourLogCreateRequest:
       type: object
-      required: [ rating ]
+      required: [ tourId, rating ]
       description: Request to create a tour log
       properties:
+        tourId:
+          type: string
+          format: uuid
+          description: ID of the tour this log belongs to
         dateTime:
           type: string
           format: date-time
@@ -585,6 +684,15 @@ components:
         rating:
           type: integer
           description: Rating of the tour
+        difficulty:
+          type: integer
+          description: Difficulty of the tour
+        totalDistance:
+          type: integer
+          description: Total distance in kilometers
+        totalTime:
+          type: integer
+          description: Total time in minutes
         comment:
           type: string
           description: Comment or notes about the tour
@@ -613,6 +721,24 @@ components:
           type: string
           description: Comment or notes about the tour
 
+    SearchResult:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [ TOUR, TOUR_LOG ]
+        id:
+          type: string
+          format: uuid
+        tourId:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        snippet:
+          type: string
+
     Route:
       type: object
       description: Raw route object
@@ -625,17 +751,9 @@ components:
           description: Duration in seconds
         coordinates:
           type: array
-          description: Array of latitude/longitude points
+          description: Array of coordinate pairs
           items:
-            type: object
-            description: Latitude/longitude point
-            properties:
-              lat:
-                type: number
-                description: Latitude
-              lng:
-                type: number
-                description: Longitude
+            $ref: '#/components/schemas/CoordinatePair'
 
     RouteResponse:
       type: object
@@ -651,23 +769,81 @@ components:
           type: array
           description: Ordered list of coordinates for the route
           items:
-            $ref: '#/components/schemas/LatLng'
+            $ref: '#/components/schemas/CoordinatePair'
 
-    LatLng:
-      type: object
-      description: Latitude and longitude point
-      properties:
-        lat:
-          type: number
-          description: Latitude
-        lng:
-          type: number
-          description: Longitude
+    CoordinatePair:
+      type: array
+      description: Coordinate pair as returned by the backend route client
+      minItems: 2
+      maxItems: 2
+      items:
+        type: number
 
-    ImageUploadResponse:
+    TourExport:
       type: object
-      description: Response returned after image upload
+      xml:
+        name: tour
+      description: XML export/import representation of a tour including logs
       properties:
-        hasImage:
-          type: boolean
-          description: Indicates whether the image exists
+        exportedAt:
+          type: string
+          format: date-time
+          description: Export timestamp
+        id:
+          type: string
+          format: uuid
+          description: Original tour ID
+        createdBy:
+          type: string
+          format: uuid
+          description: Original creator ID
+        name:
+          type: string
+        description:
+          type: string
+        imagePath:
+          type: string
+        startName:
+          type: string
+        endName:
+          type: string
+        tourType:
+          type: string
+          enum: [ BIKE, HIKE, RUNNING, VACATION ]
+        logs:
+          type: array
+          description: Exported tour logs
+          xml:
+            name: logs
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/TourLogExport'
+
+    TourLogExport:
+      type: object
+      xml:
+        name: log
+      description: XML export/import representation of a tour log
+      properties:
+        id:
+          type: string
+          format: uuid
+        tourId:
+          type: string
+          format: uuid
+        createdBy:
+          type: string
+          format: uuid
+        dateTime:
+          type: string
+          format: date-time
+        rating:
+          type: integer
+        difficulty:
+          type: integer
+        totalDistance:
+          type: integer
+        totalTime:
+          type: integer
+        comment:
+          type: string

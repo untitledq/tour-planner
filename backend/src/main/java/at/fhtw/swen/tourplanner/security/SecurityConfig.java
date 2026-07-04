@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.security;
 
+import at.fhtw.swen.tourplanner.config.CorsProperties;
 import at.fhtw.swen.tourplanner.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +21,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CorsProperties corsProperties;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CorsProperties corsProperties) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.corsProperties = corsProperties;
     }
 
     @Bean
@@ -33,6 +36,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Public endpoints
                         .requestMatchers("/api/user/register", "/api/user/login").permitAll()
                         .requestMatchers("/api/users/me/favorites/**").authenticated()
@@ -40,8 +44,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/user").authenticated()
                         .requestMatchers("/api/tours/*/image").authenticated()
                         .requestMatchers("/api/tours/**").authenticated()
+                        .requestMatchers("/api/tours/import").authenticated()
                         .requestMatchers("/api/tour-logs/**").authenticated()
                         .requestMatchers("/api/routes/**").authenticated()
+                        .requestMatchers("/api/search/**").authenticated()
 
                         // Any other request must be authenticated
                         .anyRequest().authenticated()
@@ -53,7 +59,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));

@@ -1,8 +1,8 @@
 package at.fhtw.swen.tourplanner.service.impl;
 
 import at.fhtw.swen.tourplanner.persistence.entity.UserFavoriteTour;
-import at.fhtw.swen.tourplanner.persistence.repository.TourRepository;
-import at.fhtw.swen.tourplanner.persistence.repository.UserFavoriteTourRepository;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.TourRepositoryAdapter;
+import at.fhtw.swen.tourplanner.persistence.repository.adapter.UserFavoriteTourRepositoryAdapter;
 import at.fhtw.swen.tourplanner.service.FavoriteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,30 +12,30 @@ import java.util.UUID;
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
 
-    private final UserFavoriteTourRepository favoriteRepository;
-    private final TourRepository tourRepository;
+    private final UserFavoriteTourRepositoryAdapter userFavoriteTourRepositoryAdapter;
+    private final TourRepositoryAdapter tourRepositoryAdapter;
 
-    public FavoriteServiceImpl(UserFavoriteTourRepository favoriteRepository,
-                               TourRepository tourRepository) {
-        this.favoriteRepository = favoriteRepository;
-        this.tourRepository = tourRepository;
+    public FavoriteServiceImpl(UserFavoriteTourRepositoryAdapter userFavoriteTourRepositoryAdapter,
+                               TourRepositoryAdapter tourRepositoryAdapter) {
+        this.userFavoriteTourRepositoryAdapter = userFavoriteTourRepositoryAdapter;
+        this.tourRepositoryAdapter = tourRepositoryAdapter;
     }
 
-    @Override
     @Transactional
     public void addFavorite(UUID userId, UUID tourId) {
-        if (!tourRepository.existsById(tourId)) {
-            throw new RuntimeException("Tour not found");
-        }
 
-        if (!favoriteRepository.existsByUserIdAndTourId(userId, tourId)) {
-            favoriteRepository.save(new UserFavoriteTour(userId, tourId));
+        tourRepositoryAdapter.findById(tourId);
+
+        if (!userFavoriteTourRepositoryAdapter.existsByUserIdAndTourId(userId, tourId)) {
+            userFavoriteTourRepositoryAdapter.save(
+                    new UserFavoriteTour(userId, tourId)
+            );
         }
     }
 
     @Override
     @Transactional
     public void removeFavorite(UUID userId, UUID tourId) {
-        favoriteRepository.deleteByUserIdAndTourId(userId, tourId);
+        userFavoriteTourRepositoryAdapter.deleteByUserIdAndTourId(userId, tourId);
     }
 }

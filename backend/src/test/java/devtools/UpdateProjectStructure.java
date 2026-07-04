@@ -1,4 +1,4 @@
-package at.fhtw.swen.tourplanner.devtools;
+package devtools;
 
 import java.io.*;
 import java.util.logging.Level;
