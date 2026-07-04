@@ -1,5 +1,7 @@
 package at.fhtw.swen.tourplanner.controller;
 
+import at.fhtw.swen.tourplanner.controller.request.CreateTourLogRequest;
+import at.fhtw.swen.tourplanner.controller.request.UpdateTourLogRequest;
 import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
 import at.fhtw.swen.tourplanner.service.TourLogService;
 import at.fhtw.swen.tourplanner.service.dto.TourLogDto;
@@ -59,25 +61,25 @@ public class TourLogController {
 
     @PostMapping
     public ResponseEntity<TourLogDto> create(
-            @Valid @RequestBody TourLogDto req,
+            @Valid @RequestBody CreateTourLogRequest req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
         logger.info("Create Tour Log called by user {}", userId);
 
-        return ResponseEntity.ok(service.create(req, userId));
+        return ResponseEntity.ok(service.create(toTourLogDto(req), userId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TourLogDto> update(
             @PathVariable UUID id,
-            @RequestBody TourLogDto req,
+            @Valid @RequestBody UpdateTourLogRequest req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
         logger.info("Update Tour Log {} called by user {}", id, userId);
 
-        return ResponseEntity.ok(service.update(id, req, userId));
+        return ResponseEntity.ok(service.update(id, toTourLogDto(req), userId));
     }
 
     @DeleteMapping("/{id}")
@@ -90,5 +92,28 @@ public class TourLogController {
 
         service.deleteByUser(id, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    private TourLogDto toTourLogDto(CreateTourLogRequest request) {
+        return TourLogDto.builder()
+                .tourId(request.getTourId())
+                .dateTime(request.getDateTime())
+                .rating(request.getRating())
+                .difficulty(request.getDifficulty())
+                .totalDistance(request.getTotalDistance())
+                .totalTime(request.getTotalTime())
+                .comment(request.getComment())
+                .build();
+    }
+
+    private TourLogDto toTourLogDto(UpdateTourLogRequest request) {
+        return TourLogDto.builder()
+                .dateTime(request.getDateTime())
+                .rating(request.getRating())
+                .difficulty(request.getDifficulty())
+                .totalDistance(request.getTotalDistance())
+                .totalTime(request.getTotalTime())
+                .comment(request.getComment())
+                .build();
     }
 }
