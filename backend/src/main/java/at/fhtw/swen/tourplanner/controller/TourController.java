@@ -1,5 +1,6 @@
 package at.fhtw.swen.tourplanner.controller;
 
+import at.fhtw.swen.tourplanner.controller.request.TourRequest;
 import at.fhtw.swen.tourplanner.controller.response.TourListResponse;
 import at.fhtw.swen.tourplanner.controller.response.TourTypeListResponse;
 import at.fhtw.swen.tourplanner.security.spring.JwtUserDetails;
@@ -41,7 +42,7 @@ public class TourController {
 
     @PostMapping
     public TourDto create(
-            @Valid @RequestBody TourDto req,
+            @Valid @RequestBody TourRequest req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
@@ -49,7 +50,7 @@ public class TourController {
 
         logger.info("Create Tour called by user: {}", userId);
 
-        return service.create(userId, req, id);
+        return service.create(userId, toTourDto(req), id);
     }
 
     @GetMapping
@@ -144,14 +145,14 @@ public class TourController {
     @PutMapping("/{id}")
     public TourDto update(
             @PathVariable UUID id,
-            @Valid @RequestBody TourDto req,
+            @Valid @RequestBody TourRequest req,
             @AuthenticationPrincipal JwtUserDetails userDetails
     ) {
         UUID userId = userDetails.getUserId();
 
         logger.info("Update Tour {} called by user {}", id, userId);
 
-        return service.update(id, userId, req);
+        return service.update(id, userId, toTourDto(req));
     }
 
     @DeleteMapping("/{id}")
@@ -164,5 +165,16 @@ public class TourController {
         logger.info("Delete Tour {} called by user {}", id, userId);
 
         service.deleteByUser(id, userId);
+    }
+
+    private TourDto toTourDto(TourRequest request) {
+        return TourDto.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .imagePath(request.getImagePath())
+                .tourType(request.getTourType())
+                .startName(request.getStartName())
+                .endName(request.getEndName())
+                .build();
     }
 }
